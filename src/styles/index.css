@@ -332,4 +332,15 @@ a.card:hover { border-color: var(--accent-primary); transform: translateY(-1px);
   .sidebar-backdrop.show { display: block; }
   .page-content { padding: 18px; }
   .form-grid { grid-template-columns: 1fr; }
+
+  /* The desktop "collapse to icon rail" state doesn't make sense inside the
+     mobile flyout drawer (it's already an overlay, not a docked rail) — so
+     always show full labels/badges here and hide the collapse control. */
+  .sidebar.collapsed .sidebar-title,
+  .sidebar.collapsed .sidebar-link-label,
+  .sidebar.collapsed .sidebar-soon-badge,
+  .sidebar.collapsed .sidebar-footer span { display: revert; }
+  .sidebar.collapsed .sidebar-link,
+  .sidebar.collapsed .sidebar-link-soon { justify-content: flex-start; padding: 10px 12px; }
+  .sidebar-collapse-btn { display: none; }
 }
