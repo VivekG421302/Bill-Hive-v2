@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { dbGet, dbSet } from '../db/indexedDB';
 import { useToast } from '../context/ToastContext';
+import '../utils/imageEditor';
 
 const EMPTY = { name: '', gst: '', address: '', phone: '', email: '', logo: '' };
 
@@ -9,6 +10,8 @@ export default function YourData() {
   const [data, setData] = useState(EMPTY);
   const [draft, setDraft] = useState(EMPTY);
   const [editing, setEditing] = useState(false);
+  const [hasData, setHasData] = useState(true); // assume yes until we've checked, to avoid a create-button flash
+  const [loaded, setLoaded] = useState(false);
   const fileRef = useRef(null);
 
   useEffect(() => {
@@ -16,7 +19,8 @@ export default function YourData() {
       const val = c || EMPTY;
       setData(val);
       setDraft(val);
-      if (!c) setEditing(true); // no company yet — start in edit mode
+      setHasData(!!c);
+      setLoaded(true);
     });
   }, []);
 
@@ -30,13 +34,34 @@ export default function YourData() {
       return;
     }
     const reader = new FileReader();
-    reader.onload = () => setDraft((d) => ({ ...d, logo: reader.result }));
+    reader.onload = () => {
+      window.BHImageEditor.open(reader.result, { title: 'Edit Company Logo' })
+        .then((editedDataUrl) => {
+          setDraft((d) => ({ ...d, logo: editedDataUrl }));
+          showToast('Logo updated');
+        })
+        .catch(() => {});
+    };
     reader.readAsDataURL(file);
+    // Reset input so the same file can be re-selected
+    e.target.value = '';
+  };
+
+  const handleEditExistingLogo = (e) => {
+    e.stopPropagation();
+    if (!draft.logo) return;
+    window.BHImageEditor.open(draft.logo, { title: 'Edit Company Logo' })
+      .then((editedDataUrl) => {
+        setDraft((d) => ({ ...d, logo: editedDataUrl }));
+        showToast('Logo updated');
+      })
+      .catch(() => {});
   };
 
   const save = async () => {
     await dbSet('company', draft);
     setData(draft);
+    setHasData(true);
     setEditing(false);
     window.dispatchEvent(new Event('billhive:company-updated'));
     showToast('Company details saved');
@@ -58,19 +83,40 @@ export default function YourData() {
             <h2 className="card-title">Company Profile</h2>
             <p className="card-desc">This information appears centered in the app header and on printed receipts.</p>
           </div>
-          {!editing && (
+          {!editing && hasData && (
             <button className="action-btn btn-outline" onClick={() => setEditing(true)}>
               ✎ Edit
             </button>
           )}
         </div>
 
-        {editing ? (
+        {!loaded ? null : !hasData && !editing ? (
+          <div className="empty-state">
+            <p className="empty-state-text">No company details yet. Add your profile to show it on the app header and printed bills.</p>
+            <button className="action-btn btn-save" onClick={() => setEditing(true)}>
+              + Create company profile
+            </button>
+          </div>
+        ) : editing ? (
           <>
             <div className="form-group">
               <label>Company Logo (4:1 recommended)</label>
               <div className="logo-drop" onClick={() => fileRef.current?.click()}>
-                {draft.logo ? <img src={draft.logo} alt="Logo preview" /> : <span>Click to upload logo</span>}
+                {draft.logo ? (
+                  <>
+                    <img src={draft.logo} alt="Logo preview" />
+                    <button
+                      type="button"
+                      className="logo-edit-btn"
+                      onClick={handleEditExistingLogo}
+                      title="Edit image"
+                    >
+                      ✎ Edit image
+                    </button>
+                  </>
+                ) : (
+                  <span>Click to upload logo</span>
+                )}
               </div>
               <input ref={fileRef} type="file" accept="image/*" hidden onChange={handleLogoUpload} />
             </div>
