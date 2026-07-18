@@ -21,7 +21,7 @@ const NAV_SECTIONS = [
     { label: 'Sale Summary', icon: IconSaleSummary, comingSoon: true }
   ],
   [
-    { label: 'Your Brands', icon: IconBrands, comingSoon: true },
+    { to: '/brands', label: 'Your Brands', icon: IconBrands },
     { label: 'Suppliers', icon: IconSuppliers, comingSoon: true },
     { label: 'Fulfillment', icon: IconFulfillment, comingSoon: true },
     { label: 'Catalogue', icon: IconCatalogue, comingSoon: true }

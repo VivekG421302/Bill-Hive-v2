@@ -10,6 +10,7 @@ import Dashboard from './pages/Dashboard';
 import YourData from './pages/YourData';
 import SettingsPage from './pages/Settings';
 import Account from './pages/Account';
+import Brands from './pages/Brands';
 
 export default function App() {
   return (
@@ -30,6 +31,7 @@ export default function App() {
               >
                 <Route index element={<Dashboard />} />
                 <Route path="your-data" element={<YourData />} />
+                <Route path="brands" element={<Brands />} />
                 <Route path="settings" element={<SettingsPage />} />
                 <Route path="account" element={<Account />} />
               </Route>

@@ -3,13 +3,15 @@
 // unless noted otherwise (authTokens is keyed by the token string itself).
 
 const DB_NAME = 'billhive-db';
-const DB_VERSION = 1;
+const DB_VERSION = 2; // v2: added 'brands' and 'items' stores
 export const STORE_NAMES = [
   'company',    // company profile + logo
   'settings',   // thank-you messages, terms, currency, sidebar side, accent color, theme prefs
   'account',    // local user account (username + password hash + salt + profile)
   'authTokens', // { token, expiresAt } — issued on login, checked on load
-  'theme'       // 'light' | 'dark'
+  'theme',      // 'light' | 'dark'
+  'brands',     // array of { id, name, description, color, logo }
+  'items'       // array of items (not built yet — brand pages read it to list linked products)
 ];
 
 let dbPromise = null;
