@@ -327,7 +327,8 @@ a.card:hover { border-color: var(--accent-primary); transform: translateY(-1px);
 @media (max-width: 860px) {
   .sidebar { position: fixed; top: 0; bottom: 0; z-index: 45; transform: translateX(-100%); width: 250px !important; }
   body.side-right .sidebar { transform: translateX(100%); }
-  .sidebar.mobile-open { transform: translateX(0); }
+  .sidebar.mobile-open,
+  body.side-right .sidebar.mobile-open { transform: translateX(0); }
   .sidebar-backdrop.show { display: block; }
   .page-content { padding: 18px; }
   .form-grid { grid-template-columns: 1fr; }
