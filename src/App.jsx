@@ -12,6 +12,7 @@ import SettingsPage from './pages/Settings';
 import Account from './pages/Account';
 import Brands from './pages/Brands';
 import Items from './pages/Items';
+import Stock from './pages/Stock';
 
 export default function App() {
   return (
@@ -34,6 +35,7 @@ export default function App() {
                 <Route path="your-data" element={<YourData />} />
                 <Route path="brands" element={<Brands />} />
                 <Route path="items" element={<Items />} />
+                <Route path="stock" element={<Stock />} />
                 <Route path="settings" element={<SettingsPage />} />
                 <Route path="account" element={<Account />} />
               </Route>

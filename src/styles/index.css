@@ -483,3 +483,13 @@ a.card:hover { border-color: var(--accent-primary); transform: translateY(-1px);
 .item-image-remove { position: absolute; top: 4px; right: 4px; width: 22px; height: 22px; border-radius: 50%; border: none; background: rgba(0,0,0,.6); color: #fff; font-size: 13px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 2; }
 
 .view-action-bar { display: flex; gap: 10px; margin-top: 18px; }
+
+.status-pill { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 700; letter-spacing: .02em; background: var(--bg-input); color: var(--text-secondary); }
+.status-pill.status-ok { background: rgba(76,107,74,.15); color: var(--accent-secondary); }
+.status-pill.status-low { background: rgba(209,67,67,.15); color: var(--accent-danger); }
+.stock-adjust-hint { font-size: 12px; color: var(--text-muted); margin-top: 6px; line-height: 1.4; }
+
+.bill-section { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); box-shadow: var(--shadow-card); padding: 18px; }
+.section-header { display: flex; align-items: center; gap: 10px; color: var(--text-primary); margin-bottom: 14px; }
+.section-header svg { color: var(--accent-primary); flex-shrink: 0; }
+.section-header h2 { font-size: 14.5px; font-weight: 700; margin: 0; }
