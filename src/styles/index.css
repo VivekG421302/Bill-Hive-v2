@@ -484,6 +484,39 @@ a.card:hover { border-color: var(--accent-primary); transform: translateY(-1px);
 
 .view-action-bar { display: flex; gap: 10px; margin-top: 18px; }
 
+/* ===================== Past Bills ===================== */
+.bills-filter-bar { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 16px; align-items: center; }
+.filter-btn { padding: 6px 13px; border-radius: var(--radius-sm); border: 1.5px solid var(--border-color); background: var(--bg-input); color: var(--text-secondary); font-size: 12.5px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+.filter-btn:hover { border-color: var(--accent-primary); color: var(--accent-primary); }
+.filter-btn.active { background: var(--accent-primary); border-color: var(--accent-primary); color: #fff; }
+.filter-date-range { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.filter-date-range input[type="date"] { padding: 6px 8px; font-size: 12.5px; }
+.bills-date-separator td { padding: 10px 16px 4px !important; font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: .05em; border-bottom: none !important; background: transparent; }
+
+/* ===================== Sales Return ===================== */
+.return-damaged-row { display: flex; align-items: center; gap: 8px; margin-top: 10px; padding: 10px 12px; border-radius: var(--radius-sm); border: 1.5px solid var(--border-color); background: var(--bg-input); font-size: 13.5px; color: var(--text-secondary); cursor: pointer; }
+.return-damaged-row input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; accent-color: var(--accent-danger); flex-shrink: 0; }
+
+/* ===================== Sale Summary ===================== */
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 20px; }
+.stat-card { display: flex; flex-direction: column; gap: 6px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 16px 18px; box-shadow: var(--shadow-card); }
+.stat-label { font-size: 11px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: .03em; }
+.stat-value { font-size: 22px; font-weight: 800; color: var(--text-primary); }
+.stat-card-highlight { background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-info) 100%); color: #fff; border-color: transparent; }
+.stat-card-highlight .stat-label { color: rgba(255,255,255,.85); }
+.stat-card-highlight .stat-value { color: #fff; }
+
+.summary-cards-grid { display: flex; flex-direction: column; gap: 16px; }
+@media (min-width: 900px) { .summary-cards-grid { flex-direction: row; } .summary-cards-grid > .bill-section { flex: 1; min-width: 0; } }
+.top-item-row { display: flex; flex-direction: column; gap: 6px; padding: 10px 0; border-bottom: 1px solid var(--border-color); }
+.top-item-row:last-child { border-bottom: none; }
+.top-item-info { display: flex; justify-content: space-between; gap: 10px; font-size: 13.5px; }
+.top-item-name { font-weight: 700; color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.top-item-meta { color: var(--text-muted); font-size: 12px; flex-shrink: 0; }
+.top-item-bar-track { height: 6px; background: var(--bg-input); border-radius: 999px; overflow: hidden; }
+.top-item-bar { height: 100%; background: var(--accent-primary); border-radius: 999px; }
+.top-item-bar-brand { background: linear-gradient(90deg, var(--accent-warning), var(--accent-secondary)); }
+
 .status-pill { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 700; letter-spacing: .02em; background: var(--bg-input); color: var(--text-secondary); }
 .status-pill.status-ok { background: rgba(76,107,74,.15); color: var(--accent-secondary); }
 .status-pill.status-low { background: rgba(209,67,67,.15); color: var(--accent-danger); }

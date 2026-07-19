@@ -14,11 +14,11 @@ const NAV_SECTIONS = [
   ],
   [
     { label: 'Create Bill', icon: IconCreateBill, to: '/create-bill' },
-    { label: 'Past Bills', icon: IconPastBills, comingSoon: true },
+    { label: 'Past Bills', icon: IconPastBills, to: '/past-bills' },
     { to: '/items', label: 'Items', icon: IconItems },
     { to: '/stock', label: 'Stock', icon: IconStock },
-    { label: 'Sales Return', icon: IconSalesReturn, comingSoon: true },
-    { label: 'Sale Summary', icon: IconSaleSummary, comingSoon: true }
+    { label: 'Sales Return', icon: IconSalesReturn, to: '/sales-return' },
+    { label: 'Sale Summary', icon: IconSaleSummary, to: '/sale-summary' }
   ],
   [
     { to: '/brands', label: 'Your Brands', icon: IconBrands },

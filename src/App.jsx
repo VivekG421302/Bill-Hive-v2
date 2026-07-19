@@ -13,6 +13,9 @@ import Brands from './pages/Brands';
 import Items from './pages/Items';
 import Stock from './pages/Stock';
 import CreateBill from './pages/CreateBill';
+import PastBills from './pages/PastBills';
+import SalesReturn from './pages/SalesReturn';
+import SaleSummary from './pages/SaleSummary';
 
 export default function App() {
   return (
@@ -32,10 +35,13 @@ export default function App() {
               >
                 <Route index element={<Dashboard />} />
                 <Route path="create-bill" element={<CreateBill />} />
+                <Route path="past-bills" element={<PastBills />} />
                 <Route path="your-data" element={<YourData />} />
                 <Route path="brands" element={<Brands />} />
                 <Route path="items" element={<Items />} />
                 <Route path="stock" element={<Stock />} />
+                <Route path="sales-return" element={<SalesReturn />} />
+                <Route path="sale-summary" element={<SaleSummary />} />
                 <Route path="settings" element={<SettingsPage />} />
                 <Route path="account" element={<Account />} />
               </Route>
