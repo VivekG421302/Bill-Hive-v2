@@ -13,7 +13,7 @@ const NAV_SECTIONS = [
     { to: '/', label: 'Dashboard', icon: IconHome, end: true }
   ],
   [
-    { label: 'Create Bill', icon: IconCreateBill, comingSoon: true },
+    { label: 'Create Bill', icon: IconCreateBill, to: '/create-bill' },
     { label: 'Past Bills', icon: IconPastBills, comingSoon: true },
     { to: '/items', label: 'Items', icon: IconItems },
     { to: '/stock', label: 'Stock', icon: IconStock },

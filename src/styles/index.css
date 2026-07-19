@@ -493,3 +493,86 @@ a.card:hover { border-color: var(--accent-primary); transform: translateY(-1px);
 .section-header { display: flex; align-items: center; gap: 10px; color: var(--text-primary); margin-bottom: 14px; }
 .section-header svg { color: var(--accent-primary); flex-shrink: 0; }
 .section-header h2 { font-size: 14.5px; font-weight: 700; margin: 0; }
+
+/* ===================== Create Bill ===================== */
+.bill-container { display: flex; flex-direction: column; gap: 16px; max-width: 760px; }
+input[readonly] { background: var(--bg-input); opacity: .75; cursor: not-allowed; }
+
+.line-items-container { display: flex; flex-direction: column; gap: 10px; }
+.line-item { position: relative; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 14px; transition: border-color .15s ease; }
+.line-item:hover { border-color: var(--accent-primary); }
+.line-item-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.line-item-number { width: 26px; height: 26px; border-radius: 50%; background: var(--accent-primary); color: #fff; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.line-item-name-wrap { position: relative; flex: 1; min-width: 0; }
+.line-item-name-wrap input { width: 100%; padding: 7px 10px; border: 1.5px solid var(--border-color); border-radius: var(--radius-sm); background: var(--bg-input); font-size: 13.5px; font-weight: 600; }
+.line-item-delete { width: 38px; height: 38px; border: none; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; color: var(--accent-danger); background: rgba(209,67,67,.1); flex-shrink: 0; cursor: pointer; }
+.line-item-delete:hover { background: rgba(209,67,67,.2); }
+.line-item-fields { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+@media (max-width: 560px) { .line-item-fields { grid-template-columns: 1fr 1fr; } }
+.line-item-fields .form-group { margin-bottom: 0; }
+.line-item-fields .form-group label { font-size: 11px; margin-bottom: 4px; }
+.line-item-fields input { padding: 7px 10px; font-size: 13px; }
+.line-item-total { margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+.line-item-total-label { font-size: 12.5px; color: var(--text-muted); font-weight: 500; }
+.line-item-total-value { font-size: 16px; font-weight: 700; color: var(--accent-primary); }
+
+.item-suggestions { display: none; position: absolute; top: calc(100% + 6px); left: 0; right: 0; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-md); box-shadow: 0 12px 32px rgba(0,0,0,.16); max-height: 240px; overflow-y: auto; z-index: 60; padding: 4px; }
+.item-suggestions.show { display: block; }
+.item-suggestion-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 9px 10px; border-radius: var(--radius-sm); cursor: pointer; font-size: 13px; }
+.item-suggestion-row:hover { background: var(--accent-primary-soft); }
+.item-suggestion-name { font-weight: 600; color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.item-suggestion-price { color: var(--text-muted); flex-shrink: 0; font-size: 12px; }
+.item-suggestion-empty { padding: 10px; font-size: 12.5px; color: var(--text-muted); text-align: center; }
+
+.add-item-btn { width: 100%; padding: 13px; border: 2px dashed var(--border-color); border-radius: var(--radius-md); background: transparent; color: var(--accent-primary); font-weight: 700; font-size: 13.5px; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; margin-top: 4px; }
+.add-item-btn:hover { border-color: var(--accent-primary); background: var(--accent-primary-soft); }
+
+.totals-section { background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-primary) 100%); }
+.totals-grid { display: flex; flex-direction: column; gap: 4px; }
+.total-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; }
+.total-row:not(.grand-total):not(:last-child) { border-bottom: 1px solid var(--border-color); }
+.total-label { font-size: 13.5px; color: var(--text-secondary); font-weight: 500; }
+.total-value { font-size: 14.5px; font-weight: 700; color: var(--text-primary); }
+.total-value.discount { color: var(--accent-danger); }
+.total-value.tax { color: var(--accent-secondary); }
+.total-row.grand-total { padding: 14px 0 4px; margin-top: 4px; border-top: 2px solid var(--border-color); }
+.total-row.grand-total .total-label { font-size: 15px; font-weight: 700; color: var(--text-primary); }
+.total-row.grand-total .total-value { font-size: 21px; font-weight: 800; color: var(--accent-primary); }
+
+.payment-modes { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+@media (max-width: 480px) { .payment-modes { grid-template-columns: repeat(2, 1fr); } }
+.payment-mode-btn { padding: 12px 8px; border: 1.5px solid var(--border-color); border-radius: var(--radius-md); background: var(--bg-input); color: var(--text-secondary); font-size: 12.5px; font-weight: 600; display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; }
+.payment-mode-btn:hover { border-color: var(--accent-primary); color: var(--accent-primary); }
+.payment-mode-btn.active { border-color: var(--accent-primary); background: var(--accent-primary-soft); color: var(--accent-primary); box-shadow: 0 0 0 3px var(--accent-primary-soft); }
+
+.action-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; position: sticky; bottom: 8px; z-index: 20; padding: 4px 0; }
+.action-buttons .action-btn { padding: 13px 16px; box-shadow: var(--shadow-card); }
+.btn-save-print { background: var(--accent-primary); color: #fff; border: none; }
+.btn-save-print:hover { filter: brightness(1.08); }
+.btn-preview-mode { background: var(--accent-info); color: #fff; border: none; }
+.btn-preview-mode:hover { filter: brightness(1.08); }
+
+/* ===================== POS receipt (shared by in-app preview + print) ===================== */
+.pos-bill { max-width: 300px; margin: 0 auto; padding: 8px; font-size: 12px; font-weight: 700; line-height: 1.45; background: #fff; color: #000; font-family: 'Courier New', 'Courier', monospace; }
+.pos-header { text-align: center; padding-bottom: 6px; border-bottom: 2px dashed #000; margin-bottom: 6px; }
+.pos-logo { width: 100%; max-width: 160px; height: auto; aspect-ratio: 4/1; object-fit: contain; margin: 0 auto 4px; display: block; filter: grayscale(100%) contrast(1.15); }
+.pos-company-name { font-size: 1.15em; font-weight: 800; }
+.pos-gst, .pos-address, .pos-contact { font-size: .82em; line-height: 1.35; }
+.pos-divider { border: none; border-top: 2px dashed #000; margin: 5px 0; }
+.pos-meta { display: flex; justify-content: space-between; font-size: .85em; margin-bottom: 2px; }
+.pos-meta-label { font-weight: 800; }
+.pos-customer-label { font-weight: 800; font-size: .9em; }
+.pos-table { width: 100%; border-collapse: collapse; font-size: .9em; margin: 4px 0; }
+.pos-table th { border-top: 2px solid #000; border-bottom: 2px solid #000; padding: 3px 2px; text-align: left; font-weight: 800; }
+.pos-table td { padding: 2px 2px; vertical-align: top; }
+.pos-td-right { text-align: right; }
+.pos-td-center { text-align: center; }
+.pos-totals { border-top: 2px solid #000; padding-top: 3px; font-size: .9em; }
+.pos-total-row { display: flex; justify-content: space-between; margin-bottom: 1px; }
+.pos-total-row.grand { font-weight: 800; font-size: 1.1em; border-top: 2px solid #000; padding-top: 3px; margin-top: 2px; }
+.pos-saved { text-align: center; font-size: .9em; margin: 4px 0; font-style: italic; }
+.pos-payment { font-size: .9em; margin: 3px 0; }
+.pos-thankyou { text-align: center; font-size: 1em; font-weight: 800; margin: 4px 0; }
+.pos-terms { font-size: .82em; text-align: center; line-height: 1.35; margin-top: 3px; padding-top: 3px; border-top: 2px dashed #000; }
+.pos-footer-credit { text-align: center; font-size: 9px; font-weight: 700; margin-top: 6px; color: #444; }
+.pos-preview-wrap { background: #e9e5da; border-radius: var(--radius-md); padding: 20px 8px; display: flex; justify-content: center; }

@@ -3,7 +3,7 @@
 // unless noted otherwise (authTokens is keyed by the token string itself).
 
 const DB_NAME = 'billhive-db';
-const DB_VERSION = 3; // v3: added 'stockLog' store
+const DB_VERSION = 4; // v4: added 'bills' and 'invoiceMeta' stores
 export const STORE_NAMES = [
   'company',    // company profile + logo
   'settings',   // thank-you messages, terms, currency, sidebar side, accent color, theme prefs
@@ -12,7 +12,9 @@ export const STORE_NAMES = [
   'theme',      // 'light' | 'dark'
   'brands',     // array of { id, name, description, color, logo }
   'items',      // array of items
-  'stockLog'    // array of { id, date, itemId, itemName, type, qty, reference } — most recent first
+  'stockLog',   // array of { id, date, itemId, itemName, type, qty, reference } — most recent first
+  'bills',      // array of saved bills
+  'invoiceMeta' // { "yymm": count } — used to generate sequential invoice numbers
 ];
 
 let dbPromise = null;

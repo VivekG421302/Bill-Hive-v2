@@ -13,6 +13,7 @@ import Account from './pages/Account';
 import Brands from './pages/Brands';
 import Items from './pages/Items';
 import Stock from './pages/Stock';
+import CreateBill from './pages/CreateBill';
 
 export default function App() {
   return (
@@ -32,6 +33,7 @@ export default function App() {
                 }
               >
                 <Route index element={<Dashboard />} />
+                <Route path="create-bill" element={<CreateBill />} />
                 <Route path="your-data" element={<YourData />} />
                 <Route path="brands" element={<Brands />} />
                 <Route path="items" element={<Items />} />
