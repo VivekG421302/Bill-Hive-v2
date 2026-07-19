@@ -15,7 +15,7 @@ const NAV_SECTIONS = [
   [
     { label: 'Create Bill', icon: IconCreateBill, comingSoon: true },
     { label: 'Past Bills', icon: IconPastBills, comingSoon: true },
-    { label: 'Items', icon: IconItems, comingSoon: true },
+    { to: '/items', label: 'Items', icon: IconItems },
     { label: 'Stock', icon: IconStock, comingSoon: true },
     { label: 'Sales Return', icon: IconSalesReturn, comingSoon: true },
     { label: 'Sale Summary', icon: IconSaleSummary, comingSoon: true }

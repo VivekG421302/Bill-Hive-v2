@@ -4,10 +4,8 @@ import { useToast } from '../context/ToastContext';
 import { useTheme } from '../context/ThemeContext';
 import Modal from '../components/Modal';
 import ConfirmDialog from '../components/ConfirmDialog';
+import BrandFormModal, { BRAND_COLORS } from '../components/BrandFormModal';
 import '../utils/imageEditor';
-
-const BRAND_COLORS = ['#228be6', '#e03131', '#2f9e44', '#e67700', '#9c36b5', '#1098ad', '#f06595', '#1a1a2e'];
-const EMPTY_FORM = { name: '', description: '', color: BRAND_COLORS[0], logo: '' };
 
 function colorDarken(hex, amount) {
   const num = parseInt((hex || '228be6').replace('#', ''), 16);
@@ -26,9 +24,7 @@ export default function Brands() {
   const [search, setSearch] = useState('');
 
   const [modalOpen, setModalOpen] = useState(false);
-  const [editingId, setEditingId] = useState(null);
-  const [form, setForm] = useState(EMPTY_FORM);
-  const fileRef = useRef(null);
+  const [editingBrand, setEditingBrand] = useState(null);
 
   const [deleteId, setDeleteId] = useState(null);
 
@@ -51,68 +47,23 @@ export default function Brands() {
     return brands.filter((b) => b.name.toLowerCase().includes(q));
   }, [brands, search]);
 
-  const persist = async (next) => {
-    setBrands(next);
-    await dbSet('brands', next);
+  const refreshBrands = async () => {
+    const data = await dbGet('brands');
+    setBrands(Array.isArray(data) ? data : []);
   };
 
   // ---------- Add / edit modal ----------
   const openAdd = () => {
-    setEditingId(null);
-    setForm(EMPTY_FORM);
+    setEditingBrand(null);
     setModalOpen(true);
   };
 
   const openEdit = (b) => {
-    setEditingId(b.id);
-    setForm({ name: b.name || '', description: b.description || '', color: b.color || BRAND_COLORS[0], logo: b.logo || '' });
+    setEditingBrand(b);
     setModalOpen(true);
   };
 
   const closeModal = () => setModalOpen(false);
-
-  const handleLogoUpload = (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    if (file.size > 2 * 1024 * 1024) {
-      showToast('Logo must be under 2MB');
-      return;
-    }
-    const reader = new FileReader();
-    reader.onload = () => {
-      window.BHImageEditor.open(reader.result, { title: 'Edit Brand Logo' })
-        .then((editedDataUrl) => setForm((f) => ({ ...f, logo: editedDataUrl })))
-        .catch(() => {});
-    };
-    reader.readAsDataURL(file);
-    e.target.value = '';
-  };
-
-  const removeLogo = (e) => {
-    e.stopPropagation();
-    setForm((f) => ({ ...f, logo: '' }));
-    if (fileRef.current) fileRef.current.value = '';
-  };
-
-  const saveBrand = async () => {
-    const name = form.name.trim();
-    if (!name) {
-      showToast('Brand name is required');
-      return;
-    }
-    const description = form.description.trim();
-    const color = form.color || BRAND_COLORS[0];
-
-    if (editingId) {
-      const next = brands.map((b) => (b.id === editingId ? { ...b, name, description, color, logo: form.logo } : b));
-      await persist(next);
-    } else {
-      const id = brands.reduce((max, b) => Math.max(max, b.id || 0), 0) + 1;
-      await persist([...brands, { id, name, description, color, logo: form.logo }]);
-    }
-    setModalOpen(false);
-    showToast('Brand saved');
-  };
 
   // ---------- Delete ----------
   const requestDelete = (id) => setDeleteId(id);
@@ -120,7 +71,9 @@ export default function Brands() {
   const confirmDelete = async () => {
     const id = deleteId;
     setDeleteId(null);
-    await persist(brands.filter((b) => b.id !== id));
+    const next = brands.filter((b) => b.id !== id);
+    setBrands(next);
+    await dbSet('brands', next);
     if (detailBrand?.id === id) setDetailBrand(null);
     showToast('Brand deleted');
   };
@@ -250,68 +203,12 @@ export default function Brands() {
       )}
 
       {/* ---------- Add / Edit modal ---------- */}
-      <Modal
+      <BrandFormModal
         open={modalOpen}
         onClose={closeModal}
-        title={editingId ? 'Edit Brand' : 'Add Brand'}
-        footer={
-          <>
-            <button className="action-btn btn-save" onClick={saveBrand}>Save Brand</button>
-            <button className="action-btn btn-outline" onClick={closeModal}>Cancel</button>
-          </>
-        }
-      >
-        <div className="form-grid">
-          <div className="form-group full-width">
-            <label>Brand Name <span className="required">*</span></label>
-            <input type="text" placeholder="e.g., Northline Apparel" value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} />
-          </div>
-          <div className="form-group full-width">
-            <label>Description</label>
-            <textarea rows={2} placeholder="What this brand covers (optional)" value={form.description} onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))} />
-          </div>
-          <div className="form-group full-width">
-            <label>Brand Logo</label>
-            <div className="logo-drop" onClick={() => fileRef.current?.click()}>
-              {form.logo ? (
-                <>
-                  <img src={form.logo} alt="Logo preview" />
-                  <button type="button" className="logo-edit-btn" onClick={removeLogo} title="Remove logo">✕ Remove</button>
-                </>
-              ) : (
-                <span>Click to upload logo · 4:1 ratio recommended · max 2MB</span>
-              )}
-            </div>
-            <input ref={fileRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={handleLogoUpload} />
-          </div>
-          <div className="form-group full-width">
-            <label>Brand Colour</label>
-            <div className="swatch-row">
-              {BRAND_COLORS.map((hex) => (
-                <button
-                  key={hex}
-                  type="button"
-                  className={`swatch${form.color === hex ? ' active' : ''}`}
-                  style={{ background: hex }}
-                  onClick={() => setForm((f) => ({ ...f, color: hex }))}
-                />
-              ))}
-            </div>
-            <div className="brand-color-custom-row" onClick={() => document.getElementById('brand-color-input')?.click()}>
-              <div className="brand-color-preview-dot" style={{ background: form.color }} />
-              <span className="brand-color-custom-label">Custom colour</span>
-              <span className="brand-color-hex mono">{form.color}</span>
-              <input
-                id="brand-color-input"
-                type="color"
-                value={form.color}
-                className="brand-color-input"
-                onChange={(e) => setForm((f) => ({ ...f, color: e.target.value }))}
-              />
-            </div>
-          </div>
-        </div>
-      </Modal>
+        brand={editingBrand}
+        onSaved={refreshBrands}
+      />
 
       <ConfirmDialog
         open={deleteId !== null}
