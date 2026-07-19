@@ -27,10 +27,12 @@ export default function SettingsPage() {
     const next = { ...settings, ...patch };
     setSettings(next);
     await dbSet('settings', { ...(await dbGet('settings')), ...next });
+    window.dispatchEvent(new Event('billhive:settings-updated'));
   };
 
   const saveGeneral = async () => {
     await dbSet('settings', { ...(await dbGet('settings')), ...settings });
+    window.dispatchEvent(new Event('billhive:settings-updated'));
     showToast('Settings saved');
   };
 

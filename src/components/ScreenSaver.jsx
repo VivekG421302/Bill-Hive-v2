@@ -8,13 +8,19 @@ export default function ScreenSaver() {
   const timerRef = useRef(null);
 
   useEffect(() => {
-    dbGet('settings').then((s) => {
-      if (s?.screensaver) setConfig(s.screensaver);
+    const load = () => dbGet('settings').then((s) => {
+      setConfig(s?.screensaver || { enabled: false, seconds: 30 });
     });
+    load();
+    window.addEventListener('billhive:settings-updated', load);
+    return () => window.removeEventListener('billhive:settings-updated', load);
   }, []);
 
   useEffect(() => {
-    if (!config.enabled) return undefined;
+    if (!config.enabled) {
+      setActive(false);
+      return undefined;
+    }
 
     const reset = () => {
       setActive(false);

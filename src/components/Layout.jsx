@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import Header from './Header';
 import Footer from './Footer';
+import ScreenSaver from './ScreenSaver';
 
 export default function Layout() {
   const [collapsed, setCollapsed] = useState(false);
@@ -10,6 +11,7 @@ export default function Layout() {
 
   return (
     <div className="app-shell">
+      <ScreenSaver />
       <Sidebar
         collapsed={collapsed}
         onToggleCollapse={() => setCollapsed((c) => !c)}

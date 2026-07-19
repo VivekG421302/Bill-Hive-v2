@@ -4,7 +4,6 @@ import { ThemeProvider } from './context/ThemeContext';
 import { ToastProvider } from './context/ToastContext';
 import Layout from './components/Layout';
 import ProtectedRoute from './components/ProtectedRoute';
-import ScreenSaver from './components/ScreenSaver';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import YourData from './pages/YourData';
@@ -21,7 +20,6 @@ export default function App() {
       <ToastProvider>
         <AuthProvider>
           <BrowserRouter>
-            <ScreenSaver />
             <Routes>
               <Route path="/login" element={<Login />} />
               <Route
