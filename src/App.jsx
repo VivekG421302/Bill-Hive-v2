@@ -16,6 +16,8 @@ import CreateBill from './pages/CreateBill';
 import PastBills from './pages/PastBills';
 import SalesReturn from './pages/SalesReturn';
 import SaleSummary from './pages/SaleSummary';
+import Suppliers from './pages/Suppliers';
+import Fulfillment from './pages/Fulfillment';
 
 export default function App() {
   return (
@@ -42,6 +44,8 @@ export default function App() {
                 <Route path="stock" element={<Stock />} />
                 <Route path="sales-return" element={<SalesReturn />} />
                 <Route path="sale-summary" element={<SaleSummary />} />
+                <Route path="suppliers" element={<Suppliers />} />
+                <Route path="fulfillment" element={<Fulfillment />} />
                 <Route path="settings" element={<SettingsPage />} />
                 <Route path="account" element={<Account />} />
               </Route>
