@@ -18,6 +18,7 @@ import SalesReturn from './pages/SalesReturn';
 import SaleSummary from './pages/SaleSummary';
 import Suppliers from './pages/Suppliers';
 import Fulfillment from './pages/Fulfillment';
+import Catalogue from './pages/Catalogue';
 
 export default function App() {
   return (
@@ -46,6 +47,7 @@ export default function App() {
                 <Route path="sale-summary" element={<SaleSummary />} />
                 <Route path="suppliers" element={<Suppliers />} />
                 <Route path="fulfillment" element={<Fulfillment />} />
+                <Route path="catalogue" element={<Catalogue />} />
                 <Route path="settings" element={<SettingsPage />} />
                 <Route path="account" element={<Account />} />
               </Route>

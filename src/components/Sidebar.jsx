@@ -24,7 +24,7 @@ const NAV_SECTIONS = [
     { to: '/brands', label: 'Your Brands', icon: IconBrands },
     { label: 'Suppliers', icon: IconSuppliers, to: '/suppliers' },
     { label: 'Fulfillment', icon: IconFulfillment, to: '/fulfillment' },
-    { label: 'Catalogue', icon: IconCatalogue, comingSoon: true }
+    { label: 'Catalogue', icon: IconCatalogue, to: '/catalogue' }
   ],
   [
     { to: '/your-data', label: 'Your Data', icon: IconBriefcase },
