@@ -11,6 +11,33 @@ export const DEFAULT_PRINT_CONFIG = {
   show: { logo: true, gst: true, address: true, contact: true, discount: true, tax: true, thankyou: true, terms: true }
 };
 
+const FONT_FAMILY_MAP = {
+  typewriter: "'Courier New', 'Courier', 'Lucida Console', monospace",
+  mono: "'Consolas', 'Monaco', 'Menlo', monospace",
+  receipt: "'OCR A Std', 'Courier New', monospace",
+  sans: "'Helvetica Neue', Arial, sans-serif",
+  slab: "'Roboto Slab', Georgia, serif"
+};
+const FONT_WEIGHT_MAP = {
+  normal: { base: 400, strong: 600 },
+  bold: { base: 700, strong: 800 },
+  black: { base: 800, strong: 900 }
+};
+const PAPER_WIDTH_MAP = { '58mm': 220, '80mm': 300, a4: 700 };
+const MARGINS_MAP = { none: '0mm', narrow: '4mm', normal: '8mm', wide: '16mm' };
+
+/** Turns the Print Setup form values (settings.print) into a real print config. Falls back to v1's defaults for anything unset. */
+export function buildPrintConfig(printSettings) {
+  const p = printSettings || {};
+  return {
+    weights: FONT_WEIGHT_MAP[p.fontWeight] || DEFAULT_PRINT_CONFIG.weights,
+    fontFamily: FONT_FAMILY_MAP[p.fontFamily] || DEFAULT_PRINT_CONFIG.fontFamily,
+    size: { maxWidth: PAPER_WIDTH_MAP[p.paperSize] ?? DEFAULT_PRINT_CONFIG.size.maxWidth, baseFont: p.fontSize ?? DEFAULT_PRINT_CONFIG.size.baseFont },
+    margins: MARGINS_MAP[p.margins] || DEFAULT_PRINT_CONFIG.margins,
+    show: { ...DEFAULT_PRINT_CONFIG.show, ...(p.show || {}) }
+  };
+}
+
 function escapeHtml(str) {
   return String(str || '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }

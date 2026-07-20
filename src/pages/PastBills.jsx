@@ -4,7 +4,7 @@ import { dbGet, dbSet } from '../db/indexedDB';
 import { useToast } from '../context/ToastContext';
 import Modal from '../components/Modal';
 import ConfirmDialog from '../components/ConfirmDialog';
-import { buildPosBillHtml, printPosBill, DEFAULT_PRINT_CONFIG } from '../utils/posReceipt';
+import { buildPosBillHtml, printPosBill, buildPrintConfig } from '../utils/posReceipt';
 
 const FILTERS = [
   { id: 'all', label: 'All' },
@@ -101,7 +101,7 @@ export default function PastBills() {
   const openPreview = (bill) => setPreviewBill(bill);
   const closePreview = () => setPreviewBill(null);
 
-  const reprint = (bill) => printPosBill(bill, DEFAULT_PRINT_CONFIG);
+  const reprint = (bill) => printPosBill(bill, buildPrintConfig(settings.print));
 
   const requestDelete = (id) => setDeleteId(id);
   const confirmDelete = async () => {
@@ -213,7 +213,7 @@ export default function PastBills() {
       >
         {previewBill && (
           <div className="pos-preview-wrap">
-            <div dangerouslySetInnerHTML={{ __html: buildPosBillHtml(previewBill, DEFAULT_PRINT_CONFIG) }} />
+            <div dangerouslySetInnerHTML={{ __html: buildPosBillHtml(previewBill, buildPrintConfig(settings.print)) }} />
           </div>
         )}
       </Modal>

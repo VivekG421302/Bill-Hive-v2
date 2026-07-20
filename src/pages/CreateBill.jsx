@@ -3,7 +3,7 @@ import { dbGet, dbSet } from '../db/indexedDB';
 import { useToast } from '../context/ToastContext';
 import ConfirmDialog from '../components/ConfirmDialog';
 import Modal from '../components/Modal';
-import { buildPosBillHtml, printPosBill, DEFAULT_PRINT_CONFIG } from '../utils/posReceipt';
+import { buildPosBillHtml, printPosBill, buildPrintConfig } from '../utils/posReceipt';
 
 const PAYMENT_MODES = [
   { id: 'cash', label: 'Cash', icon: IconCash },
@@ -230,7 +230,7 @@ export default function CreateBill() {
   const saveAndPrint = async () => {
     const billData = await saveBill();
     if (!billData) return;
-    setTimeout(() => printPosBill(billData, DEFAULT_PRINT_CONFIG), 300);
+    setTimeout(() => printPosBill(billData, buildPrintConfig(settings.print)), 300);
   };
 
   const previewBill = () => {
@@ -240,7 +240,7 @@ export default function CreateBill() {
 
   const closePreview = () => setPreviewData(null);
   const printFromPreview = () => {
-    if (previewData) printPosBill(previewData, DEFAULT_PRINT_CONFIG);
+    if (previewData) printPosBill(previewData, buildPrintConfig(settings.print));
     closePreview();
   };
 
@@ -413,7 +413,7 @@ export default function CreateBill() {
       >
         {previewData && (
           <div className="pos-preview-wrap">
-            <div dangerouslySetInnerHTML={{ __html: buildPosBillHtml(previewData, DEFAULT_PRINT_CONFIG) }} />
+            <div dangerouslySetInnerHTML={{ __html: buildPosBillHtml(previewData, buildPrintConfig(settings.print)) }} />
           </div>
         )}
       </Modal>
