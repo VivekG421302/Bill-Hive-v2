@@ -15,6 +15,7 @@ const NAV_SECTIONS = [
   [
     { label: 'Create Bill', icon: IconCreateBill, to: '/create-bill' },
     { label: 'Past Bills', icon: IconPastBills, to: '/past-bills' },
+    { label: 'Customers', icon: IconCustomers, to: '/customers' },
     { to: '/items', label: 'Items', icon: IconItems },
     { to: '/stock', label: 'Stock', icon: IconStock },
     { label: 'Sales Return', icon: IconSalesReturn, to: '/sales-return' },
@@ -202,6 +203,9 @@ function IconChevronUpDown({ dir }) {
 /* --- Icons for v1 pages not yet ported (used for "Coming soon" nav items) --- */
 function IconCreateBill() {
   return (<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" strokeWidth="1.8"/><line x1="12" y1="8" x2="12" y2="16" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/><line x1="8" y1="12" x2="16" y2="12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>);
+}
+function IconCustomers() {
+  return (<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/><circle cx="9" cy="7" r="4" stroke="currentColor" strokeWidth="1.8"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>);
 }
 function IconPastBills() {
   return (<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/><polyline points="14 2 14 8 20 8" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/><line x1="16" y1="13" x2="8" y2="13" stroke="currentColor" strokeWidth="1.8"/><line x1="16" y1="17" x2="8" y2="17" stroke="currentColor" strokeWidth="1.8"/></svg>);

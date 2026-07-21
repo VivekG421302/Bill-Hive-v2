@@ -3,6 +3,7 @@ import { dbGet, dbSet } from '../db/indexedDB';
 import { useToast } from '../context/ToastContext';
 import ConfirmDialog from '../components/ConfirmDialog';
 import Modal from '../components/Modal';
+import CustomerFormModal from '../components/CustomerFormModal';
 import { buildPosBillHtml, printPosBill, buildPrintConfig } from '../utils/posReceipt';
 
 const PAYMENT_MODES = [
@@ -56,11 +57,16 @@ export default function CreateBill() {
   const { showToast } = useToast();
 
   const [catalogItems, setCatalogItems] = useState([]);
+  const [customers, setCustomers] = useState([]);
   const [company, setCompany] = useState({});
   const [settings, setSettings] = useState({ currencySymbol: '₹', thankYouMessages: '', termsConditions: '' });
 
   const [customerName, setCustomerName] = useState('');
   const [customerContact, setCustomerContact] = useState('');
+  const [customerId, setCustomerId] = useState(null);
+  const [customerSuggestOpen, setCustomerSuggestOpen] = useState(false);
+  const [customerFormOpen, setCustomerFormOpen] = useState(false);
+  const customerBlurTimer = useRef(null);
   const [invoiceNo, setInvoiceNo] = useState('');
   const [invoiceDate, setInvoiceDate] = useState(today());
   const [dueDate, setDueDate] = useState(today());
@@ -77,10 +83,11 @@ export default function CreateBill() {
   const blurTimer = useRef(null);
 
   useEffect(() => {
-    Promise.all([dbGet('items'), dbGet('company'), dbGet('settings')]).then(([it, co, se]) => {
+    Promise.all([dbGet('items'), dbGet('company'), dbGet('settings'), dbGet('customers')]).then(([it, co, se, cu]) => {
       setCatalogItems(Array.isArray(it) ? it : []);
       setCompany(co || {});
       setSettings((s) => ({ ...s, ...(se || {}) }));
+      setCustomers(Array.isArray(cu) ? cu : []);
     });
     generateInvoiceNumber().then(setInvoiceNo);
     setLineItems([newLine()]);
@@ -127,6 +134,33 @@ export default function CreateBill() {
     return matches;
   };
 
+  // ---------- Customer search / link ----------
+  const customerMatches = useMemo(() => {
+    const q = customerName.trim().toLowerCase();
+    return (q ? customers.filter((c) => c.name.toLowerCase().includes(q)) : customers).slice(0, 8);
+  }, [customers, customerName]);
+
+  const handleCustomerNameInput = (value) => {
+    setCustomerName(value);
+    setCustomerId(null);
+    setCustomerSuggestOpen(true);
+  };
+  const applyCustomerSuggestion = (c) => {
+    setCustomerName(c.name);
+    setCustomerContact(c.phone || '');
+    if (c.address) setDeliveryAddress(c.address);
+    setCustomerId(c.id);
+    setCustomerSuggestOpen(false);
+  };
+  const handleCustomerNameBlur = () => {
+    customerBlurTimer.current = setTimeout(() => setCustomerSuggestOpen(false), 150);
+  };
+  const cancelCustomerBlur = () => { if (customerBlurTimer.current) clearTimeout(customerBlurTimer.current); };
+  const handleCustomerCreated = (savedCustomer) => {
+    setCustomers((cs) => [...cs, savedCustomer]);
+    applyCustomerSuggestion(savedCustomer);
+  };
+
   // ---------- Payment ----------
   // (paymentMode state set directly by buttons)
 
@@ -150,7 +184,7 @@ export default function CreateBill() {
   };
 
   const getBillData = () => ({
-    invoiceNo, invoiceDate, dueDate, customerName, customerContact, deliveryAddress,
+    invoiceNo, invoiceDate, dueDate, dueAmount: parseFloat(dueAmount) || 0, customerName, customerContact, customerId, deliveryAddress,
     lineItems: [...lineItems],
     billAmount: totals.billAmount, discountAmount: totals.discountAmount, taxAmount: totals.taxAmount, grandTotal: totals.grandTotal,
     paymentMode, notes,
@@ -162,6 +196,7 @@ export default function CreateBill() {
     setLineItems([newLine()]);
     setCustomerName('');
     setCustomerContact('');
+    setCustomerId(null);
     setDueDate(today());
     setDueAmount('');
     setDueAmountManual(false);
@@ -176,6 +211,7 @@ export default function CreateBill() {
     setLineItems([]);
     setCustomerName('');
     setCustomerContact('');
+    setCustomerId(null);
     setDueDate('');
     setDueAmount('');
     setDueAmountManual(false);
@@ -256,7 +292,31 @@ export default function CreateBill() {
           <div className="form-grid">
             <div className="form-group">
               <label>Customer Name <span className="required">*</span></label>
-              <input type="text" placeholder="Enter customer name" value={customerName} onChange={(e) => setCustomerName(e.target.value)} />
+              <div className="line-item-name-wrap">
+                <input
+                  type="text" placeholder="Search or type customer name" autoComplete="off"
+                  value={customerName}
+                  onChange={(e) => handleCustomerNameInput(e.target.value)}
+                  onFocus={() => setCustomerSuggestOpen(true)}
+                  onBlur={handleCustomerNameBlur}
+                />
+                {customerSuggestOpen && (
+                  <div className="item-suggestions show">
+                    {customerMatches.length === 0 ? (
+                      <div className="item-suggestion-empty">No matching customer — will be saved as a one-off</div>
+                    ) : customerMatches.map((c) => (
+                      <div key={c.id} className="item-suggestion-row" onMouseDown={() => { cancelCustomerBlur(); applyCustomerSuggestion(c); }}>
+                        <span className="item-suggestion-name">{c.name}</span>
+                        <span className="item-suggestion-price">{c.phone || ''}</span>
+                      </div>
+                    ))}
+                    <div className="item-suggestion-row item-suggestion-add" onMouseDown={() => { cancelCustomerBlur(); setCustomerFormOpen(true); setCustomerSuggestOpen(false); }}>
+                      <span className="item-suggestion-name">+ Add new customer…</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+              {customerId && <span className="linked-hint">✓ Linked to saved customer</span>}
             </div>
             <div className="form-group">
               <label>Contact Number</label>
@@ -390,6 +450,8 @@ export default function CreateBill() {
           <button className="action-btn btn-preview-mode" onClick={previewBill}><IconEye /> Preview</button>
         </div>
       </div>
+
+      <CustomerFormModal open={customerFormOpen} onClose={() => setCustomerFormOpen(false)} customer={null} onSaved={handleCustomerCreated} />
 
       <ConfirmDialog
         open={clearConfirmOpen}

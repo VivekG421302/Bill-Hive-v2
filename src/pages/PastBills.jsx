@@ -187,6 +187,9 @@ export default function PastBills() {
             <div className="view-detail-row"><span className="view-detail-label">Contact</span><span className="view-detail-value">{detailBill.customerContact || '—'}</span></div>
             <div className="view-detail-row"><span className="view-detail-label">Payment</span><span className="view-detail-value">{(detailBill.paymentMode || '—').toUpperCase()}</span></div>
             <div className="view-detail-row"><span className="view-detail-label">Grand Total</span><span className="view-detail-value">{currency(detailBill.grandTotal, settings.currencySymbol)}</span></div>
+            {parseFloat(detailBill.dueAmount) > 0 && (
+              <div className="view-detail-row"><span className="view-detail-label">Outstanding Due</span><span className="view-detail-value" style={{ color: 'var(--accent-danger)' }}>{currency(detailBill.dueAmount, settings.currencySymbol)}</span></div>
+            )}
             <div className="view-detail-row"><span className="view-detail-label">Items</span><span className="view-detail-value">{(detailBill.lineItems || []).map((i) => `${i.name} × ${i.qty}`).join(', ')}</span></div>
             {detailBill.notes && <div className="view-detail-row"><span className="view-detail-label">Notes</span><span className="view-detail-value">{detailBill.notes}</span></div>}
             <div className="view-action-bar">

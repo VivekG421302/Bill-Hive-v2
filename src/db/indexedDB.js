@@ -3,7 +3,7 @@
 // unless noted otherwise (authTokens is keyed by the token string itself).
 
 const DB_NAME = 'billhive-db';
-const DB_VERSION = 6; // v6: added 'suppliers' and 'purchaseOrders' stores
+const DB_VERSION = 7; // v7: added 'customers' store
 export const STORE_NAMES = [
   'company',    // company profile + logo
   'settings',   // thank-you messages, terms, currency, sidebar side, accent color, theme prefs
@@ -17,7 +17,8 @@ export const STORE_NAMES = [
   'invoiceMeta', // { "yymm": count } — used to generate sequential invoice numbers
   'returns',    // array of sales return records
   'suppliers',  // array of { id, name, contactPerson, phone, email, address, itemsSupplied, notes, itemIds }
-  'purchaseOrders' // array of { id, poNumber, supplierId, supplierName, date, items, status }
+  'purchaseOrders', // array of { id, poNumber, supplierId, supplierName, date, items, status }
+  'customers'   // array of { id, name, phone, email, address, notes }
 ];
 
 let dbPromise = null;

@@ -6,6 +6,7 @@ import Layout from './components/Layout';
 import ProtectedRoute from './components/ProtectedRoute';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
+import Customers from './pages/Customers';
 import YourData from './pages/YourData';
 import SettingsPage from './pages/Settings';
 import Account from './pages/Account';
@@ -39,6 +40,7 @@ export default function App() {
                 <Route index element={<Dashboard />} />
                 <Route path="create-bill" element={<CreateBill />} />
                 <Route path="past-bills" element={<PastBills />} />
+                <Route path="customers" element={<Customers />} />
                 <Route path="your-data" element={<YourData />} />
                 <Route path="brands" element={<Brands />} />
                 <Route path="items" element={<Items />} />
