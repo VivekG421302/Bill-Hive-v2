@@ -51,6 +51,7 @@ export default function SettingsPage() {
         setSettings((prev) => ({
           ...prev,
           ...s,
+          thankYouMessages: Array.isArray(s.thankYouMessages) ? s.thankYouMessages.join('\n') : (s.thankYouMessages ?? DEFAULT_SETTINGS.thankYouMessages),
           screensaver: s.screensaver || DEFAULT_SETTINGS.screensaver,
           print: (() => {
             const dp = DEFAULT_SETTINGS.print;
