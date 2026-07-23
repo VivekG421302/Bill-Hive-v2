@@ -154,7 +154,7 @@ export function buildPosBillHtml(billData, printCfg = DEFAULT_PRINT_CONFIG) {
   const show = printCfg.show || {};
   const cols = activeColumns(printCfg);
 
-  const thankYouList = (settings.thankYouMessages || '').split('\n').map((s) => s.trim()).filter(Boolean);
+  const _rawTym = settings.thankYouMessages; const thankYouList = (Array.isArray(_rawTym) ? _rawTym : String(_rawTym || '').split('\n')).map((s) => s.trim()).filter(Boolean);
   const thankYouMsg = thankYouList.length > 0 ? thankYouList[Math.floor(Math.random() * thankYouList.length)] : 'Thank you!';
 
   const now = new Date();
