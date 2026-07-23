@@ -4,6 +4,7 @@ import Sidebar from './Sidebar';
 import Header from './Header';
 import Footer from './Footer';
 import ScreenSaver from './ScreenSaver';
+import ErrorBoundary from './ErrorBoundary';
 
 export default function Layout() {
   const [collapsed, setCollapsed] = useState(false);
@@ -21,7 +22,9 @@ export default function Layout() {
       <div className="app-main">
         <Header onOpenMobileSidebar={() => setMobileOpen(true)} />
         <div className="page-content">
-          <Outlet />
+          <ErrorBoundary>
+            <Outlet />
+          </ErrorBoundary>
         </div>
         <Footer />
       </div>
