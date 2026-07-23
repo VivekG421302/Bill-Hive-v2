@@ -3,7 +3,7 @@ import { dbGet, dbSet, dbClearAll, exportAllData, importAllData } from '../db/in
 import { useTheme, ACCENT_PRESETS } from '../context/ThemeContext';
 import { useToast } from '../context/ToastContext';
 import Modal from '../components/Modal';
-import { buildPosBillHtml, printPosBill, buildPrintConfig } from '../utils/posReceipt';
+import { buildPosBillHtml, printPosBill, buildPrintConfig, SECTION_DEFS, DEFAULT_SECTION_ORDER, COLUMN_DEFS, DEFAULT_COLUMN_ORDER, PAPER_PRESETS } from '../utils/posReceipt';
 
 const DEFAULT_SETTINGS = {
   thankYouMessages: 'Thank you for your business!\nVisit again soon!',
@@ -13,10 +13,15 @@ const DEFAULT_SETTINGS = {
   print: {
     fontFamily: 'typewriter',
     fontWeight: 'bold',
+    textStyle: 'normal',
+    lineHeight: 1.45,
     paperSize: '80mm',
+    customWidthMm: 80,
     fontSize: 12,
     margins: 'normal',
-    show: { logo: true, gst: true, address: true, contact: true, discount: true, tax: true, thankyou: true, terms: true }
+    show: { logo: true, gst: true, address: true, contact: true, discount: true, tax: true, thankyou: true, terms: true },
+    sectionOrder: DEFAULT_SECTION_ORDER,
+    columnOrder: DEFAULT_COLUMN_ORDER
   },
   dbConfig: { provider: 'none', apiUrl: '', apiKey: '' }
 };
@@ -83,6 +88,16 @@ export default function SettingsPage() {
   // ---------- Print setup ----------
   const setPrint = (patch) => setSettings((s) => ({ ...s, print: { ...s.print, ...patch } }));
   const setPrintShow = (key, value) => setSettings((s) => ({ ...s, print: { ...s.print, show: { ...s.print.show, [key]: value } } }));
+
+  const moveInOrder = (orderKey, index, dir) => {
+    setSettings((s) => {
+      const order = [...s.print[orderKey]];
+      const target = index + dir;
+      if (target < 0 || target >= order.length) return s;
+      [order[index], order[target]] = [order[target], order[index]];
+      return { ...s, print: { ...s.print, [orderKey]: order } };
+    });
+  };
 
   const dummyBillData = () => ({
     ...DUMMY_BILL_BASE,
@@ -176,7 +191,7 @@ export default function SettingsPage() {
         </div>
         <div className="form-grid">
           <div className="form-group">
-            <label>Font Style</label>
+            <label>Font Family</label>
             <select value={settings.print.fontFamily} onChange={(e) => setPrint({ fontFamily: e.target.value })}>
               <option value="typewriter">Typewriter — Classic receipt</option>
               <option value="mono">Monospace — Code-style</option>
@@ -194,19 +209,38 @@ export default function SettingsPage() {
             </select>
           </div>
           <div className="form-group">
-            <label>Paper Width</label>
-            <select value={settings.print.paperSize} onChange={(e) => setPrint({ paperSize: e.target.value })}>
-              <option value="58mm">58mm — Narrow thermal</option>
-              <option value="80mm">80mm — Standard thermal</option>
-              <option value="a4">A4 — Full page</option>
+            <label>Text Style</label>
+            <select value={settings.print.textStyle} onChange={(e) => setPrint({ textStyle: e.target.value })}>
+              <option value="normal">Normal</option>
+              <option value="italic">Italic</option>
             </select>
           </div>
+          <div className="form-group">
+            <label>Paper Size</label>
+            <select value={settings.print.paperSize} onChange={(e) => setPrint({ paperSize: e.target.value })}>
+              {Object.entries(PAPER_PRESETS).map(([key, p]) => <option key={key} value={key}>{p.label}</option>)}
+            </select>
+          </div>
+          {settings.print.paperSize === 'custom' && (
+            <div className="form-group">
+              <label>Custom Width <span style={{ color: 'var(--accent-primary)', fontWeight: 600 }}>{settings.print.customWidthMm}mm</span></label>
+              <input type="number" min={30} max={300} step={1} value={settings.print.customWidthMm} onChange={(e) => setPrint({ customWidthMm: Number(e.target.value) })} />
+            </div>
+          )}
           <div className="form-group">
             <label>Font Size <span style={{ color: 'var(--accent-primary)', fontWeight: 600 }}>{settings.print.fontSize}px</span></label>
             <div className="font-size-row">
               <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>8px</span>
               <input type="range" min={8} max={18} step={1} value={settings.print.fontSize} onChange={(e) => setPrint({ fontSize: Number(e.target.value) })} />
               <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>18px</span>
+            </div>
+          </div>
+          <div className="form-group">
+            <label>Line Height <span style={{ color: 'var(--accent-primary)', fontWeight: 600 }}>{settings.print.lineHeight.toFixed(2)}</span></label>
+            <div className="font-size-row">
+              <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>Tight</span>
+              <input type="range" min={1.0} max={2.2} step={0.05} value={settings.print.lineHeight} onChange={(e) => setPrint({ lineHeight: Number(e.target.value) })} />
+              <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>Loose</span>
             </div>
           </div>
           <div className="form-group">
@@ -230,6 +264,44 @@ export default function SettingsPage() {
                 <input type="checkbox" checked={settings.print.show[key] !== false} onChange={(e) => setPrintShow(key, e.target.checked)} /> {label}
               </label>
             ))}
+          </div>
+        </div>
+
+        <div className="form-grid" style={{ marginTop: 12 }}>
+          <div className="form-group">
+            <label>Bill Section Order <span style={{ fontWeight: 400, color: 'var(--text-muted)' }}>(move blocks up/down)</span></label>
+            <div className="reorder-list">
+              {settings.print.sectionOrder.map((key, idx) => {
+                const def = SECTION_DEFS.find((s) => s.key === key);
+                return (
+                  <div className="reorder-list-item" key={key}>
+                    <span>{def?.label || key}</span>
+                    <div className="reorder-list-arrows">
+                      <button type="button" disabled={idx === 0} onClick={() => moveInOrder('sectionOrder', idx, -1)} title="Move up"><IconArrowUp /></button>
+                      <button type="button" disabled={idx === settings.print.sectionOrder.length - 1} onClick={() => moveInOrder('sectionOrder', idx, 1)} title="Move down"><IconArrowDown /></button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+          <div className="form-group">
+            <label>Item Table Column Order <span style={{ fontWeight: 400, color: 'var(--text-muted)' }}>(move columns left/right)</span></label>
+            <div className="reorder-list">
+              {settings.print.columnOrder.map((key, idx) => {
+                const def = COLUMN_DEFS.find((c) => c.key === key);
+                const hidden = def?.showKey && settings.print.show[def.showKey] === false;
+                return (
+                  <div className={`reorder-list-item${hidden ? ' reorder-list-item-hidden' : ''}`} key={key}>
+                    <span>{def?.label || key}{hidden ? ' (hidden)' : ''}</span>
+                    <div className="reorder-list-arrows">
+                      <button type="button" disabled={idx === 0} onClick={() => moveInOrder('columnOrder', idx, -1)} title="Move left"><IconArrowUp /></button>
+                      <button type="button" disabled={idx === settings.print.columnOrder.length - 1} onClick={() => moveInOrder('columnOrder', idx, 1)} title="Move right"><IconArrowDown /></button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
         <div className="btn-row">
@@ -418,4 +490,10 @@ function IconEye({ size = 15 }) {
 }
 function IconPrinter({ size = 15 }) {
   return (<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><polyline points="6 9 6 2 18 2 18 9" /><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" /><rect x="6" y="14" width="12" height="8" /></svg>);
+}
+function IconArrowUp() {
+  return (<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><line x1="12" y1="19" x2="12" y2="5" /><polyline points="5 12 12 5 19 12" /></svg>);
+}
+function IconArrowDown() {
+  return (<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><line x1="12" y1="5" x2="12" y2="19" /><polyline points="19 12 12 19 5 12" /></svg>);
 }

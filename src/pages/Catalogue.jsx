@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { dbGet } from '../db/indexedDB';
 import { useToast } from '../context/ToastContext';
 import Modal from '../components/Modal';
+import ImageZoomLightbox from '../components/ImageZoomLightbox';
 
 const currency = (n, symbol = '₹') => `${symbol} ${(parseFloat(n) || 0).toFixed(2)}`;
 const formatDate = (d) => new Date(d).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
@@ -26,6 +27,7 @@ export default function Catalogue() {
 
   const [detailItem, setDetailItem] = useState(null);
   const [galleryIndex, setGalleryIndex] = useState(0);
+  const [zoomOpen, setZoomOpen] = useState(false);
   const touchXRef = useRef(0);
 
   useEffect(() => {
@@ -212,6 +214,9 @@ export default function Catalogue() {
                   {galleryImages.map((src, i) => <img key={i} src={src} alt={detailItem.name} />)}
                 </div>
               )}
+              {galleryImages.length > 0 && (
+                <button className="product-page-zoom-btn" onClick={() => setZoomOpen(true)} title="Zoom image" aria-label="Zoom image"><IconZoom /></button>
+              )}
               {galleryImages.length > 1 && (
                 <>
                   <button className="product-page-arrow prev" disabled={galleryIndex === 0} onClick={() => moveGallery(-1)}><IconChevron dir="left" /></button>
@@ -251,6 +256,13 @@ export default function Catalogue() {
           </>
         )}
       </Modal>
+
+      <ImageZoomLightbox
+        src={galleryImages[galleryIndex]}
+        alt={detailItem?.name}
+        open={zoomOpen}
+        onClose={() => setZoomOpen(false)}
+      />
     </div>
   );
 }
@@ -261,6 +273,7 @@ function IconSearch() { return (<svg width="16" height="16" viewBox="0 0 24 24" 
 function IconPrinter({ size = 15 }) { return (<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><polyline points="6 9 6 2 18 2 18 9" /><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" /><rect x="6" y="14" width="12" height="8" /></svg>); }
 function IconBrand() { return (<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M20.59 13.41 13.42 20.58a2 2 0 0 1-2.83 0L2 12.01V2h10.01l8.58 8.58a2 2 0 0 1 0 2.83z" strokeLinejoin="round" /><line x1="7" y1="7" x2="7.01" y2="7" strokeLinecap="round" /></svg>); }
 function IconImagePlaceholder({ size = 32 }) { return (<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" opacity="0.3"><rect x="3" y="3" width="18" height="18" rx="2" /><circle cx="8.5" cy="8.5" r="1.5" /><polyline points="21 15 16 10 5 21" /></svg>); }
+function IconZoom() { return (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /><line x1="11" y1="8" x2="11" y2="14" /><line x1="8" y1="11" x2="14" y2="11" /></svg>); }
 function IconChevron({ dir }) {
   const points = dir === 'left' ? '15 18 9 12 15 6' : '9 18 15 12 9 6';
   return (<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><polyline points={points} stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" /></svg>);
