@@ -1,7 +1,7 @@
 // Bill Hive service worker — cache-first for same-origin static assets,
 // network-first for navigations with an offline fallback to the app shell.
 // Bump CACHE_NAME whenever a static asset changes so old caches are dropped.
-const CACHE_NAME = 'billhive-v1.0.0';
+const CACHE_NAME = 'billhive-v2.0.0';
 const APP_SHELL = ['/', '/index.html', '/manifest.json', '/favicon.svg', '/icon-192.png', '/icon-512.png'];
 
 self.addEventListener('install', (event) => {
@@ -56,3 +56,4 @@ self.addEventListener('fetch', (event) => {
     }).catch(() => caches.match(request))
   );
 });
+
