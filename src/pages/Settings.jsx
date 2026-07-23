@@ -92,7 +92,7 @@ export default function SettingsPage() {
   };
 
   // ---------- Thank-you messages (stored as a single newline-joined string; edited as a list) ----------
-  const messages = settings.thankYouMessages ? settings.thankYouMessages.split('\n') : [];
+  const messages = Array.isArray(settings.thankYouMessages) ? settings.thankYouMessages : (settings.thankYouMessages ? String(settings.thankYouMessages).split('\n') : []);
   const setMessages = (next) => setSettings((s) => ({ ...s, thankYouMessages: next.join('\n') }));
   const updateMessage = (idx, value) => { const next = [...messages]; next[idx] = value; setMessages(next); };
   const removeMessage = (idx) => setMessages(messages.filter((_, i) => i !== idx));
