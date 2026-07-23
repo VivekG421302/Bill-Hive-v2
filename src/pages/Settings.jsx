@@ -52,7 +52,20 @@ export default function SettingsPage() {
           ...prev,
           ...s,
           screensaver: s.screensaver || DEFAULT_SETTINGS.screensaver,
-          print: { ...DEFAULT_SETTINGS.print, ...(s.print || {}), show: { ...DEFAULT_SETTINGS.print.show, ...((s.print || {}).show || {}) } },
+          print: (() => {
+            const dp = DEFAULT_SETTINGS.print;
+            const sp = s.print || {};
+            return {
+              ...dp,
+              ...sp,
+              show: { ...dp.show, ...(sp.show || {}) },
+              lineHeight: sp.lineHeight != null ? sp.lineHeight : dp.lineHeight,
+              textStyle: sp.textStyle ?? dp.textStyle,
+              customWidthMm: sp.customWidthMm != null ? sp.customWidthMm : dp.customWidthMm,
+              sectionOrder: Array.isArray(sp.sectionOrder) && sp.sectionOrder.length === dp.sectionOrder.length ? sp.sectionOrder : dp.sectionOrder,
+              columnOrder: Array.isArray(sp.columnOrder) && sp.columnOrder.length === dp.columnOrder.length ? sp.columnOrder : dp.columnOrder,
+            };
+          })(),
           dbConfig: { ...DEFAULT_SETTINGS.dbConfig, ...(s.dbConfig || {}) }
         }));
       }
@@ -236,7 +249,7 @@ export default function SettingsPage() {
             </div>
           </div>
           <div className="form-group">
-            <label>Line Height <span style={{ color: 'var(--accent-primary)', fontWeight: 600 }}>{settings.print.lineHeight.toFixed(2)}</span></label>
+            <label>Line Height <span style={{ color: 'var(--accent-primary)', fontWeight: 600 }}>{(settings.print.lineHeight ?? 1.45).toFixed(2)}</span></label>
             <div className="font-size-row">
               <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>Tight</span>
               <input type="range" min={1.0} max={2.2} step={0.05} value={settings.print.lineHeight} onChange={(e) => setPrint({ lineHeight: Number(e.target.value) })} />
@@ -497,3 +510,4 @@ function IconArrowUp() {
 function IconArrowDown() {
   return (<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><line x1="12" y1="5" x2="12" y2="19" /><polyline points="19 12 12 19 5 12" /></svg>);
 }
+
