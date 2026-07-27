@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bill Hive — External API Reference</title>
+<style>
+  :root {
+    --bg: #0f1115;
+    --panel: #171a21;
+    --panel-alt: #1d212b;
+    --border: #2a2f3a;
+    --text: #e7e9ee;
+    --text-muted: #9aa1b1;
+    --accent: #f5a524;
+    --accent-2: #4f8cff;
+    --get: #3fb950;
+    --put: #4f8cff;
+    --post: #d29922;
+    --delete: #f85149;
+    --code-bg: #0b0d12;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+  }
+  header {
+    padding: 28px 32px 20px;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: rgba(15, 17, 21, 0.95);
+    backdrop-filter: blur(6px);
+    z-index: 10;
+  }
+  header h1 { margin: 0 0 6px; font-size: 22px; }
+  header p { margin: 0; color: var(--text-muted); font-size: 13.5px; max-width: 800px; }
+  .badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: rgba(245, 165, 36, 0.15);
+    color: var(--accent);
+    border: 1px solid rgba(245, 165, 36, 0.35);
+    margin-left: 10px;
+    vertical-align: middle;
+  }
+  main { max-width: 1180px; margin: 0 auto; padding: 24px 32px 80px; }
+  .toc {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0 0 28px;
+    padding: 14px 16px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+  .toc a {
+    font-size: 12.5px;
+    color: var(--text-muted);
+    text-decoration: none;
+    padding: 4px 10px;
+    border-radius: 6px;
+    background: var(--panel-alt);
+    border: 1px solid var(--border);
+  }
+  .toc a:hover { color: var(--text); border-color: var(--accent-2); }
+  section.resource {
+    margin-bottom: 34px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .resource-head {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .resource-head h2 { margin: 0; font-size: 16.5px; }
+  .resource-head .store-name { font-family: 'SFMono-Regular', Consolas, Menlo, monospace; font-size: 12px; color: var(--text-muted); }
+  .resource-desc { padding: 0 20px 16px; color: var(--text-muted); font-size: 13px; margin: 0; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { text-align: left; padding: 10px 20px; vertical-align: top; font-size: 13px; border-top: 1px solid var(--border); }
+  th { background: var(--panel-alt); color: var(--text-muted); font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.04em; font-weight: 600; }
+  td.route-cell { white-space: nowrap; }
+  .method {
+    display: inline-block;
+    font-family: 'SFMono-Regular', Consolas, Menlo, monospace;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 5px;
+    margin-right: 6px;
+  }
+  .method.get { background: rgba(63, 185, 80, 0.15); color: var(--get); }
+  .method.put { background: rgba(79, 140, 255, 0.15); color: var(--put); }
+  .method.post { background: rgba(210, 153, 34, 0.15); color: var(--post); }
+  .method.delete { background: rgba(248, 81, 73, 0.15); color: var(--delete); }
+  .route { font-family: 'SFMono-Regular', Consolas, Menlo, monospace; font-size: 12.5px; }
+  code { font-family: 'SFMono-Regular', Consolas, Menlo, monospace; font-size: 12px; background: var(--code-bg); padding: 1px 5px; border-radius: 4px; color: #ffd479; }
+  ul.fields { margin: 0; padding-left: 16px; }
+  ul.fields li { margin-bottom: 3px; }
+  ul.fields code { color: #9ecbff; }
+  pre {
+    margin: 0;
+    padding: 10px 12px;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 11.5px;
+    max-width: 340px;
+    overflow-x: auto;
+    white-space: pre;
+  }
+  .params { font-size: 12.5px; color: var(--text-muted); }
+  .params code { color: #9ecbff; }
+  .note {
+    margin: 0 0 28px;
+    padding: 14px 18px;
+    background: rgba(79, 140, 255, 0.08);
+    border: 1px solid rgba(79, 140, 255, 0.25);
+    border-radius: 10px;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  .note strong { color: var(--text); }
+  footer { padding: 30px 32px; color: var(--text-muted); font-size: 12px; text-align: center; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Bill Hive — External API Reference <span class="badge">Dev only</span></h1>
+  <p>
+    This is the contract the app's gateway (<code>src/api/api.js</code>) calls when the
+    "Use external API" toggle in Settings is switched on. Implement each route below against
+    your own backend at the base URL set in <code>VITE_API_BASE_URL</code>. All request/response
+    bodies are JSON. This page is generated documentation — it is not wired to live data.
+  </p>
+</header>
+
+<main>
+
+  <div class="note">
+    <strong>How the gateway maps calls:</strong>
+    Most stores hold a single record keyed by <code>"value"</code> (mirroring the current
+    IndexedDB layer), so <code>GET /{store}</code> returns that one record/array and
+    <code>PUT /{store}/value</code> replaces it wholesale. <code>authTokens</code> is the
+    exception — it's keyed per-token. Every route below is prefixed with your configured base URL,
+    e.g. <code>http://localhost:4000/api</code>.
+  </div>
+
+  <div class="toc" id="toc"></div>
+
+  <!-- ================= GLOBAL / ACCOUNT-WIDE ================= -->
+
+  <section class="resource" id="company">
+    <div class="resource-head"><h2>Company Profile</h2><span class="store-name">store: company</span></div>
+    <p class="resource-desc">Business identity printed on every bill — name, GST, contact details, and logo.</p>
+    <table>
+      <thead><tr><th>API Route</th><th>Description</th><th>Fields</th><th>Filters / Params</th><th>JSON</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="route-cell"><span class="method get">GET</span><span class="route">/company</span></td>
+          <td>Fetch the company profile.</td>
+          <td><ul class="fields"><li><code>name</code> string</li><li><code>gst</code> string</li><li><code>address</code> string</li><li><code>phone</code> string</li><li><code>email</code> string</li><li><code>logo</code> string (base64 data URL)</li></ul></td>
+          <td class="params">none</td>
+          <td><pre>{
+  "name": "Acme Traders",
+  "gst": "22AAAAA0000A1Z5",
+  "address": "12 MG Road, Pune",
+  "phone": "9876543210",
+  "email": "hello@acme.com",
+  "logo": "data:image/png;base64,..."
+}</pre></td>
+        </tr>
+        <tr>
+          <td class="route-cell"><span class="method put">PUT</span><span class="route">/company/value</span></td>
+          <td>Replace the company profile.</td>
+          <td>Same as above (full object).</td>
+          <td class="params">none</td>
+          <td><pre>// request body — same shape as GET</pre></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="resource" id="settings">
+    <div class="resource-head"><h2>Settings</h2><span class="store-name">store: settings</span></div>
+    <p class="resource-desc">Invoice defaults, print layout, and appearance preferences.</p>
+    <table>
+      <thead><tr><th>API Route</th><th>Description</th><th>Fields</th><th>Filters / Params</th><th>JSON</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="route-cell"><span class="method get">GET</span><span class="route">/settings</span></td>
+          <td>Fetch app settings.</td>
+          <td><ul class="fields"><li><code>thankYouMessages</code> string</li><li><code>termsConditions</code> string</li><li><code>currencySymbol</code> string</li><li><code>screensaver</code> object <code>{enabled, seconds}</code></li><li><code>print</code> object (font, paper size, margins, section/column order, show flags)</li><li><code>dbConfig</code> object <code>{provider, apiUrl, apiKey}</code></li></ul></td>
+          <td class="params">none</td>
+          <td><pre>{
+  "thankYouMessages": "Thank you!\nVisit again",
+  "termsConditions": "Goods once sold...",
+  "currencySymbol": "₹",
+  "screensaver": { "enabled": false, "seconds": 30 },
+  "print": { "paperSize": "80mm", "fontSize": 12 }
+}</pre></td>
+        </tr>
+        <tr>
+          <td class="route-cell"><span class="method put">PUT</span><span class="route">/settings/value</span></td>
+          <td>Replace app settings.</td>
+          <td>Same as above (full object, merged client-side before send).</td>
+          <td class="params">none</td>
+          <td><pre>// request body — same shape as GET</pre></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="resource" id="account">
+    <div class="resource-head"><h2>Account</h2><span class="store-name">store: account</span></div>
+    <p class="resource-desc">The local device account. Superseded by JWT auth once that lands — see the Auth section below.</p>
+    <table>
+      <thead><tr><th>API Route</th><th>Description</th><th>Fields</th><th>Filters / Params</th><th>JSON</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="route-cell"><span class="method get">GET</span><span class="route">/account</span></td>
+          <td>Fetch the current account.</td>
+          <td><ul class="fields"><li><code>username</code> string</li><li><code>passwordHash</code> string</li><li><code>salt</code> string</li><li><code>name</code> string</li><li><code>email</code> string</li></ul></td>
+          <td class="params">none</td>
+          <td><pre>{
+  "username": "vivek",
+  "name": "Vivek G",
+  "email": "vivek@example.com"
+}</pre></td>
+        </tr>
+        <tr>
+          <td class="route-cell"><span class="method put">PUT</span><span class="route">/account/value</span></td>
+          <td>Create or update the account.</td>
+          <td>Same as above.</td>
+          <td class="params">none</td>
+          <td><pre>// request body — same shape as GET</pre></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="resource" id="theme">
+    <div class="resource-head"><h2>Theme</h2><span class="store-name">store: theme</span></div>
+    <p class="resource-desc">Light/dark preference.</p>
+    <table>
+      <thead><tr><th>API Route</th><th>Description</th><th>Fields</th><th>Filters / Params</th><th>JSON</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="route-cell"><span class="method get">GET</span><span class="route">/theme</span></td>
+          <td>Fetch current theme.</td>
+          <td><code>value</code>: <code>"light"</code> | <code>"dark"</code></td>
+          <td class="params">none</td>
+          <td><pre>{ "value": "dark" }</pre></td>
+        </tr>
+        <tr>
+          <td class="route-cell"><span class="method put">PUT</span><span class="route">/theme/value</span></td>
+          <td>Set the theme.</td>
+          <td>Same as above.</td>
+          <td class="params">none</td>
+          <td><pre>{ "value": "light" }</pre></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ================= COLLECTIONS ================= -->
+
+  <section class="resource" id="items">
+    <div class="resource-head"><h2>Items</h2><span class="store-name">store: items</span></div>
+    <p class="resource-desc">Catalogue of sellable items.</p>
+    <table>
+      <thead><tr><th>API Route</th><th>Description</th><th>Fields</th><th>Filters / Params</th><th>JSON</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="route-cell"><span class="method get">GET</span><span class="route">/items</span></td>
+          <td>List all items.</td>
+          <td><ul class="fields"><li><code>id</code> string/number</li><li><code>name</code> string</li><li><code>sku</code> string</li><li><code>ean</code> string</li><li><code>itemNumber</code> string</li><li><code>brand</code> string</li><li><code>cost</code> number</li><li><code>price</code> number</li><li><code>discount</code> number</li><li><code>tax</code> number</li><li><code>stock</code> number</li><li><code>trackStock</code> boolean</li></ul></td>
+          <td class="params"><code>?search=</code> name/sku match<br><code>?brand=</code><br><code>?lowStock=true</code></td>
+          <td><pre>[
+  {
+    "id": 1,
+    "name": "Cotton T-Shirt",
+    "sku": "SKU-001",
+    "brand": "Acme",
+    "cost": 120,
+    "price": 199,
+    "discount": 0,
+    "tax": 5,
+    "stock": 40,
+    "trackStock": true
+  }
+]</pre></td>
+        </tr>
+        <tr>
+          <td class="route-cell"><span class="method put">PUT</span><span class="route">/items/value</span></td>
+          <td>Replace the full items array (create/update/delete all handled client-side, then synced).</td>
+          <td>Array of item objects (shape above).</td>
+          <td class="params">none</td>
+          <td><pre>// request body — array, same shape as GET</pre></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="resource" id="brands">
+    <div class="resource-head"><h2>Brands</h2><span class="store-name">store: brands</span></div>
+    <p class="resource-desc">Brands used to group items.</p>
+    <table>
+      <thead><tr><th>API Route</th><th>Description</th><th>Fields</th><th>Filters / Params</th><th>JSON</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="route-cell"><span class="method get">GET</span><span class="route">/brands</span></td>
+          <td>List all brands.</td>
+          <td><ul class="fields"><li><code>id</code></li><li><code>name</code> string</li><li><code>description</code> string</li><li><code>color</code> string (hex)</li><li><code>logo</code> string (base64)</li></ul></td>
+          <td class="params"><code>?search=</code></td>
+          <td><pre>[
+  {
+    "id": 1,
+    "name": "Acme",
+    "description": "In-house label",
+    "color": "#4f8cff",
+    "logo": ""
+  }
+]</pre></td>
+        </tr>
+        <tr>
+          <td class="route-cell"><span class="method put">PUT</span><span class="route">/brands/value</span></td>
+          <td>Replace the full brands array.</td>
+          <td>Array of brand objects.</td>
+          <td class="params">none</td>
+          <td><pre>// request body — array, same shape as GET</pre></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="resource" id="bills">
+    <div class="resource-head"><h2>Bills</h2><span class="store-name">store: bills</span></div>
+    <p class="resource-desc">Saved invoices created in Create Bill.</p>
+    <table>
+      <thead><tr><th>API Route</th><th>Description</th><th>Fields</th><th>Filters / Params</th><th>JSON</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="route-cell"><span class="method get">GET</span><span class="route">/bills</span></td>
+          <td>List all saved bills.</td>
+          <td><ul class="fields"><li><code>invoiceNo</code> string</li><li><code>invoiceDate</code>, <code>dueDate</code> date</li><li><code>customerName</code>, <code>customerContact</code>, <code>customerId</code>, <code>deliveryAddress</code></li><li><code>lineItems</code> array <code>{name, qty, price, discount, tax, total}</code></li><li><code>billAmount</code>, <code>discountAmount</code>, <code>taxAmount</code>, <code>grandTotal</code>, <code>dueAmount</code> numbers</li><li><code>paymentMode</code> string</li></ul></td>
+          <td class="params"><code>?customerId=</code><br><code>?from=&to=</code> date range<br><code>?invoiceNo=</code></td>
+          <td><pre>[
+  {
+    "invoiceNo": "260701",
+    "invoiceDate": "2026-07-01",
+    "customerName": "John Doe",
+    "lineItems": [
+      { "name": "Item A", "qty": 2, "price": 150, "discount": 10, "tax": 5, "total": 283.5 }
+    ],
+    "billAmount": 300,
+    "discountAmount": 10,
+    "taxAmount": 14.5,
+    "grandTotal": 304.5,
+    "paymentMode": "cash"
+  }
+]</pre></td>
+        </tr>
+        <tr>
+          <td class="route-cell"><span class="method put">PUT</span><span class="route">/bills/value</span></td>
+          <td>Replace the full bills array.</td>
+          <td>Array of bill objects.</td>
+          <td class="params">none</td>
+          <td><pre>// request body — array, same shape as GET</pre></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="resource" id="stockLog">
+    <div class="resource-head"><h2>Stock Log</h2><span class="store-name">store: stockLog</span></div>
+    <p class="resource-desc">Audit trail of stock movements, most recent first.</p>
+    <table>
+      <thead><tr><th>API Route</th><th>Description</th><th>Fields</th><th>Filters / Params</th><th>JSON</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="route-cell"><span class="method get">GET</span><span class="route">/stockLog</span></td>
+          <td>List stock movement entries.</td>
+          <td><ul class="fields"><li><code>id</code></li><li><code>date</code> ISO string</li><li><code>itemId</code>, <code>itemName</code></li><li><code>type</code> string (e.g. "Purchase Received", "Sale", "Adjustment")</li><li><code>qty</code> number</li><li><code>reference</code> string</li></ul></td>
+          <td class="params"><code>?itemId=</code><br><code>?type=</code><br><code>?from=&to=</code></td>
+          <td><pre>[
+  {
+    "id": 173234,
+    "date": "2026-07-20T10:15:00Z",
+    "itemId": 1,
+    "itemName": "Cotton T-Shirt",
+    "type": "Purchase Received",
+    "qty": 50,
+    "reference": "PO-0004"
+  }
+]</pre></td>
+        </tr>
+        <tr>
+          <td class="route-cell"><span class="method put">PUT</span><span class="route">/stockLog/value</span></td>
+          <td>Replace the full stock log array.</td>
+          <td>Array of log entries.</td>
+          <td class="params">none</td>
+          <td><pre>// request body — array, same shape as GET</pre></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="resource" id="returns">
+    <div class="resource-head"><h2>Sales Returns</h2><span class="store-name">store: returns</span></div>
+    <p class="resource-desc">Records of returned/refunded sale items.</p>
+    <table>
+      <thead><tr><th>API Route</th><th>Description</th><th>Fields</th><th>Filters / Params</th><th>JSON</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="route-cell"><span class="method get">GET</span><span class="route">/returns</span></td>
+          <td>List sales returns.</td>
+          <td><ul class="fields"><li><code>id</code></li><li><code>invoiceNo</code> (original bill)</li><li><code>items</code> array <code>{itemId, name, qty, refundPerUnit}</code></li><li><code>refundAmount</code> number</li><li><code>reason</code> string</li><li><code>damagedStock</code> boolean</li><li><code>date</code> ISO string</li></ul></td>
+          <td class="params"><code>?invoiceNo=</code><br><code>?from=&to=</code></td>
+          <td><pre>[
+  {
+    "id": 501,
+    "invoiceNo": "260701",
+    "refundAmount": 199,
+    "reason": "Wrong size",
+    "damagedStock": false,
+    "date": "2026-07-22T09:00:00Z"
+  }
+]</pre></td>
+        </tr>
+        <tr>
+          <td class="route-cell"><span class="method put">PUT</span><span class="route">/returns/value</span></td>
+          <td>Replace the full returns array.</td>
+          <td>Array of return objects.</td>
+          <td class="params">none</td>
+          <td><pre>// request body — array, same shape as GET</pre></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="resource" id="suppliers">
+    <div class="resource-head"><h2>Suppliers</h2><span class="store-name">store: suppliers</span></div>
+    <p class="resource-desc">Vendors items are purchased from.</p>
+    <table>
+      <thead><tr><th>API Route</th><th>Description</th><th>Fields</th><th>Filters / Params</th><th>JSON</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="route-cell"><span class="method get">GET</span><span class="route">/suppliers</span></td>
+          <td>List all suppliers.</td>
+          <td><ul class="fields"><li><code>id</code></li><li><code>name</code></li><li><code>contactPerson</code></li><li><code>phone</code>, <code>email</code>, <code>address</code></li><li><code>itemsSupplied</code> string</li><li><code>notes</code> string</li><li><code>itemIds</code> array</li></ul></td>
+          <td class="params"><code>?search=</code></td>
+          <td><pre>[
+  {
+    "id": 1,
+    "name": "Metro Wholesale",
+    "contactPerson": "Raj",
+    "phone": "9988776655",
+    "itemsSupplied": "T-Shirts, Jeans",
+    "itemIds": [1, 4]
+  }
+]</pre></td>
+        </tr>
+        <tr>
+          <td class="route-cell"><span class="method put">PUT</span><span class="route">/suppliers/value</span></td>
+          <td>Replace the full suppliers array.</td>
+          <td>Array of supplier objects.</td>
+          <td class="params">none</td>
+          <td><pre>// request body — array, same shape as GET</pre></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="resource" id="purchaseOrders">
+    <div class="resource-head"><h2>Purchase Orders</h2><span class="store-name">store: purchaseOrders</span></div>
+    <p class="resource-desc">Orders raised against suppliers for restocking.</p>
+    <table>
+      <thead><tr><th>API Route</th><th>Description</th><th>Fields</th><th>Filters / Params</th><th>JSON</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="route-cell"><span class="method get">GET</span><span class="route">/purchaseOrders</span></td>
+          <td>List purchase orders.</td>
+          <td><ul class="fields"><li><code>id</code></li><li><code>poNumber</code> string</li><li><code>supplierId</code>, <code>supplierName</code></li><li><code>date</code> ISO string</li><li><code>items</code> array <code>{itemId, name, qty}</code></li><li><code>status</code> string ("Pending" | "Received" | ...)</li></ul></td>
+          <td class="params"><code>?supplierId=</code><br><code>?status=</code></td>
+          <td><pre>[
+  {
+    "id": 4,
+    "poNumber": "PO-0004",
+    "supplierId": 1,
+    "supplierName": "Metro Wholesale",
+    "date": "2026-07-18T00:00:00Z",
+    "items": [{ "itemId": 1, "name": "Cotton T-Shirt", "qty": 50 }],
+    "status": "Pending"
+  }
+]</pre></td>
+        </tr>
+        <tr>
+          <td class="route-cell"><span class="method put">PUT</span><span class="route">/purchaseOrders/value</span></td>
+          <td>Replace the full purchase orders array.</td>
+          <td>Array of PO objects.</td>
+          <td class="params">none</td>
+          <td><pre>// request body — array, same shape as GET</pre></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="resource" id="customers">
+    <div class="resource-head"><h2>Customers</h2><span class="store-name">store: customers</span></div>
+    <p class="resource-desc">Customer directory used in Create Bill and Customers page.</p>
+    <table>
+      <thead><tr><th>API Route</th><th>Description</th><th>Fields</th><th>Filters / Params</th><th>JSON</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="route-cell"><span class="method get">GET</span><span class="route">/customers</span></td>
+          <td>List all customers.</td>
+          <td><ul class="fields"><li><code>id</code></li><li><code>name</code></li><li><code>phone</code></li><li><code>email</code></li><li><code>address</code></li><li><code>notes</code></li></ul></td>
+          <td class="params"><code>?search=</code> name/phone match</td>
+          <td><pre>[
+  {
+    "id": 1,
+    "name": "John Doe",
+    "phone": "9876543210",
+    "email": "john@example.com",
+    "address": "",
+    "notes": ""
+  }
+]</pre></td>
+        </tr>
+        <tr>
+          <td class="route-cell"><span class="method put">PUT</span><span class="route">/customers/value</span></td>
+          <td>Replace the full customers array.</td>
+          <td>Array of customer objects.</td>
+          <td class="params">none</td>
+          <td><pre>// request body — array, same shape as GET</pre></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="resource" id="invoiceMeta">
+    <div class="resource-head"><h2>Invoice Meta</h2><span class="store-name">store: invoiceMeta</span></div>
+    <p class="resource-desc">Running per-month counters used to generate sequential invoice numbers.</p>
+    <table>
+      <thead><tr><th>API Route</th><th>Description</th><th>Fields</th><th>Filters / Params</th><th>JSON</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="route-cell"><span class="method get">GET</span><span class="route">/invoiceMeta</span></td>
+          <td>Fetch the counter map.</td>
+          <td>Map of <code>"yymm"</code> → count, e.g. <code>"2607": 12</code></td>
+          <td class="params">none</td>
+          <td><pre>{ "2607": 12, "2606": 48 }</pre></td>
+        </tr>
+        <tr>
+          <td class="route-cell"><span class="method put">PUT</span><span class="route">/invoiceMeta/value</span></td>
+          <td>Replace the counter map.</td>
+          <td>Same as above.</td>
+          <td class="params">none</td>
+          <td><pre>// request body — same shape as GET</pre></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ================= WHOLE-DB OPERATIONS ================= -->
+
+  <section class="resource" id="bulk">
+    <div class="resource-head"><h2>Backup &amp; Reset</h2><span class="store-name">whole-database</span></div>
+    <p class="resource-desc">Used by Settings → Export/Import/Erase.</p>
+    <table>
+      <thead><tr><th>API Route</th><th>Description</th><th>Fields</th><th>Filters / Params</th><th>JSON</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="route-cell"><span class="method get">GET</span><span class="route">/export</span></td>
+          <td>Dump every store except <code>account</code> and <code>authTokens</code> (secrets are never exported).</td>
+          <td>One key per store name, plus <code>_exportedAt</code>.</td>
+          <td class="params">none</td>
+          <td><pre>{
+  "company": {...},
+  "items": [...],
+  "bills": [...],
+  "_exportedAt": "2026-07-27T10:00:00Z"
+}</pre></td>
+        </tr>
+        <tr>
+          <td class="route-cell"><span class="method post">POST</span><span class="route">/import</span></td>
+          <td>Restore data from a previously exported dump. Unknown keys are ignored.</td>
+          <td>Same shape as <code>/export</code> response.</td>
+          <td class="params">none</td>
+          <td><pre>// request body — same shape as /export</pre></td>
+        </tr>
+        <tr>
+          <td class="route-cell"><span class="method post">POST</span><span class="route">/clear-all</span></td>
+          <td>Erase every store for the current account. Irreversible.</td>
+          <td>none</td>
+          <td class="params">none</td>
+          <td><pre>{}</pre></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ================= FUTURE: AUTH / NOTIFICATIONS / MAIL ================= -->
+
+  <section class="resource" id="auth">
+    <div class="resource-head"><h2>Auth (planned — JWT)</h2><span class="store-name">gateway: auth.*</span></div>
+    <p class="resource-desc">Not implemented yet. Will replace the local cookie/IndexedDB token scheme once wired up in <code>src/api/api.js</code>.</p>
+    <table>
+      <thead><tr><th>API Route</th><th>Description</th><th>Fields</th><th>Filters / Params</th><th>JSON</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="route-cell"><span class="method post">POST</span><span class="route">/auth/login</span></td>
+          <td>Exchange credentials for a JWT.</td>
+          <td>Request: <code>username</code>, <code>password</code>. Response: <code>token</code>, <code>expiresAt</code>, <code>user</code>.</td>
+          <td class="params">none</td>
+          <td><pre>{
+  "token": "eyJhbGciOi...",
+  "expiresAt": "2026-08-03T00:00:00Z",
+  "user": { "username": "vivek", "name": "Vivek G" }
+}</pre></td>
+        </tr>
+        <tr>
+          <td class="route-cell"><span class="method post">POST</span><span class="route">/auth/register</span></td>
+          <td>Create a new account.</td>
+          <td>Request: <code>username</code>, <code>password</code>, <code>name</code>, <code>email</code>. Response: same as login.</td>
+          <td class="params">none</td>
+          <td><pre>// response — same shape as /auth/login</pre></td>
+        </tr>
+        <tr>
+          <td class="route-cell"><span class="method post">POST</span><span class="route">/auth/logout</span></td>
+          <td>Invalidate the current token.</td>
+          <td>none</td>
+          <td class="params">Header: <code>Authorization: Bearer &lt;token&gt;</code></td>
+          <td><pre>{}</pre></td>
+        </tr>
+        <tr>
+          <td class="route-cell"><span class="method get">GET</span><span class="route">/auth/verify</span></td>
+          <td>Check whether a token is still valid.</td>
+          <td>Response: <code>valid</code> boolean, <code>user</code>.</td>
+          <td class="params">Header: <code>Authorization: Bearer &lt;token&gt;</code></td>
+          <td><pre>{ "valid": true, "user": { "username": "vivek" } }</pre></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="resource" id="notifications">
+    <div class="resource-head"><h2>Notifications (planned)</h2><span class="store-name">gateway: notifications.*</span></div>
+    <p class="resource-desc">Not implemented yet.</p>
+    <table>
+      <thead><tr><th>API Route</th><th>Description</th><th>Fields</th><th>Filters / Params</th><th>JSON</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="route-cell"><span class="method post">POST</span><span class="route">/notifications</span></td>
+          <td>Send/queue a notification (e.g. low stock, PO received).</td>
+          <td><code>type</code>, <code>title</code>, <code>message</code>, <code>data</code> (object)</td>
+          <td class="params">none</td>
+          <td><pre>{
+  "type": "low_stock",
+  "title": "Low stock",
+  "message": "Cotton T-Shirt is below threshold",
+  "data": { "itemId": 1 }
+}</pre></td>
+        </tr>
+        <tr>
+          <td class="route-cell"><span class="method get">GET</span><span class="route">/notifications</span></td>
+          <td>List notifications for the current account.</td>
+          <td>Array of notification objects (shape above, plus <code>id</code>, <code>read</code>, <code>createdAt</code>).</td>
+          <td class="params"><code>?unreadOnly=true</code></td>
+          <td><pre>[
+  { "id": 1, "type": "low_stock", "read": false, "createdAt": "2026-07-27T09:00:00Z" }
+]</pre></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="resource" id="mail">
+    <div class="resource-head"><h2>Mail / SMTP (planned)</h2><span class="store-name">gateway: mail.*</span></div>
+    <p class="resource-desc">Not implemented yet.</p>
+    <table>
+      <thead><tr><th>API Route</th><th>Description</th><th>Fields</th><th>Filters / Params</th><th>JSON</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="route-cell"><span class="method post">POST</span><span class="route">/mail/send</span></td>
+          <td>Send an email (e.g. invoice PDF to a customer) through the server's SMTP config.</td>
+          <td><code>to</code>, <code>subject</code>, <code>body</code>, <code>attachments</code> (optional array)</td>
+          <td class="params">none</td>
+          <td><pre>{
+  "to": "customer@example.com",
+  "subject": "Your invoice 260701",
+  "body": "Thanks for your purchase...",
+  "attachments": []
+}</pre></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+</main>
+
+<footer>
+  Bill Hive — generated API reference. Regenerate this file whenever a store's shape changes in <code>src/db/indexedDB.js</code>.
+</footer>
+
+<script>
+  // Build the table-of-contents from the resource sections present on the page.
+  var toc = document.getElementById('toc');
+  document.querySelectorAll('section.resource').forEach(function (sec) {
+    var title = sec.querySelector('h2').textContent;
+    var a = document.createElement('a');
+    a.href = '#' + sec.id;
+    a.textContent = title;
+    toc.appendChild(a);
+  });
+</script>
+
+</body>
+</html>

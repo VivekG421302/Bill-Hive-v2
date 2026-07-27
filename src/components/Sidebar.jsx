@@ -4,6 +4,7 @@ import BrandIcon from './BrandIcon';
 import { useTheme } from '../context/ThemeContext';
 import { usePWAInstall } from '../hooks/usePWAInstall';
 import { useToast } from '../context/ToastContext';
+import { isExternalMode, API_MODE_CHANGE_EVENT } from '../api/api';
 
 /* Each entry is either a real route ({ to, label, icon }) or a not-yet-built
    page from v1 ({ label, icon, comingSoon: true }). Sections are separated
@@ -38,6 +39,17 @@ export default function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onClo
   const { theme, toggleTheme } = useTheme();
   const { canInstall, promptInstall } = usePWAInstall();
   const { showToast } = useToast();
+  const [externalMode, setExternalMode] = useState(() => isExternalMode());
+
+  useEffect(() => {
+    const sync = () => setExternalMode(isExternalMode());
+    window.addEventListener(API_MODE_CHANGE_EVENT, sync);
+    window.addEventListener('storage', sync);
+    return () => {
+      window.removeEventListener(API_MODE_CHANGE_EVENT, sync);
+      window.removeEventListener('storage', sync);
+    };
+  }, []);
 
   const navRef = useRef(null);
   const [canScrollUp, setCanScrollUp] = useState(false);
@@ -131,6 +143,18 @@ export default function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onClo
                     </NavLink>
                   )
                 )}
+                {sectionIdx === NAV_SECTIONS.length - 1 && externalMode && (
+                  <a
+                    href="/api-docs.html"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="sidebar-link"
+                    title="API Docs — external data reference"
+                  >
+                    <IconApiDocs />
+                    <span className="sidebar-link-label">API Docs</span>
+                  </a>
+                )}
               </div>
             ))}
           </nav>
@@ -198,6 +222,9 @@ function IconChevrons({ collapsed }) {
 function IconChevronUpDown({ dir }) {
   const d = dir === 'up' ? 'M6 15l6-6 6 6' : 'M6 9l6 6 6-6';
   return (<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d={d} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>);
+}
+function IconApiDocs() {
+  return (<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/><polyline points="14 2 14 8 20 8" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/><path d="M9 13l-1.5 1.5L9 16M13 13l1.5 1.5L13 16" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>);
 }
 
 /* --- Icons for v1 pages not yet ported (used for "Coming soon" nav items) --- */
