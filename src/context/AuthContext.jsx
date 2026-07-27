@@ -5,6 +5,21 @@ import { TOKEN_COOKIE, TOKEN_TTL_MS, randomSalt, hashPassword, generateToken } f
 
 const AuthContext = createContext(null);
 
+// Login was previously force-disabled during early development. It's back
+// on now — see DEV_MASTER_PASSWORD below for the dev-only convenience login.
+export const LOGIN_DISABLED = false;
+
+// Dev-only master password (never present in a production build — the
+// `if (import.meta.env.DEV)` check around every use of this is eliminated
+// by Vite/esbuild's dead-code elimination at build time, so this string and
+// the branch that checks it are simply not in the shipped bundle).
+//
+// Lets you log in as whatever local account already exists on this device
+// without knowing its real password — for development/testing only. It
+// does NOT create an account and does NOT work if there's no account yet;
+// it's a bypass of the password check, not a way to skip having one.
+const DEV_MASTER_PASSWORD = 'gimic';
+
 export function AuthProvider({ children }) {
   const [ready, setReady] = useState(false);
   const [hasAccount, setHasAccount] = useState(false);
@@ -13,6 +28,17 @@ export function AuthProvider({ children }) {
   const bootstrap = useCallback(async () => {
     const account = await apiGet('account');
     setHasAccount(!!account);
+
+    if (LOGIN_DISABLED) {
+      // Skip the token/cookie check entirely and go straight in. Use the
+      // saved account for the display name if one exists, otherwise a
+      // generic guest identity.
+      setUser(account
+        ? { username: account.username, name: account.name, email: account.email }
+        : { username: 'guest', name: 'Guest', email: '' });
+      setReady(true);
+      return;
+    }
 
     const cookieToken = Cookies.get(TOKEN_COOKIE);
     if (cookieToken && account) {
@@ -44,13 +70,25 @@ export function AuthProvider({ children }) {
 
   const login = useCallback(async ({ username, password }) => {
     const account = await apiGet('account');
-    if (!account || account.username.toLowerCase() !== username.toLowerCase()) {
+    if (!account) {
       throw new Error('Invalid username or password.');
     }
-    const candidateHash = await hashPassword(password, account.salt);
-    if (candidateHash !== account.passwordHash) {
-      throw new Error('Invalid username or password.');
+
+    const isDevMasterLogin = import.meta.env.DEV && password === DEV_MASTER_PASSWORD;
+
+    if (!isDevMasterLogin) {
+      if (account.username.toLowerCase() !== username.toLowerCase()) {
+        throw new Error('Invalid username or password.');
+      }
+      const candidateHash = await hashPassword(password, account.salt);
+      if (candidateHash !== account.passwordHash) {
+        throw new Error('Invalid username or password.');
+      }
     }
+    // isDevMasterLogin: skips the username match and password hash check
+    // above entirely — logs in as the account that exists on this device,
+    // whatever username/password was typed.
+
     const token = generateToken();
     const expiresAt = Date.now() + TOKEN_TTL_MS;
     await apiSet('authTokens', { token, expiresAt }, token);
