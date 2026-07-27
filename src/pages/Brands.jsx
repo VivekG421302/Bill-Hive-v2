@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { dbGet, dbSet } from '../db/indexedDB';
+import { apiGet, apiSet } from '../api/api';
 import { useToast } from '../context/ToastContext';
 import { useTheme } from '../context/ThemeContext';
 import Modal from '../components/Modal';
@@ -37,7 +37,7 @@ export default function Brands() {
   const touchXRef = useRef(0);
 
   useEffect(() => {
-    dbGet('brands').then((data) => {
+    apiGet('brands').then((data) => {
       setBrands(Array.isArray(data) ? data : []);
       setLoaded(true);
     });
@@ -50,7 +50,7 @@ export default function Brands() {
   }, [brands, search]);
 
   const refreshBrands = async () => {
-    const data = await dbGet('brands');
+    const data = await apiGet('brands');
     setBrands(Array.isArray(data) ? data : []);
   };
 
@@ -75,7 +75,7 @@ export default function Brands() {
     setDeleteId(null);
     const next = brands.filter((b) => b.id !== id);
     setBrands(next);
-    await dbSet('brands', next);
+    await apiSet('brands', next);
     if (detailBrand?.id === id) setDetailBrand(null);
     showToast('Brand deleted');
   };
@@ -83,7 +83,7 @@ export default function Brands() {
   // ---------- Ecom-style brand detail page ----------
   const ensureItems = async () => {
     if (items === null) {
-      const data = await dbGet('items');
+      const data = await apiGet('items');
       setItems(Array.isArray(data) ? data : []);
       return Array.isArray(data) ? data : [];
     }

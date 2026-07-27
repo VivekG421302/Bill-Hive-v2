@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { dbGet, dbSet } from '../db/indexedDB';
+import { apiGet, apiSet } from '../api/api';
 import { useToast } from '../context/ToastContext';
 import Modal from '../components/Modal';
 import ConfirmDialog from '../components/ConfirmDialog';
@@ -45,7 +45,7 @@ export default function PastBills() {
   const [deleteId, setDeleteId] = useState(null);
 
   useEffect(() => {
-    Promise.all([dbGet('bills'), dbGet('settings')]).then(([b, s]) => {
+    Promise.all([apiGet('bills'), apiGet('settings')]).then(([b, s]) => {
       setBills(Array.isArray(b) ? b : []);
       if (s) setSettings((prev) => ({ ...prev, ...s }));
       setLoaded(true);
@@ -109,7 +109,7 @@ export default function PastBills() {
     setDeleteId(null);
     const next = bills.filter((b) => b.id !== id);
     setBills(next);
-    await dbSet('bills', next);
+    await apiSet('bills', next);
     if (detailBill?.id === id) setDetailBill(null);
     showToast('Bill deleted');
   };

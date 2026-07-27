@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import BrandIcon from './BrandIcon';
-import { dbGet } from '../db/indexedDB';
+import { apiGet } from '../api/api';
 
 export default function ScreenSaver() {
   const [config, setConfig] = useState({ enabled: false, seconds: 30 });
@@ -8,7 +8,7 @@ export default function ScreenSaver() {
   const timerRef = useRef(null);
 
   useEffect(() => {
-    const load = () => dbGet('settings').then((s) => {
+    const load = () => apiGet('settings').then((s) => {
       setConfig(s?.screensaver || { enabled: false, seconds: 30 });
     });
     load();

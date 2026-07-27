@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { dbGet, dbSet } from '../db/indexedDB';
+import { apiGet, apiSet } from '../api/api';
 import { useToast } from '../context/ToastContext';
 import Modal from '../components/Modal';
 import ConfirmDialog from '../components/ConfirmDialog';
@@ -49,7 +49,7 @@ export default function Items() {
   const touchXRef = useRef(0);
 
   useEffect(() => {
-    Promise.all([dbGet('items'), dbGet('brands')]).then(([it, br]) => {
+    Promise.all([apiGet('items'), apiGet('brands')]).then(([it, br]) => {
       setItems(Array.isArray(it) ? it : []);
       setBrands(Array.isArray(br) ? br : []);
       setLoaded(true);
@@ -57,7 +57,7 @@ export default function Items() {
   }, []);
 
   const refreshBrands = async () => {
-    const data = await dbGet('brands');
+    const data = await apiGet('brands');
     setBrands(Array.isArray(data) ? data : []);
   };
 
@@ -69,7 +69,7 @@ export default function Items() {
 
   const persist = async (next) => {
     setItems(next);
-    await dbSet('items', next);
+    await apiSet('items', next);
   };
 
   // ---------- Add / edit modal ----------

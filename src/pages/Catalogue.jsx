@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { dbGet } from '../db/indexedDB';
+import { apiGet } from '../api/api';
 import { useToast } from '../context/ToastContext';
 import Modal from '../components/Modal';
 import ImageZoomLightbox from '../components/ImageZoomLightbox';
@@ -31,7 +31,7 @@ export default function Catalogue() {
   const touchXRef = useRef(0);
 
   useEffect(() => {
-    Promise.all([dbGet('items'), dbGet('brands'), dbGet('company'), dbGet('settings')]).then(([it, br, co, se]) => {
+    Promise.all([apiGet('items'), apiGet('brands'), apiGet('company'), apiGet('settings')]).then(([it, br, co, se]) => {
       setItems(Array.isArray(it) ? it : []);
       setBrands(Array.isArray(br) ? br : []);
       setCompany(co || {});

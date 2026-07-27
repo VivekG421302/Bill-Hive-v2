@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { dbGet, dbSet } from '../db/indexedDB';
+import { apiGet, apiSet } from '../api/api';
 import { useToast } from '../context/ToastContext';
 import Modal from '../components/Modal';
 import ConfirmDialog from '../components/ConfirmDialog';
@@ -28,7 +28,7 @@ export default function Fulfillment() {
   const [receiveConfirmId, setReceiveConfirmId] = useState(null);
 
   useEffect(() => {
-    Promise.all([dbGet('items'), dbGet('suppliers'), dbGet('purchaseOrders')]).then(([it, sup, po]) => {
+    Promise.all([apiGet('items'), apiGet('suppliers'), apiGet('purchaseOrders')]).then(([it, sup, po]) => {
       setCatalogItems(Array.isArray(it) ? it : []);
       setSuppliers(Array.isArray(sup) ? sup : []);
       setPurchaseOrders(Array.isArray(po) ? po : []);
@@ -92,7 +92,7 @@ export default function Fulfillment() {
 
     const next = [po, ...purchaseOrders];
     setPurchaseOrders(next);
-    await dbSet('purchaseOrders', next);
+    await apiSet('purchaseOrders', next);
     setRestockChecked({});
     showToast(`Purchase order ${po.poNumber} created`);
   };
@@ -100,7 +100,7 @@ export default function Fulfillment() {
   const updatePOStatus = async (id, status, extra = {}) => {
     const next = purchaseOrders.map((p) => (p.id === id ? { ...p, status, ...extra } : p));
     setPurchaseOrders(next);
-    await dbSet('purchaseOrders', next);
+    await apiSet('purchaseOrders', next);
     if (detailPO?.id === id) setDetailPO({ ...detailPO, status, ...extra });
   };
 
@@ -126,10 +126,10 @@ export default function Fulfillment() {
     });
 
     setCatalogItems(nextItems);
-    await dbSet('items', nextItems);
+    await apiSet('items', nextItems);
     if (logEntries.length > 0) {
-      const stockLog = (await dbGet('stockLog')) || [];
-      await dbSet('stockLog', [...logEntries, ...stockLog].slice(0, 200));
+      const stockLog = (await apiGet('stockLog')) || [];
+      await apiSet('stockLog', [...logEntries, ...stockLog].slice(0, 200));
     }
     await updatePOStatus(id, 'Received');
     showToast(`${po.poNumber} received — stock updated`);
@@ -141,7 +141,7 @@ export default function Fulfillment() {
     setDeleteId(null);
     const next = purchaseOrders.filter((p) => p.id !== id);
     setPurchaseOrders(next);
-    await dbSet('purchaseOrders', next);
+    await apiSet('purchaseOrders', next);
     if (detailPO?.id === id) setDetailPO(null);
     showToast('Purchase order deleted');
   };

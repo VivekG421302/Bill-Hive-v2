@@ -87,6 +87,14 @@ async function externalRequest(path, { method = 'GET', body } = {}) {
   return res.json().catch(() => null);
 }
 
+// Almost every store holds one record under the fixed key 'value' (see
+// src/db/indexedDB.js), so the common case is a clean /{store} route with no
+// key in the path. Only non-default keys (e.g. authTokens, keyed per-token)
+// get appended: /{store}/{key}.
+function storePath(store, key) {
+  return key === 'value' ? `/${store}` : `/${store}/${encodeURIComponent(key)}`;
+}
+
 // =========================================================================
 // Data gateway
 // =========================================================================
@@ -96,25 +104,25 @@ async function externalRequest(path, { method = 'GET', body } = {}) {
 
 export async function apiGet(store, key = 'value') {
   return isExternalMode()
-    ? externalRequest(`/${store}/${encodeURIComponent(key)}`)
+    ? externalRequest(storePath(store, key))
     : db.dbGet(store, key);
 }
 
 export async function apiGetAll(store) {
   return isExternalMode()
-    ? externalRequest(`/${store}`)
+    ? externalRequest(`/${store}/_all`)
     : db.dbGetAll(store);
 }
 
 export async function apiSet(store, value, key = 'value') {
   return isExternalMode()
-    ? externalRequest(`/${store}/${encodeURIComponent(key)}`, { method: 'PUT', body: value })
+    ? externalRequest(storePath(store, key), { method: 'PUT', body: value })
     : db.dbSet(store, value, key);
 }
 
 export async function apiRemove(store, key = 'value') {
   return isExternalMode()
-    ? externalRequest(`/${store}/${encodeURIComponent(key)}`, { method: 'DELETE' })
+    ? externalRequest(storePath(store, key), { method: 'DELETE' })
     : db.dbRemove(store, key);
 }
 

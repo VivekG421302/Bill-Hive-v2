@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { dbGet } from '../db/indexedDB';
+import { apiGet } from '../api/api';
 
 const currency = (n, symbol = '₹') => `${symbol}${(parseFloat(n) || 0).toFixed(2)}`;
 const formatDate = (d) => new Date(d).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
@@ -23,7 +23,7 @@ export default function Dashboard() {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    Promise.all([dbGet('bills'), dbGet('items'), dbGet('settings')]).then(([b, it, se]) => {
+    Promise.all([apiGet('bills'), apiGet('items'), apiGet('settings')]).then(([b, it, se]) => {
       setBills(Array.isArray(b) ? b : []);
       setItems(Array.isArray(it) ? it : []);
       if (se) setSettings((prev) => ({ ...prev, ...se }));

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { dbGet, dbSet } from '../db/indexedDB';
+import { apiGet, apiSet } from '../api/api';
 import { useToast } from '../context/ToastContext';
 import Modal from '../components/Modal';
 import ImageZoomLightbox from '../components/ImageZoomLightbox';
@@ -41,7 +41,7 @@ export default function Stock() {
   const touchXRef = useRef(0);
 
   useEffect(() => {
-    Promise.all([dbGet('items'), dbGet('stockLog')]).then(([it, log]) => {
+    Promise.all([apiGet('items'), apiGet('stockLog')]).then(([it, log]) => {
       setItems(Array.isArray(it) ? it : []);
       setStockLog(Array.isArray(log) ? log : []);
       setLoaded(true);
@@ -75,7 +75,7 @@ export default function Stock() {
     if (adjustNoInventory) {
       const nextLog = logMovement(stockLog, item.id, item.name, 'Damaged (not added to inventory)', -Math.abs(qty), note || 'Damaged stock');
       setStockLog(nextLog);
-      await dbSet('stockLog', nextLog);
+      await apiSet('stockLog', nextLog);
       closeAdjust();
       showToast('Damaged stock logged');
       return;
@@ -98,8 +98,8 @@ export default function Stock() {
 
     setItems(nextItems);
     setStockLog(nextLog);
-    await dbSet('items', nextItems);
-    await dbSet('stockLog', nextLog);
+    await apiSet('items', nextItems);
+    await apiSet('stockLog', nextLog);
     closeAdjust();
     showToast('Stock updated');
   };

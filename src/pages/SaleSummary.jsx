@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { dbGet } from '../db/indexedDB';
+import { apiGet } from '../api/api';
 
 const currency = (n, symbol = '₹') => `${symbol}${(parseFloat(n) || 0).toFixed(2)}`;
 
@@ -11,7 +11,7 @@ export default function SaleSummary() {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    Promise.all([dbGet('bills'), dbGet('returns'), dbGet('items'), dbGet('settings')]).then(([b, r, it, s]) => {
+    Promise.all([apiGet('bills'), apiGet('returns'), apiGet('items'), apiGet('settings')]).then(([b, r, it, s]) => {
       setBills(Array.isArray(b) ? b : []);
       setReturns(Array.isArray(r) ? r : []);
       setCatalogItems(Array.isArray(it) ? it : []);

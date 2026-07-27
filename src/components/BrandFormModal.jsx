@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { dbGet, dbSet } from '../db/indexedDB';
+import { apiGet, apiSet } from '../api/api';
 import { useToast } from '../context/ToastContext';
 import Modal from './Modal';
 import '../utils/imageEditor';
@@ -55,7 +55,7 @@ export default function BrandFormModal({ open, onClose, brand, onSaved }) {
     }
     const description = form.description.trim();
     const color = form.color || BRAND_COLORS[0];
-    const current = (await dbGet('brands')) || [];
+    const current = (await apiGet('brands')) || [];
 
     let saved;
     let next;
@@ -67,7 +67,7 @@ export default function BrandFormModal({ open, onClose, brand, onSaved }) {
       saved = { id, name, description, color, logo: form.logo };
       next = [...current, saved];
     }
-    await dbSet('brands', next);
+    await apiSet('brands', next);
     showToast('Brand saved');
     onSaved?.(saved);
     onClose();

@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState, useCallback } from 'react';
-import { dbGet, dbSet } from '../db/indexedDB';
+import { apiGet, apiSet } from '../api/api';
 
 const ThemeContext = createContext(null);
 
@@ -20,8 +20,8 @@ export function ThemeProvider({ children }) {
 
   useEffect(() => {
     (async () => {
-      const savedTheme = await dbGet('theme');
-      const settings = await dbGet('settings');
+      const savedTheme = await apiGet('theme');
+      const settings = await apiGet('settings');
       if (savedTheme) setTheme(savedTheme);
       if (settings?.accentColor) setAccentColor(settings.accentColor);
       if (settings?.sidebarSide) setSidebarSide(settings.sidebarSide);
@@ -57,21 +57,21 @@ export function ThemeProvider({ children }) {
   const toggleTheme = useCallback(() => {
     setTheme((t) => {
       const next = t === 'dark' ? 'light' : 'dark';
-      dbSet('theme', next);
+      apiSet('theme', next);
       return next;
     });
   }, []);
 
   const updateAccentColor = useCallback(async (hex) => {
     setAccentColor(hex);
-    const settings = (await dbGet('settings')) || {};
-    await dbSet('settings', { ...settings, accentColor: hex });
+    const settings = (await apiGet('settings')) || {};
+    await apiSet('settings', { ...settings, accentColor: hex });
   }, []);
 
   const updateSidebarSide = useCallback(async (side) => {
     setSidebarSide(side);
-    const settings = (await dbGet('settings')) || {};
-    await dbSet('settings', { ...settings, sidebarSide: side });
+    const settings = (await apiGet('settings')) || {};
+    await apiSet('settings', { ...settings, sidebarSide: side });
   }, []);
 
   return (

@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
-import { dbGet, dbSet, dbClearAll, exportAllData, importAllData } from '../db/indexedDB';
-import { getApiMode, setApiMode } from '../api/api';
+import { apiGet, apiSet, apiClearAll, apiExportAllData, apiImportAllData, getApiMode, setApiMode } from '../api/api';
 import { useTheme, ACCENT_PRESETS } from '../context/ThemeContext';
 import { useToast } from '../context/ToastContext';
 import Modal from '../components/Modal';
@@ -58,7 +57,7 @@ export default function SettingsPage() {
   };
 
   useEffect(() => {
-    dbGet('settings').then((s) => {
+    apiGet('settings').then((s) => {
       if (s) {
         setSettings((prev) => ({
           ...prev,
@@ -83,24 +82,24 @@ export default function SettingsPage() {
         }));
       }
     });
-    dbGet('company').then((c) => setCompany(c || {}));
+    apiGet('company').then((c) => setCompany(c || {}));
   }, []);
 
   const persist = async (patch) => {
     const next = { ...settings, ...patch };
     setSettings(next);
-    await dbSet('settings', { ...(await dbGet('settings')), ...next });
+    await apiSet('settings', { ...(await apiGet('settings')), ...next });
     window.dispatchEvent(new Event('billhive:settings-updated'));
   };
 
   const saveGeneral = async () => {
-    await dbSet('settings', { ...(await dbGet('settings')), ...settings });
+    await apiSet('settings', { ...(await apiGet('settings')), ...settings });
     window.dispatchEvent(new Event('billhive:settings-updated'));
     showToast('Settings saved');
   };
 
   const saveConfig = async () => {
-    await dbSet('settings', { ...(await dbGet('settings')), dbConfig: settings.dbConfig });
+    await apiSet('settings', { ...(await apiGet('settings')), dbConfig: settings.dbConfig });
     showToast('Configuration saved');
   };
 
@@ -134,7 +133,7 @@ export default function SettingsPage() {
   const printDummyBill = () => printPosBill(dummyBillData(), buildPrintConfig(settings.print));
 
   const handleExport = async () => {
-    const dump = await exportAllData();
+    const dump = await apiExportAllData();
     const blob = new Blob([JSON.stringify(dump, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -153,7 +152,7 @@ export default function SettingsPage() {
     reader.onload = async () => {
       try {
         const dump = JSON.parse(reader.result);
-        await importAllData(dump);
+        await apiImportAllData(dump);
         showToast('Data imported — reloading…');
         setTimeout(() => window.location.reload(), 900);
       } catch {
@@ -165,7 +164,7 @@ export default function SettingsPage() {
   };
 
   const confirmErase = async () => {
-    await dbClearAll();
+    await apiClearAll();
     showToast('All data erased');
     setEraseOpen(false);
     setEraseInput('');

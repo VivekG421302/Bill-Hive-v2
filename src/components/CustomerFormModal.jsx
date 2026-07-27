@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { dbGet, dbSet } from '../db/indexedDB';
+import { apiGet, apiSet } from '../api/api';
 import { useToast } from '../context/ToastContext';
 import Modal from './Modal';
 
@@ -26,7 +26,7 @@ export default function CustomerFormModal({ open, onClose, customer, onSaved }) 
       return;
     }
     const data = { name, phone: form.phone.trim(), email: form.email.trim(), address: form.address.trim(), notes: form.notes.trim() };
-    const current = (await dbGet('customers')) || [];
+    const current = (await apiGet('customers')) || [];
 
     let saved;
     let next;
@@ -38,7 +38,7 @@ export default function CustomerFormModal({ open, onClose, customer, onSaved }) 
       saved = { id, ...data };
       next = [...current, saved];
     }
-    await dbSet('customers', next);
+    await apiSet('customers', next);
     showToast('Customer saved');
     onSaved?.(saved);
     onClose();

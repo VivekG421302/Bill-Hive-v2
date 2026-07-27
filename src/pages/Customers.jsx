@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { dbGet, dbSet } from '../db/indexedDB';
+import { apiGet, apiSet } from '../api/api';
 import { useToast } from '../context/ToastContext';
 import Modal from '../components/Modal';
 import ConfirmDialog from '../components/ConfirmDialog';
@@ -28,7 +28,7 @@ export default function Customers() {
   const [detailCustomer, setDetailCustomer] = useState(null);
 
   useEffect(() => {
-    Promise.all([dbGet('customers'), dbGet('bills'), dbGet('settings')]).then(([c, b, s]) => {
+    Promise.all([apiGet('customers'), apiGet('bills'), apiGet('settings')]).then(([c, b, s]) => {
       setCustomers(Array.isArray(c) ? c : []);
       setBills(Array.isArray(b) ? b : []);
       if (s) setSettings((prev) => ({ ...prev, ...s }));
@@ -37,7 +37,7 @@ export default function Customers() {
   }, []);
 
   const refreshCustomers = async () => {
-    const data = await dbGet('customers');
+    const data = await apiGet('customers');
     setCustomers(Array.isArray(data) ? data : []);
   };
 
@@ -79,7 +79,7 @@ export default function Customers() {
     setDeleteId(null);
     const next = customers.filter((c) => c.id !== id);
     setCustomers(next);
-    await dbSet('customers', next);
+    await apiSet('customers', next);
     if (detailCustomer?.id === id) setDetailCustomer(null);
     showToast('Customer deleted');
   };

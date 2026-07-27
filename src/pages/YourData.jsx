@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { dbGet, dbSet } from '../db/indexedDB';
+import { apiGet, apiSet } from '../api/api';
 import { useToast } from '../context/ToastContext';
 import '../utils/imageEditor';
 
@@ -15,7 +15,7 @@ export default function YourData() {
   const fileRef = useRef(null);
 
   useEffect(() => {
-    dbGet('company').then((c) => {
+    apiGet('company').then((c) => {
       const val = c || EMPTY;
       setData(val);
       setDraft(val);
@@ -59,7 +59,7 @@ export default function YourData() {
   };
 
   const save = async () => {
-    await dbSet('company', draft);
+    await apiSet('company', draft);
     setData(draft);
     setHasData(true);
     setEditing(false);

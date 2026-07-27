@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { dbGet, dbSet } from '../db/indexedDB';
+import { apiGet, apiSet } from '../api/api';
 import { useToast } from '../context/ToastContext';
 import ConfirmDialog from '../components/ConfirmDialog';
 import Modal from '../components/Modal';
@@ -44,9 +44,9 @@ async function generateInvoiceNumber() {
   const yy = String(now.getFullYear()).slice(-2);
   const mm = String(now.getMonth() + 1).padStart(2, '0');
   const key = yy + mm;
-  const meta = (await dbGet('invoiceMeta')) || {};
+  const meta = (await apiGet('invoiceMeta')) || {};
   meta[key] = (meta[key] || 0) + 1;
-  await dbSet('invoiceMeta', meta);
+  await apiSet('invoiceMeta', meta);
   return key + String(meta[key]).padStart(2, '0');
 }
 
@@ -83,7 +83,7 @@ export default function CreateBill() {
   const blurTimer = useRef(null);
 
   useEffect(() => {
-    Promise.all([dbGet('items'), dbGet('company'), dbGet('settings'), dbGet('customers')]).then(([it, co, se, cu]) => {
+    Promise.all([apiGet('items'), apiGet('company'), apiGet('settings'), apiGet('customers')]).then(([it, co, se, cu]) => {
       setCatalogItems(Array.isArray(it) ? it : []);
       setCompany(co || {});
       setSettings((s) => ({ ...s, ...(se || {}) }));
@@ -233,12 +233,12 @@ export default function CreateBill() {
     billData.id = Date.now();
     billData.createdAt = new Date().toISOString();
 
-    const bills = (await dbGet('bills')) || [];
-    await dbSet('bills', [...bills, billData]);
+    const bills = (await apiGet('bills')) || [];
+    await apiSet('bills', [...bills, billData]);
 
     // Decrement stock for catalog-linked, tracked items + log the movement
     const nextItems = [...catalogItems];
-    const stockLog = (await dbGet('stockLog')) || [];
+    const stockLog = (await apiGet('stockLog')) || [];
     const newLogEntries = [];
     billData.lineItems.forEach((li) => {
       if (!li.itemId) return;
@@ -253,9 +253,9 @@ export default function CreateBill() {
     });
     if (newLogEntries.length > 0) {
       setCatalogItems(nextItems);
-      await dbSet('items', nextItems);
+      await apiSet('items', nextItems);
       const nextLog = [...newLogEntries, ...stockLog].slice(0, 200);
-      await dbSet('stockLog', nextLog);
+      await apiSet('stockLog', nextLog);
     }
 
     showToast('Bill saved successfully!');

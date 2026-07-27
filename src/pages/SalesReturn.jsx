@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { dbGet, dbSet } from '../db/indexedDB';
+import { apiGet, apiSet } from '../api/api';
 import { useToast } from '../context/ToastContext';
 import Modal from '../components/Modal';
 
@@ -24,7 +24,7 @@ export default function SalesReturn() {
   const [viewReturn, setViewReturn] = useState(null);
 
   useEffect(() => {
-    Promise.all([dbGet('bills'), dbGet('returns'), dbGet('items'), dbGet('settings')]).then(([b, r, it, s]) => {
+    Promise.all([apiGet('bills'), apiGet('returns'), apiGet('items'), apiGet('settings')]).then(([b, r, it, s]) => {
       setBills(Array.isArray(b) ? b : []);
       setReturns(Array.isArray(r) ? r : []);
       setCatalogItems(Array.isArray(it) ? it : []);
@@ -149,13 +149,13 @@ export default function SalesReturn() {
 
     const nextReturns = [...returns, returnRecord];
     setReturns(nextReturns);
-    await dbSet('returns', nextReturns);
+    await apiSet('returns', nextReturns);
 
     if (newLogEntries.length > 0) {
       setCatalogItems(nextItems);
-      await dbSet('items', nextItems);
-      const stockLog = (await dbGet('stockLog')) || [];
-      await dbSet('stockLog', [...newLogEntries, ...stockLog].slice(0, 200));
+      await apiSet('items', nextItems);
+      const stockLog = (await apiGet('stockLog')) || [];
+      await apiSet('stockLog', [...newLogEntries, ...stockLog].slice(0, 200));
     }
 
     showToast(`Return processed — refund ${currency(refund, settings.currencySymbol)}${damagedStock ? ' (logged as damaged)' : ''}`);

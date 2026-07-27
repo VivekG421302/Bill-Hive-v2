@@ -155,11 +155,15 @@
 
   <div class="note">
     <strong>How the gateway maps calls:</strong>
-    Most stores hold a single record keyed by <code>"value"</code> (mirroring the current
-    IndexedDB layer), so <code>GET /{store}</code> returns that one record/array and
-    <code>PUT /{store}/value</code> replaces it wholesale. <code>authTokens</code> is the
-    exception — it's keyed per-token. Every route below is prefixed with your configured base URL,
-    e.g. <code>http://localhost:4000/api</code>.
+    Almost every store holds a single record keyed <code>"value"</code> internally
+    (mirroring the current IndexedDB layer), so from the outside it's just a plain
+    resource: <code>GET /{store}</code> returns that record/array and
+    <code>PUT /{store}</code> replaces it wholesale — no key in the URL. The one exception
+    is <code>authTokens</code>, which is keyed per-token, so its routes include the key:
+    <code>GET /authTokens/{token}</code>. Every route below is relative to your configured
+    base URL, e.g. <code>http://localhost:4000/api</code> — point any backend that
+    implements these routes and fields at that URL and the app will start reading/writing
+    through it as soon as external mode is switched on.
   </div>
 
   <div class="toc" id="toc"></div>
@@ -187,7 +191,7 @@
 }</pre></td>
         </tr>
         <tr>
-          <td class="route-cell"><span class="method put">PUT</span><span class="route">/company/value</span></td>
+          <td class="route-cell"><span class="method put">PUT</span><span class="route">/company</span></td>
           <td>Replace the company profile.</td>
           <td>Same as above (full object).</td>
           <td class="params">none</td>
@@ -217,7 +221,7 @@
 }</pre></td>
         </tr>
         <tr>
-          <td class="route-cell"><span class="method put">PUT</span><span class="route">/settings/value</span></td>
+          <td class="route-cell"><span class="method put">PUT</span><span class="route">/settings</span></td>
           <td>Replace app settings.</td>
           <td>Same as above (full object, merged client-side before send).</td>
           <td class="params">none</td>
@@ -245,7 +249,7 @@
 }</pre></td>
         </tr>
         <tr>
-          <td class="route-cell"><span class="method put">PUT</span><span class="route">/account/value</span></td>
+          <td class="route-cell"><span class="method put">PUT</span><span class="route">/account</span></td>
           <td>Create or update the account.</td>
           <td>Same as above.</td>
           <td class="params">none</td>
@@ -269,7 +273,7 @@
           <td><pre>{ "value": "dark" }</pre></td>
         </tr>
         <tr>
-          <td class="route-cell"><span class="method put">PUT</span><span class="route">/theme/value</span></td>
+          <td class="route-cell"><span class="method put">PUT</span><span class="route">/theme</span></td>
           <td>Set the theme.</td>
           <td>Same as above.</td>
           <td class="params">none</td>
@@ -308,7 +312,7 @@
 ]</pre></td>
         </tr>
         <tr>
-          <td class="route-cell"><span class="method put">PUT</span><span class="route">/items/value</span></td>
+          <td class="route-cell"><span class="method put">PUT</span><span class="route">/items</span></td>
           <td>Replace the full items array (create/update/delete all handled client-side, then synced).</td>
           <td>Array of item objects (shape above).</td>
           <td class="params">none</td>
@@ -340,7 +344,7 @@
 ]</pre></td>
         </tr>
         <tr>
-          <td class="route-cell"><span class="method put">PUT</span><span class="route">/brands/value</span></td>
+          <td class="route-cell"><span class="method put">PUT</span><span class="route">/brands</span></td>
           <td>Replace the full brands array.</td>
           <td>Array of brand objects.</td>
           <td class="params">none</td>
@@ -378,7 +382,7 @@
 ]</pre></td>
         </tr>
         <tr>
-          <td class="route-cell"><span class="method put">PUT</span><span class="route">/bills/value</span></td>
+          <td class="route-cell"><span class="method put">PUT</span><span class="route">/bills</span></td>
           <td>Replace the full bills array.</td>
           <td>Array of bill objects.</td>
           <td class="params">none</td>
@@ -412,7 +416,7 @@
 ]</pre></td>
         </tr>
         <tr>
-          <td class="route-cell"><span class="method put">PUT</span><span class="route">/stockLog/value</span></td>
+          <td class="route-cell"><span class="method put">PUT</span><span class="route">/stockLog</span></td>
           <td>Replace the full stock log array.</td>
           <td>Array of log entries.</td>
           <td class="params">none</td>
@@ -445,7 +449,7 @@
 ]</pre></td>
         </tr>
         <tr>
-          <td class="route-cell"><span class="method put">PUT</span><span class="route">/returns/value</span></td>
+          <td class="route-cell"><span class="method put">PUT</span><span class="route">/returns</span></td>
           <td>Replace the full returns array.</td>
           <td>Array of return objects.</td>
           <td class="params">none</td>
@@ -478,7 +482,7 @@
 ]</pre></td>
         </tr>
         <tr>
-          <td class="route-cell"><span class="method put">PUT</span><span class="route">/suppliers/value</span></td>
+          <td class="route-cell"><span class="method put">PUT</span><span class="route">/suppliers</span></td>
           <td>Replace the full suppliers array.</td>
           <td>Array of supplier objects.</td>
           <td class="params">none</td>
@@ -512,7 +516,7 @@
 ]</pre></td>
         </tr>
         <tr>
-          <td class="route-cell"><span class="method put">PUT</span><span class="route">/purchaseOrders/value</span></td>
+          <td class="route-cell"><span class="method put">PUT</span><span class="route">/purchaseOrders</span></td>
           <td>Replace the full purchase orders array.</td>
           <td>Array of PO objects.</td>
           <td class="params">none</td>
@@ -545,7 +549,7 @@
 ]</pre></td>
         </tr>
         <tr>
-          <td class="route-cell"><span class="method put">PUT</span><span class="route">/customers/value</span></td>
+          <td class="route-cell"><span class="method put">PUT</span><span class="route">/customers</span></td>
           <td>Replace the full customers array.</td>
           <td>Array of customer objects.</td>
           <td class="params">none</td>
@@ -569,7 +573,7 @@
           <td><pre>{ "2607": 12, "2606": 48 }</pre></td>
         </tr>
         <tr>
-          <td class="route-cell"><span class="method put">PUT</span><span class="route">/invoiceMeta/value</span></td>
+          <td class="route-cell"><span class="method put">PUT</span><span class="route">/invoiceMeta</span></td>
           <td>Replace the counter map.</td>
           <td>Same as above.</td>
           <td class="params">none</td>

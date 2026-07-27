@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { dbGet, dbSet } from '../db/indexedDB';
+import { apiGet, apiSet } from '../api/api';
 import { useToast } from '../context/ToastContext';
 import Modal from '../components/Modal';
 import ConfirmDialog from '../components/ConfirmDialog';
@@ -23,7 +23,7 @@ export default function Suppliers() {
   const [detailSupplier, setDetailSupplier] = useState(null);
 
   useEffect(() => {
-    Promise.all([dbGet('suppliers'), dbGet('items')]).then(([s, it]) => {
+    Promise.all([apiGet('suppliers'), apiGet('items')]).then(([s, it]) => {
       setSuppliers(Array.isArray(s) ? s : []);
       setCatalogItems(Array.isArray(it) ? it : []);
       setLoaded(true);
@@ -42,7 +42,7 @@ export default function Suppliers() {
 
   const persist = async (next) => {
     setSuppliers(next);
-    await dbSet('suppliers', next);
+    await apiSet('suppliers', next);
   };
 
   // ---------- Add / edit modal ----------

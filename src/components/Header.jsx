@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import BrandIcon from './BrandIcon';
-import { dbGet } from '../db/indexedDB';
+import { apiGet } from '../api/api';
 
 export default function Header({ onOpenMobileSidebar }) {
   const [company, setCompany] = useState(null);
 
   useEffect(() => {
-    dbGet('company').then(setCompany);
-    const onFocus = () => dbGet('company').then(setCompany); // refresh after Your Data edits
+    apiGet('company').then(setCompany);
+    const onFocus = () => apiGet('company').then(setCompany); // refresh after Your Data edits
     window.addEventListener('billhive:company-updated', onFocus);
     return () => window.removeEventListener('billhive:company-updated', onFocus);
   }, []);
