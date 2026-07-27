@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react';
 import { dbGet, dbSet, dbClearAll, exportAllData, importAllData } from '../db/indexedDB';
+import { getApiMode, setApiMode } from '../api/api';
 import { useTheme, ACCENT_PRESETS } from '../context/ThemeContext';
 import { useToast } from '../context/ToastContext';
 import Modal from '../components/Modal';
 import { buildPosBillHtml, printPosBill, buildPrintConfig, SECTION_DEFS, DEFAULT_SECTION_ORDER, COLUMN_DEFS, DEFAULT_COLUMN_ORDER, PAPER_PRESETS } from '../utils/posReceipt';
+
+const IS_DEV = import.meta.env.DEV;
 
 const DEFAULT_SETTINGS = {
   thankYouMessages: 'Thank you for your business!\nVisit again soon!',
@@ -44,6 +47,15 @@ export default function SettingsPage() {
   const [eraseOpen, setEraseOpen] = useState(false);
   const [dummyPreviewOpen, setDummyPreviewOpen] = useState(false);
   const [company, setCompany] = useState({});
+  const [apiMode, setApiModeState] = useState(() => (IS_DEV ? getApiMode() : 'internal'));
+
+  const toggleApiMode = () => {
+    const next = apiMode === 'external' ? 'internal' : 'external';
+    setApiMode(next);
+    setApiModeState(next);
+    showToast(`Switched to ${next} data — reloading…`);
+    setTimeout(() => window.location.reload(), 700);
+  };
 
   useEffect(() => {
     dbGet('settings').then((s) => {
@@ -443,6 +455,25 @@ export default function SettingsPage() {
           <button className="action-btn btn-save" onClick={saveConfig}>Save Configuration</button>
         </div>
       </div>
+
+      {/* Developer — data source toggle (dev builds only, never shown in production) */}
+      {IS_DEV && (
+        <div className="card" style={{ borderColor: 'var(--accent-warning, #d97706)' }}>
+          <div className="card-header">
+            <div>
+              <h2 className="card-title">Developer <span className="soon-badge">Dev only</span></h2>
+              <p className="card-desc">Switch where the app reads/writes data. Internal uses this browser's storage (default). External calls the REST API configured via VITE_API_BASE_URL. This card only renders in dev builds.</p>
+            </div>
+          </div>
+          <div className="toggle-row">
+            <span>Use external API ({apiMode === 'external' ? 'on' : 'off'})</span>
+            <label className="switch">
+              <input type="checkbox" checked={apiMode === 'external'} onChange={toggleApiMode} />
+              <span className="switch-track" />
+            </label>
+          </div>
+        </div>
+      )}
 
       {/* Danger zone */}
       <div className="card" style={{ borderColor: 'var(--accent-danger)' }}>
