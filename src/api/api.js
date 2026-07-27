@@ -60,17 +60,36 @@ export const API_MODE_CHANGE_EVENT = MODE_CHANGE_EVENT;
 // =========================================================================
 // External REST client
 // =========================================================================
-// Base URL / key are read from Vite env vars, so they can differ per
-// developer machine without editing code:
-//   VITE_API_BASE_URL=http://localhost:4000/api
-//   VITE_API_KEY=...
-// Create a .env.local (git-ignored) to set these locally.
+// Base URL is settable two ways:
+//   1. From the UI — Settings > Developer Setting > Base URL (stored in
+//      localStorage, takes priority, no rebuild needed).
+//   2. Via VITE_API_BASE_URL in .env.local, as a machine-level default.
+// Falls back to http://localhost:4000/api if neither is set.
 
-const EXTERNAL_BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000/api').replace(/\/$/, '');
+const BASE_URL_STORAGE_KEY = 'billhive:api-base-url';
+const DEFAULT_BASE_URL = 'http://localhost:4000/api';
+
+export function getApiBaseUrl() {
+  const stored = isDevBuild ? localStorage.getItem(BASE_URL_STORAGE_KEY) : null;
+  const raw = (stored && stored.trim()) || import.meta.env.VITE_API_BASE_URL || DEFAULT_BASE_URL;
+  return raw.replace(/\/$/, '');
+}
+
+/** Set the base URL from the UI. No-op outside of dev builds. */
+export function setApiBaseUrl(url) {
+  if (!isDevBuild) return;
+  const trimmed = (url || '').trim();
+  if (trimmed) localStorage.setItem(BASE_URL_STORAGE_KEY, trimmed);
+  else localStorage.removeItem(BASE_URL_STORAGE_KEY);
+  window.dispatchEvent(new Event(MODE_CHANGE_EVENT));
+}
+
+export const API_BASE_URL_STORAGE_KEY = BASE_URL_STORAGE_KEY;
+
 const EXTERNAL_API_KEY = import.meta.env.VITE_API_KEY || '';
 
 async function externalRequest(path, { method = 'GET', body } = {}) {
-  const res = await fetch(`${EXTERNAL_BASE_URL}${path}`, {
+  const res = await fetch(`${getApiBaseUrl()}${path}`, {
     method,
     headers: {
       'Content-Type': 'application/json',
@@ -187,6 +206,8 @@ const api = {
   getApiMode,
   setApiMode,
   isExternalMode,
+  getApiBaseUrl,
+  setApiBaseUrl,
   apiGet,
   apiGetAll,
   apiSet,

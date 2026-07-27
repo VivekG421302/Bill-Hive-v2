@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { apiGet, apiSet, apiClearAll, apiExportAllData, apiImportAllData, getApiMode, setApiMode } from '../api/api';
+import { apiGet, apiSet, apiClearAll, apiExportAllData, apiImportAllData, getApiMode, setApiMode, getApiBaseUrl, setApiBaseUrl } from '../api/api';
 import { useTheme, ACCENT_PRESETS } from '../context/ThemeContext';
 import { useToast } from '../context/ToastContext';
 import Modal from '../components/Modal';
@@ -47,6 +47,7 @@ export default function SettingsPage() {
   const [dummyPreviewOpen, setDummyPreviewOpen] = useState(false);
   const [company, setCompany] = useState({});
   const [apiMode, setApiModeState] = useState(() => (IS_DEV ? getApiMode() : 'internal'));
+  const [baseUrl, setBaseUrl] = useState(() => (IS_DEV ? getApiBaseUrl() : ''));
 
   const toggleApiMode = () => {
     const next = apiMode === 'external' ? 'internal' : 'external';
@@ -54,6 +55,11 @@ export default function SettingsPage() {
     setApiModeState(next);
     showToast(`Switched to ${next} data — reloading…`);
     setTimeout(() => window.location.reload(), 700);
+  };
+
+  const saveBaseUrl = () => {
+    setApiBaseUrl(baseUrl);
+    showToast('Base URL saved');
   };
 
   useEffect(() => {
@@ -96,11 +102,6 @@ export default function SettingsPage() {
     await apiSet('settings', { ...(await apiGet('settings')), ...settings });
     window.dispatchEvent(new Event('billhive:settings-updated'));
     showToast('Settings saved');
-  };
-
-  const saveConfig = async () => {
-    await apiSet('settings', { ...(await apiGet('settings')), dbConfig: settings.dbConfig });
-    showToast('Configuration saved');
   };
 
   // ---------- Thank-you messages (stored as a single newline-joined string; edited as a list) ----------
@@ -413,56 +414,25 @@ export default function SettingsPage() {
         </div>
       </div>
 
-      {/* Database Configuration (placeholder — not connected to anything yet) */}
-      <div className="card">
-        <div className="card-header">
-          <div>
-            <h2 className="card-title">Database Configuration <span className="soon-badge">Coming soon</span></h2>
-            <p className="card-desc">Bill Hive currently runs fully offline using your browser's local storage. These fields are saved for when cloud/database sync becomes available — they don't connect to anything yet.</p>
-          </div>
-        </div>
-        <div className="form-grid">
-          <div className="form-group">
-            <label>Provider</label>
-            <select value={settings.dbConfig.provider} onChange={(e) => setSettings((s) => ({ ...s, dbConfig: { ...s.dbConfig, provider: e.target.value } }))}>
-              <option value="none">None (Local storage only)</option>
-              <option value="firebase">Firebase</option>
-              <option value="supabase">Supabase</option>
-              <option value="rest">Custom REST API</option>
-            </select>
-          </div>
-          <div className="form-group">
-            <label>API URL</label>
-            <input type="text" placeholder="https://api.example.com" value={settings.dbConfig.apiUrl} onChange={(e) => setSettings((s) => ({ ...s, dbConfig: { ...s.dbConfig, apiUrl: e.target.value } }))} />
-          </div>
-          <div className="form-group">
-            <label>API Key</label>
-            <input type="password" placeholder="Enter API key" value={settings.dbConfig.apiKey} onChange={(e) => setSettings((s) => ({ ...s, dbConfig: { ...s.dbConfig, apiKey: e.target.value } }))} />
-          </div>
-          <div className="form-group">
-            <label>Sync</label>
-            <div className="toggle-row" style={{ padding: 0 }}>
-              <label className="switch">
-                <input type="checkbox" disabled />
-                <span className="switch-track" />
-              </label>
-              <span style={{ fontSize: 12.5, color: 'var(--text-muted)' }}>Disabled until a provider is connected</span>
-            </div>
-          </div>
-        </div>
-        <div className="btn-row">
-          <button className="action-btn btn-save" onClick={saveConfig}>Save Configuration</button>
-        </div>
-      </div>
-
-      {/* Developer — data source toggle (dev builds only, never shown in production) */}
+      {/* Developer Setting (dev builds only, never shown in production) */}
       {IS_DEV && (
         <div className="card" style={{ borderColor: 'var(--accent-warning, #d97706)' }}>
           <div className="card-header">
             <div>
-              <h2 className="card-title">Developer <span className="soon-badge">Dev only</span></h2>
-              <p className="card-desc">Switch where the app reads/writes data. Internal uses this browser's storage (default). External calls the REST API configured via VITE_API_BASE_URL. This card only renders in dev builds.</p>
+              <h2 className="card-title">Developer Setting <span className="soon-badge">Dev only</span></h2>
+              <p className="card-desc">Point the app at a backend and switch it on. Internal (off) keeps using this browser's storage.</p>
             </div>
+          </div>
+          <div className="form-group" style={{ maxWidth: 420 }}>
+            <label>Base URL</label>
+            <input
+              type="text"
+              placeholder="http://localhost:4000/api"
+              value={baseUrl}
+              onChange={(e) => setBaseUrl(e.target.value)}
+              onBlur={saveBaseUrl}
+              onKeyDown={(e) => { if (e.key === 'Enter') { e.currentTarget.blur(); } }}
+            />
           </div>
           <div className="toggle-row">
             <span>Use external API ({apiMode === 'external' ? 'on' : 'off'})</span>

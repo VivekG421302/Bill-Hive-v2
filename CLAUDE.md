@@ -25,11 +25,20 @@ of two backends based on a runtime mode:
   via `fetch`.
 
 The mode is stored in `localStorage` under `billhive:api-mode` and is toggled
-from **Settings → Developer** (only rendered when `import.meta.env.DEV` is
-true; the card is entirely absent from production builds, and `setApiMode`
-is a no-op outside dev regardless of what's in storage). Flipping it fires
+from **Settings → Developer Setting** (only rendered when
+`import.meta.env.DEV` is true; the card is entirely absent from production
+builds, and `setApiMode` is a no-op outside dev regardless of what's in
+storage). The card has exactly two controls: a **Base URL** text field and
+the on/off toggle — nothing else. Flipping the toggle fires
 `window.dispatchEvent(new Event('billhive:api-mode-changed'))` and the
 Settings page reloads the app so every store re-reads from the new source.
+
+**Base URL** can be set two ways, in priority order:
+1. Typed into **Settings → Developer Setting → Base URL** — saved to
+   `localStorage` (`billhive:api-base-url`) on blur/Enter, no rebuild needed.
+2. `VITE_API_BASE_URL` in `.env.local` — a machine-level fallback if the UI
+   field is empty.
+3. Falls back to `http://localhost:4000/api` if neither is set.
 
 **Every page/component that used to import `dbGet`/`dbSet`/etc. from
 `../db/indexedDB` now imports `apiGet`/`apiSet`/etc. from `../api/api`
@@ -37,11 +46,19 @@ instead** — call signatures are identical, so this was a straight swap, not a
 rewrite. `src/db/indexedDB.js` itself is untouched and is still what runs
 under the hood in internal mode.
 
+## Docs page in the sidebar
+
+`public/api-docs.html` (served at `/api-docs.html`) is linked from the
+sidebar as **API Docs**. It's shown whenever `import.meta.env.DEV` is true —
+regardless of which mode (internal/external) is currently selected — so it's
+always one click away while developing, and never shows up in a production
+build.
+
 ## Route contract for external mode
 
 Full reference with fields/params/JSON examples per store: **`public/api-docs.html`**
-(served at `/api-docs.html`, also linked from the sidebar — but only when
-external mode is on, so it never shows in a normal user's app).
+(served at `/api-docs.html`, linked from the sidebar in dev builds — see
+"Docs page in the sidebar" below).
 
 Short version: almost every store in `STORE_NAMES` (see `src/db/indexedDB.js`)
 holds one record under a fixed key `"value"`, so the external routes are
@@ -102,8 +119,9 @@ sections so the shape is agreed on before the code lands.
 2. Implement the routes in `public/api-docs.html` for the stores you care
    about first (`items`, `customers`, `bills` are the ones exercised most by
    normal use).
-3. Run the frontend (`npm run dev`), set `VITE_API_BASE_URL` in `.env.local`,
-   flip the Developer toggle in Settings to external, reload.
+3. Run the frontend (`npm run dev`), open **Settings → Developer Setting**,
+   type your backend's URL into **Base URL** (e.g. `http://localhost:4000/api`),
+   flip the toggle to external, reload.
 4. Use the app normally — every read/write for a store you've implemented
    now round-trips through your backend. Stores you haven't implemented yet
    will 404/error on that page; that's expected until you add them.

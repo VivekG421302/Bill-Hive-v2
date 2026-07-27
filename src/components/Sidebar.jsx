@@ -4,7 +4,8 @@ import BrandIcon from './BrandIcon';
 import { useTheme } from '../context/ThemeContext';
 import { usePWAInstall } from '../hooks/usePWAInstall';
 import { useToast } from '../context/ToastContext';
-import { isExternalMode, API_MODE_CHANGE_EVENT } from '../api/api';
+
+const IS_DEV = import.meta.env.DEV;
 
 /* Each entry is either a real route ({ to, label, icon }) or a not-yet-built
    page from v1 ({ label, icon, comingSoon: true }). Sections are separated
@@ -39,17 +40,6 @@ export default function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onClo
   const { theme, toggleTheme } = useTheme();
   const { canInstall, promptInstall } = usePWAInstall();
   const { showToast } = useToast();
-  const [externalMode, setExternalMode] = useState(() => isExternalMode());
-
-  useEffect(() => {
-    const sync = () => setExternalMode(isExternalMode());
-    window.addEventListener(API_MODE_CHANGE_EVENT, sync);
-    window.addEventListener('storage', sync);
-    return () => {
-      window.removeEventListener(API_MODE_CHANGE_EVENT, sync);
-      window.removeEventListener('storage', sync);
-    };
-  }, []);
 
   const navRef = useRef(null);
   const [canScrollUp, setCanScrollUp] = useState(false);
@@ -143,7 +133,7 @@ export default function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onClo
                     </NavLink>
                   )
                 )}
-                {sectionIdx === NAV_SECTIONS.length - 1 && externalMode && (
+                {sectionIdx === NAV_SECTIONS.length - 1 && IS_DEV && (
                   <a
                     href="/api-docs.html"
                     target="_blank"
