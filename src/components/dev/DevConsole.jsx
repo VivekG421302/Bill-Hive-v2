@@ -13,8 +13,6 @@ export default function DevConsole({ collapsed }) {
   const { IS_DEV, pageCompletion, togglePageComplete } = useDev();
   const [open, setOpen] = useState(false);
 
-  if (!IS_DEV) return null;
-
   const completedCount = ALL_ROUTES.filter((r) => pageCompletion[r.path]).length;
   const pct = Math.round((completedCount / ALL_ROUTES.length) * 100);
 
