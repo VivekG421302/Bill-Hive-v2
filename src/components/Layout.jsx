@@ -5,6 +5,7 @@ import Header from './Header';
 import Footer from './Footer';
 import ScreenSaver from './ScreenSaver';
 import ErrorBoundary from './ErrorBoundary';
+import DevFloatingButton from './dev/DevFloatingButton';
 
 export default function Layout() {
   const [collapsed, setCollapsed] = useState(false);
@@ -28,6 +29,8 @@ export default function Layout() {
         </div>
         <Footer />
       </div>
+      {import.meta.env.DEV && <DevFloatingButton />}
     </div>
   );
 }
+
