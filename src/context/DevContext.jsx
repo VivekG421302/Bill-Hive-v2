@@ -1,32 +1,25 @@
 /**
  * src/context/DevContext.jsx
  *
- * Developer Mode state. Works in both local dev AND production Vercel preview.
+ * Fully self-contained Developer Mode — works on Vercel previews too.
  *
- * To enable on a production/preview deploy, run in browser console:
+ * Enable from browser console (any deploy):
  *   localStorage.setItem('billhive:dev-enabled', '1'); location.reload();
- * To disable:
+ * Disable:
  *   localStorage.removeItem('billhive:dev-enabled'); location.reload();
  */
 
-import {
-  createContext, useContext, useState, useEffect, useCallback
-} from 'react';
-import {
-  getApiBaseUrl,
-  setApiBaseUrl,
-  getApiMode,
-  setApiMode,
-  API_MODE_CHANGE_EVENT,
-} from '../api/api';
+import { createContext, useContext, useState, useCallback, useEffect } from 'react';
 
-// IS_DEV is true when running `vite dev` OR when the override flag is set in localStorage.
-// This lets you test dev mode on a Vercel preview URL without a code change.
-const IS_DEV =
-  Boolean(import.meta.env && import.meta.env.DEV) ||
-  localStorage.getItem('billhive:dev-enabled') === '1';
+const DEV_ENABLED_KEY  = 'billhive:dev-enabled';
+const BASE_URL_KEY     = 'billhive:api-base-url';
+const PAGE_DONE_KEY    = 'billhive:dev-page-completion';
+const URL_CHANGE_EVENT = 'billhive:baseurl-changed';
 
-const PAGE_COMPLETION_KEY = 'billhive:dev-page-completion';
+// True in `vite dev` OR when manually enabled in localStorage on any deploy
+export const IS_DEV =
+  Boolean(import.meta.env?.DEV) ||
+  localStorage.getItem(DEV_ENABLED_KEY) === '1';
 
 export const ALL_ROUTES = [
   { path: '/',             label: 'Dashboard' },
@@ -47,63 +40,77 @@ export const ALL_ROUTES = [
   { path: '/login',        label: 'Login' },
 ];
 
-const DevContext = createContext(null);
-
-function loadPageCompletion() {
-  try { return JSON.parse(localStorage.getItem(PAGE_COMPLETION_KEY) || '{}'); }
+function readBaseUrl() {
+  return localStorage.getItem(BASE_URL_KEY) || '';
+}
+function readPageCompletion() {
+  try { return JSON.parse(localStorage.getItem(PAGE_DONE_KEY) || '{}'); }
   catch { return {}; }
 }
 
-export function DevProvider({ children }) {
-  const [baseUrl, _setBaseUrl]           = useState(() => getApiBaseUrl());
-  const [apiMode, _setApiMode]           = useState(() => getApiMode());
-  const [pageCompletion, setPageCompletion] = useState(loadPageCompletion);
-  const [connStatus, setConnStatus]      = useState('idle');
+const DevContext = createContext(null);
 
+export function DevProvider({ children }) {
+  const [baseUrl, setBaseUrlState]       = useState(readBaseUrl);
+  const [pageCompletion, setPageCompletion] = useState(readPageCompletion);
+  const [connStatus, setConnStatus]      = useState('idle'); // idle|checking|ok|error
+
+  // Keep state in sync if another tab or the console changes localStorage
   useEffect(() => {
-    const sync = () => { _setBaseUrl(getApiBaseUrl()); _setApiMode(getApiMode()); };
-    window.addEventListener(API_MODE_CHANGE_EVENT, sync);
-    return () => window.removeEventListener(API_MODE_CHANGE_EVENT, sync);
+    const onStorage = (e) => {
+      if (e.key === BASE_URL_KEY) setBaseUrlState(e.newValue || '');
+    };
+    const onUrlChange = () => setBaseUrlState(readBaseUrl());
+    window.addEventListener('storage', onStorage);
+    window.addEventListener(URL_CHANGE_EVENT, onUrlChange);
+    return () => {
+      window.removeEventListener('storage', onStorage);
+      window.removeEventListener(URL_CHANGE_EVENT, onUrlChange);
+    };
   }, []);
 
+  // Persist page completion
   useEffect(() => {
-    localStorage.setItem(PAGE_COMPLETION_KEY, JSON.stringify(pageCompletion));
+    localStorage.setItem(PAGE_DONE_KEY, JSON.stringify(pageCompletion));
   }, [pageCompletion]);
 
   const updateBaseUrl = useCallback((url) => {
-    setApiBaseUrl(url);
-    _setBaseUrl(url || getApiBaseUrl());
+    const trimmed = (url || '').trim();
+    if (trimmed) localStorage.setItem(BASE_URL_KEY, trimmed);
+    else localStorage.removeItem(BASE_URL_KEY);
+    setBaseUrlState(trimmed);
     setConnStatus('idle');
+    window.dispatchEvent(new Event(URL_CHANGE_EVENT));
   }, []);
 
-  const updateApiMode = useCallback((mode) => {
-    setApiMode(mode);
-    _setApiMode(mode);
+  const checkConnection = useCallback(async (url) => {
+    const target = (url ?? readBaseUrl()).replace(/\/$/, '');
+    if (!target) { setConnStatus('error'); return; }
+    setConnStatus('checking');
+    try {
+      const res = await fetch(`${target}/health`, {
+        signal: AbortSignal.timeout(5000),
+      });
+      setConnStatus(res.ok ? 'ok' : 'error');
+    } catch {
+      setConnStatus('error');
+    }
   }, []);
 
   const togglePageComplete = useCallback((path) => {
     setPageCompletion((prev) => ({ ...prev, [path]: !prev[path] }));
   }, []);
 
-  const checkConnection = useCallback(async (url) => {
-    const target = (url || baseUrl).replace(/\/$/, '');
-    if (!target) { setConnStatus('error'); return; }
-    setConnStatus('checking');
-    try {
-      const res = await fetch(`${target}/health`, {
-        method: 'GET',
-        signal: AbortSignal.timeout(4000),
-      });
-      setConnStatus(res.ok ? 'ok' : 'error');
-    } catch {
-      setConnStatus('error');
-    }
-  }, [baseUrl]);
-
   return (
     <DevContext.Provider value={{
-      IS_DEV, baseUrl, apiMode, connStatus, pageCompletion,
-      updateBaseUrl, updateApiMode, checkConnection, togglePageComplete, setConnStatus,
+      IS_DEV,
+      baseUrl,
+      connStatus,
+      pageCompletion,
+      updateBaseUrl,
+      checkConnection,
+      togglePageComplete,
+      setConnStatus,
     }}>
       {children}
     </DevContext.Provider>
@@ -112,6 +119,6 @@ export function DevProvider({ children }) {
 
 export function useDev() {
   const ctx = useContext(DevContext);
-  if (!ctx) throw new Error('useDev must be used within DevProvider');
+  if (!ctx) throw new Error('useDev must be used within <DevProvider>');
   return ctx;
 }
