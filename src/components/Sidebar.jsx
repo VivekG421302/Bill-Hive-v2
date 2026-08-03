@@ -5,8 +5,7 @@ import { useTheme } from '../context/ThemeContext';
 import DevConsole from './dev/DevConsole';
 import { usePWAInstall } from '../hooks/usePWAInstall';
 import { useToast } from '../context/ToastContext';
-
-const IS_DEV = import.meta.env.DEV;
+import { useDev } from '../context/DevContext';
 
 /* Each entry is either a real route ({ to, label, icon }) or a not-yet-built
    page from v1 ({ label, icon, comingSoon: true }). Sections are separated
@@ -41,6 +40,7 @@ export default function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onClo
   const { theme, toggleTheme } = useTheme();
   const { canInstall, promptInstall } = usePWAInstall();
   const { showToast } = useToast();
+  const { IS_DEV } = useDev();
 
   const navRef = useRef(null);
   const [canScrollUp, setCanScrollUp] = useState(false);
