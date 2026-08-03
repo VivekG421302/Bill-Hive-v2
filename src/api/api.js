@@ -70,14 +70,13 @@ const BASE_URL_STORAGE_KEY = 'billhive:api-base-url';
 const DEFAULT_BASE_URL = 'http://localhost:4000/api';
 
 export function getApiBaseUrl() {
-  const stored = isDevBuild ? localStorage.getItem(BASE_URL_STORAGE_KEY) : null;
+  const stored = localStorage.getItem(BASE_URL_STORAGE_KEY);
   const raw = (stored && stored.trim()) || import.meta.env.VITE_API_BASE_URL || DEFAULT_BASE_URL;
   return raw.replace(/\/$/, '');
 }
 
-/** Set the base URL from the UI. No-op outside of dev builds. */
+/** Set the base URL from the UI. Always works so Vercel previews can point to ngrok. */
 export function setApiBaseUrl(url) {
-  if (!isDevBuild) return;
   const trimmed = (url || '').trim();
   if (trimmed) localStorage.setItem(BASE_URL_STORAGE_KEY, trimmed);
   else localStorage.removeItem(BASE_URL_STORAGE_KEY);
