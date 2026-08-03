@@ -29,8 +29,7 @@ export default function Layout() {
         </div>
         <Footer />
       </div>
-      {import.meta.env.DEV && <DevFloatingButton />}
+      <DevFloatingButton />
     </div>
   );
 }
-
