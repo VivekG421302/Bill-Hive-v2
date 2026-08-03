@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import { NavLink } from 'react-router-dom';
 import BrandIcon from './BrandIcon';
 import { useTheme } from '../context/ThemeContext';
+import DevConsole from './dev/DevConsole';
 import { usePWAInstall } from '../hooks/usePWAInstall';
 import { useToast } from '../context/ToastContext';
 
@@ -163,6 +164,7 @@ export default function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onClo
         </div>
 
         <div className="sidebar-footer">
+          {IS_DEV && <DevConsole collapsed={collapsed} />}
           {canInstall && (
             <button className="pwa-install-btn" onClick={promptInstall} title="Install App">
               <IconDownload />
@@ -253,3 +255,4 @@ function IconCatalogue() {
 }
 
 export { IconHome, IconBriefcase, IconSliders, IconUser };
+
