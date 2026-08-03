@@ -3,6 +3,7 @@ import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { ToastProvider } from './context/ToastContext';
 import Layout from './components/Layout';
+import { DevProvider } from './context/DevContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
@@ -26,6 +27,7 @@ export default function App() {
     <ThemeProvider>
       <ToastProvider>
         <AuthProvider>
+          <DevProvider>
           <BrowserRouter>
             <Routes>
               <Route path="/login" element={<Login />} />
@@ -55,8 +57,10 @@ export default function App() {
               </Route>
             </Routes>
           </BrowserRouter>
+          </DevProvider>
         </AuthProvider>
       </ToastProvider>
     </ThemeProvider>
   );
 }
+
