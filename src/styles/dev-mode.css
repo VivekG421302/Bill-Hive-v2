@@ -381,3 +381,119 @@
   color: #4f8cff;
   word-break: break-all;
 }
+
+/* ── Dev Page (/dev route) ───────────────────────────────────────────────── */
+.dev-page {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 32px 20px 80px;
+}
+.dev-page-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+.dev-page-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: rgba(245,165,36,.12);
+  border: 1px solid rgba(245,165,36,.3);
+  color: #f5a524;
+  flex-shrink: 0;
+}
+.dev-page-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text-primary, #e7e9ee);
+  margin: 0 0 4px;
+}
+.dev-page-subtitle {
+  font-size: 13px;
+  color: var(--text-secondary, #9aa1b1);
+  margin: 0;
+}
+.dev-page-card {
+  background: var(--card-bg, #13161f);
+  border: 1px solid var(--border-color, #24293a);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.dev-page-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+.dev-page-card-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary, #e7e9ee);
+  margin-bottom: 4px;
+}
+.dev-page-card-desc {
+  font-size: 12.5px;
+  color: var(--text-secondary, #9aa1b1);
+  line-height: 1.55;
+}
+.dev-page-card-note {
+  margin-top: 12px;
+  padding: 10px 12px;
+  background: rgba(63,185,80,.08);
+  border: 1px solid rgba(63,185,80,.2);
+  border-radius: 8px;
+  font-size: 12.5px;
+  color: #3fb950;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.dev-reload-btn {
+  background: none;
+  border: 1px solid rgba(63,185,80,.4);
+  border-radius: 6px;
+  padding: 3px 10px;
+  font-size: 12px;
+  color: #3fb950;
+  cursor: pointer;
+  font-family: inherit;
+  margin-left: auto;
+}
+.dev-reload-btn:hover { background: rgba(63,185,80,.1); }
+
+/* Toggle switch */
+.dev-toggle {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  border-radius: 999px;
+  background: #2a2f3a;
+  border: 1px solid #3a3f4e;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background .2s, border-color .2s;
+}
+.dev-toggle.on {
+  background: rgba(245,165,36,.25);
+  border-color: #f5a524;
+}
+.dev-toggle-thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #6a7080;
+  transition: transform .2s, background .2s;
+}
+.dev-toggle.on .dev-toggle-thumb {
+  transform: translateX(20px);
+  background: #f5a524;
+}
