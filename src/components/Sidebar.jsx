@@ -32,7 +32,8 @@ const NAV_SECTIONS = [
   [
     { to: '/your-data', label: 'Your Data', icon: IconBriefcase },
     { to: '/settings', label: 'Settings', icon: IconSliders },
-    { to: '/account', label: 'Account', icon: IconUser }
+    { to: '/account', label: 'Account', icon: IconUser },
+    { to: '/dev', label: 'Dev Tools', icon: IconDevTools }
   ]
 ];
 
@@ -164,7 +165,7 @@ export default function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onClo
         </div>
 
         <div className="sidebar-footer">
-          {IS_DEV && <DevConsole collapsed={collapsed} />}
+          <DevConsole collapsed={collapsed} />
           {canInstall && (
             <button className="pwa-install-btn" onClick={promptInstall} title="Install App">
               <IconDownload />
@@ -252,6 +253,10 @@ function IconFulfillment() {
 }
 function IconCatalogue() {
   return (<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/></svg>);
+}
+
+function IconDevTools() {
+  return (<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><polyline points="16 18 22 12 16 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/><polyline points="8 6 2 12 8 18" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>);
 }
 
 export { IconHome, IconBriefcase, IconSliders, IconUser };
