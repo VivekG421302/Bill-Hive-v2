@@ -2,11 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import './styles/index.css';
-// Dev-mode styles — Vite tree-shakes this import in production builds
-if (import.meta.env.DEV) {
-  import('./styles/dev-mode.css');
-}
-
+import './styles/dev-mode.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -21,4 +17,3 @@ if ('serviceWorker' in navigator) {
     });
   });
 }
-
