@@ -1,0 +1,351 @@
+/* ==========================================================================
+   src/styles/dev-mode.css
+   All Dev Mode UI — imported only in DEV builds via main.jsx guard.
+   ========================================================================== */
+
+/* ── Floating Action Button ──────────────────────────────────────────────── */
+.dev-fab {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 14px;
+  background: #1a1d27;
+  color: #f5a524;
+  border: 1px solid rgba(245, 165, 36, 0.4);
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45);
+  transition: background 0.15s, border-color 0.15s, transform 0.1s;
+  font-family: inherit;
+}
+.dev-fab:hover {
+  background: #22263a;
+  border-color: rgba(245, 165, 36, 0.7);
+  transform: translateY(-1px);
+}
+.dev-fab-label { line-height: 1; }
+
+/* ── Modal Backdrop ──────────────────────────────────────────────────────── */
+.dev-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1299;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(3px);
+  animation: devFadeIn 0.15s ease;
+}
+
+/* ── Modal Shell ─────────────────────────────────────────────────────────── */
+.dev-modal {
+  position: fixed;
+  bottom: 80px;
+  right: 24px;
+  z-index: 1300;
+  width: 360px;
+  max-width: calc(100vw - 32px);
+  background: #13161f;
+  border: 1px solid #2a2f3a;
+  border-radius: 14px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+  animation: devSlideUp 0.18s ease;
+  font-family: inherit;
+}
+@keyframes devFadeIn   { from { opacity: 0 } to { opacity: 1 } }
+@keyframes devSlideUp  { from { opacity: 0; transform: translateY(12px) } to { opacity: 1; transform: none } }
+
+.dev-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px 10px;
+  border-bottom: 1px solid #22273a;
+}
+.dev-modal-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #f5a524;
+}
+.dev-modal-close {
+  background: none;
+  border: none;
+  color: #9aa1b1;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  line-height: 1;
+  transition: color 0.1s;
+}
+.dev-modal-close:hover { color: #e7e9ee; }
+
+/* ── Tabs ────────────────────────────────────────────────────────────────── */
+.dev-modal-tabs {
+  display: flex;
+  border-bottom: 1px solid #22273a;
+}
+.dev-tab {
+  flex: 1;
+  padding: 9px 0;
+  background: none;
+  border: none;
+  font-size: 12px;
+  font-weight: 600;
+  color: #9aa1b1;
+  cursor: pointer;
+  transition: color 0.15s;
+  font-family: inherit;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+.dev-tab:hover { color: #e7e9ee; }
+.dev-tab.active { color: #f5a524; border-bottom-color: #f5a524; }
+
+/* ── Body ────────────────────────────────────────────────────────────────── */
+.dev-modal-body { padding: 16px; }
+.dev-modal-hint {
+  font-size: 12px;
+  color: #9aa1b1;
+  margin: 0 0 12px;
+  line-height: 1.55;
+}
+.dev-modal-divider {
+  height: 1px;
+  background: #22273a;
+  margin: 14px 0;
+}
+
+/* ── URL Input Row ───────────────────────────────────────────────────────── */
+.dev-url-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.dev-url-input {
+  flex: 1;
+  background: #0b0d14;
+  border: 1px solid #2a2f3a;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 12px;
+  color: #e7e9ee;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.dev-url-input:focus { border-color: #f5a524; }
+.dev-url-input::placeholder { color: #4a5060; }
+.dev-btn-save {
+  padding: 0 14px;
+  background: #f5a524;
+  border: none;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #0b0d14;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  font-family: inherit;
+}
+.dev-btn-save:hover { opacity: 0.85; }
+
+/* ── Connection Status ───────────────────────────────────────────────────── */
+.dev-status-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.dev-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.dev-status-label {
+  font-size: 12px;
+  font-weight: 600;
+  flex: 1;
+}
+.dev-btn-check {
+  background: none;
+  border: 1px solid #2a2f3a;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 11px;
+  color: #9aa1b1;
+  cursor: pointer;
+  font-family: inherit;
+  transition: border-color 0.15s, color 0.15s;
+}
+.dev-btn-check:hover:not(:disabled) { border-color: #4f8cff; color: #4f8cff; }
+.dev-btn-check:disabled { opacity: 0.4; cursor: default; }
+
+/* ── Guide Link ──────────────────────────────────────────────────────────── */
+.dev-guide-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #4f8cff;
+  text-decoration: none;
+  padding: 8px 10px;
+  border: 1px solid rgba(79, 140, 255, 0.25);
+  border-radius: 8px;
+  background: rgba(79, 140, 255, 0.06);
+  transition: background 0.15s, border-color 0.15s;
+}
+.dev-guide-link:hover {
+  background: rgba(79, 140, 255, 0.12);
+  border-color: rgba(79, 140, 255, 0.5);
+}
+
+/* ── API Mode Buttons ────────────────────────────────────────────────────── */
+.dev-mode-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 4px; }
+.dev-mode-btn {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  background: #0f111a;
+  border: 1px solid #2a2f3a;
+  border-radius: 10px;
+  text-align: left;
+  cursor: pointer;
+  font-family: inherit;
+  color: #9aa1b1;
+  transition: border-color 0.15s, background 0.15s;
+}
+.dev-mode-btn:hover { background: #141720; border-color: #3a3f4e; }
+.dev-mode-btn.selected { border-color: #f5a524; background: rgba(245, 165, 36, 0.06); color: #e7e9ee; }
+.dev-mode-btn svg { flex-shrink: 0; margin-top: 1px; color: #f5a524; }
+.dev-mode-btn-title { font-size: 12.5px; font-weight: 700; color: #e7e9ee; margin-bottom: 3px; }
+.dev-mode-btn-desc  { font-size: 11.5px; line-height: 1.5; }
+.dev-mode-tick { margin-left: auto; color: #f5a524; font-size: 16px; flex-shrink: 0; align-self: center; }
+
+/* ── Dev Console (Sidebar) ───────────────────────────────────────────────── */
+.dev-console {
+  margin-top: 6px;
+  border-top: 1px solid rgba(245, 165, 36, 0.15);
+}
+.dev-console-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-family: inherit;
+  color: #9aa1b1;
+  transition: color 0.15s;
+}
+.dev-console-header:hover { color: #e7e9ee; }
+.dev-console-title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(245, 165, 36, 0.8);
+}
+.dev-console-meta {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: #9aa1b1;
+}
+
+/* Progress bar */
+.dev-console-progress-track {
+  height: 2px;
+  background: rgba(255,255,255,0.07);
+  border-radius: 999px;
+  margin: 0 12px 2px;
+  overflow: hidden;
+}
+.dev-console-progress-fill {
+  height: 100%;
+  background: #f5a524;
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+
+/* Route list */
+.dev-console-list {
+  list-style: none;
+  margin: 4px 0 8px;
+  padding: 0;
+}
+.dev-console-item {
+  display: flex;
+  align-items: center;
+  padding: 2px 10px;
+}
+.dev-console-item.done .dev-console-route-link {
+  color: #4a5460;
+  text-decoration: line-through;
+}
+.dev-console-check-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  width: 100%;
+}
+.dev-console-checkbox {
+  accent-color: #f5a524;
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+}
+.dev-console-route-link {
+  font-size: 12px;
+  color: #9aa1b1;
+  text-decoration: none;
+  flex: 1;
+  padding: 4px 0;
+  transition: color 0.15s;
+}
+.dev-console-route-link:hover { color: #e7e9ee; }
+.dev-console-route-link.active { color: #f5a524; font-weight: 600; }
+
+/* Collapsed sidebar — icon only */
+.dev-console-icon-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 8px 0;
+  background: none;
+  border: none;
+  color: rgba(245, 165, 36, 0.7);
+  cursor: pointer;
+}
+.dev-console-badge {
+  position: absolute;
+  top: 4px;
+  right: 8px;
+  background: #f5a524;
+  color: #0b0d14;
+  font-size: 9px;
+  font-weight: 800;
+  border-radius: 999px;
+  padding: 1px 4px;
+  line-height: 1;
+}
