@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Bill Hive — Dev Guide & Entity Reference</title>
+<style>
+:root {
+  --bg: #0c0e15;
+  --panel: #13161f;
+  --panel-alt: #191d28;
+  --border: #24293a;
+  --text: #e7e9ee;
+  --muted: #8a93a8;
+  --accent: #f5a524;
+  --blue: #4f8cff;
+  --green: #3fb950;
+  --red: #f85149;
+  --yellow: #d29922;
+  --purple: #bc8cff;
+  --code-bg: #090b10;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* Header */
+header{padding:28px 32px 20px;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(12,14,21,.96);backdrop-filter:blur(8px);z-index:50}
+.header-inner{display:flex;align-items:center;gap:14px;max-width:1200px;margin:0 auto}
+.header-logo{display:flex;align-items:center;justify-content:center;width:36px;height:36px;background:rgba(245,165,36,.12);border:1px solid rgba(245,165,36,.3);border-radius:8px;color:var(--accent)}
+.header-text h1{font-size:18px;font-weight:800;color:var(--text)}
+.header-text p{font-size:12.5px;color:var(--muted);margin-top:2px}
+.header-badges{margin-left:auto;display:flex;gap:8px}
+.badge{display:inline-block;font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px}
+.badge-dev{background:rgba(245,165,36,.12);color:var(--accent);border:1px solid rgba(245,165,36,.3)}
+.badge-v2{background:rgba(79,140,255,.1);color:var(--blue);border:1px solid rgba(79,140,255,.25)}
+
+/* Layout */
+.layout{display:grid;grid-template-columns:220px 1fr;max-width:1200px;margin:0 auto;min-height:calc(100vh - 90px)}
+
+/* Sidebar TOC */
+.toc-sidebar{padding:24px 0;position:sticky;top:90px;height:calc(100vh - 90px);overflow-y:auto;border-right:1px solid var(--border)}
+.toc-section{margin-bottom:20px;padding:0 16px}
+.toc-section-title{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.toc-link{display:block;font-size:12.5px;color:var(--muted);padding:4px 8px;border-radius:5px;transition:background .12s,color .12s}
+.toc-link:hover{background:var(--panel-alt);color:var(--text);text-decoration:none}
+
+/* Content */
+main{padding:32px 36px 100px}
+.section-heading{font-size:22px;font-weight:800;color:var(--text);margin-bottom:6px;display:flex;align-items:center;gap:10px}
+.section-desc{font-size:13.5px;color:var(--muted);margin-bottom:28px;line-height:1.6}
+
+/* Resource block */
+.resource{margin-bottom:24px;background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.resource-header{display:flex;align-items:center;gap:12px;padding:13px 18px;border-bottom:1px solid var(--border);background:var(--panel-alt)}
+.resource-title{font-size:13.5px;font-weight:700;flex:1}
+.resource-desc{font-size:12px;color:var(--muted)}
+
+/* Method badge */
+.method{font-size:10px;font-weight:800;padding:3px 9px;border-radius:5px;letter-spacing:.04em;flex-shrink:0}
+.GET   {background:rgba(63,185,80,.12);color:var(--green);border:1px solid rgba(63,185,80,.25)}
+.POST  {background:rgba(210,153,34,.12);color:var(--yellow);border:1px solid rgba(210,153,34,.25)}
+.PUT   {background:rgba(79,140,255,.12);color:var(--blue);border:1px solid rgba(79,140,255,.25)}
+.DELETE{background:rgba(248,81,73,.12);color:var(--red);border:1px solid rgba(248,81,73,.25)}
+.PATCH {background:rgba(188,140,255,.12);color:var(--purple);border:1px solid rgba(188,140,255,.25)}
+
+/* Route path */
+.route-path{font-family:'SF Mono','Fira Code',monospace;font-size:13px;color:var(--blue);background:rgba(79,140,255,.07);padding:2px 7px;border-radius:4px}
+
+/* Table */
+.param-table{width:100%;border-collapse:collapse;font-size:12.5px}
+.param-table th{text-align:left;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);padding:8px 16px;border-bottom:1px solid var(--border);background:rgba(0,0,0,.2)}
+.param-table td{padding:9px 16px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:top}
+.param-table tr:last-child td{border-bottom:none}
+.param-name{font-family:'SF Mono','Fira Code',monospace;font-size:12px;color:var(--accent)}
+.param-type{color:var(--purple);font-family:'SF Mono','Fira Code',monospace;font-size:11.5px}
+.param-req{font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;background:rgba(248,81,73,.1);color:var(--red)}
+.param-opt{font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;background:rgba(138,147,168,.1);color:var(--muted)}
+
+/* Code block */
+.code-block{background:var(--code-bg);border-top:1px solid var(--border);padding:12px 16px;font-family:'SF Mono','Fira Code',monospace;font-size:11.5px;color:#aab4c8;line-height:1.7;overflow-x:auto}
+.code-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);padding:8px 16px 4px;border-top:1px solid var(--border);background:rgba(0,0,0,.12)}
+
+/* Entity card */
+.entity-card{margin-bottom:28px;background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.entity-header{display:flex;align-items:center;gap:10px;padding:14px 18px;background:var(--panel-alt);border-bottom:1px solid var(--border)}
+.entity-name{font-size:14px;font-weight:800;color:var(--text)}
+.entity-table-name{font-size:11.5px;color:var(--muted);font-family:'SF Mono','Fira Code',monospace}
+.entity-desc{font-size:12px;color:var(--muted);margin-left:auto}
+.field-table{width:100%;border-collapse:collapse;font-size:12.5px}
+.field-table th{text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);padding:7px 16px;border-bottom:1px solid var(--border);background:rgba(0,0,0,.15)}
+.field-table td{padding:8px 16px;border-bottom:1px solid rgba(255,255,255,.03);vertical-align:top}
+.field-table tr:last-child td{border-bottom:none}
+.field-name{font-family:'SF Mono','Fira Code',monospace;font-size:12px;color:var(--accent)}
+.field-type{font-family:'SF Mono','Fira Code',monospace;font-size:11.5px;color:var(--purple)}
+.field-pk{background:rgba(245,165,36,.1);color:var(--accent);font-size:10px;font-weight:700;padding:2px 5px;border-radius:3px}
+.field-fk{background:rgba(79,140,255,.1);color:var(--blue);font-size:10px;font-weight:700;padding:2px 5px;border-radius:3px}
+.field-uni{background:rgba(63,185,80,.1);color:var(--green);font-size:10px;font-weight:700;padding:2px 5px;border-radius:3px}
+.field-nn{background:rgba(188,140,255,.1);color:var(--purple);font-size:10px;font-weight:700;padding:2px 5px;border-radius:3px}
+
+/* Relationship diagram box */
+.rel-box{margin:16px 18px;padding:14px 16px;background:var(--code-bg);border:1px solid var(--border);border-radius:8px;font-family:'SF Mono','Fira Code',monospace;font-size:12px;color:#aab4c8;line-height:1.9;white-space:pre}
+
+/* Divider */
+.section-divider{height:1px;background:var(--border);margin:40px 0}
+.section-number{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:rgba(245,165,36,.15);border:1px solid rgba(245,165,36,.3);font-size:13px;font-weight:800;color:var(--accent)}
+
+/* Legend */
+.legend{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px;padding:12px 16px;background:var(--panel);border:1px solid var(--border);border-radius:8px}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--muted)}
+
+@media(max-width:768px){
+  .layout{grid-template-columns:1fr}
+  .toc-sidebar{display:none}
+  main{padding:20px 16px 60px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-logo">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+        <polyline points="16 18 22 12 16 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <polyline points="8 6 2 12 8 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="header-text">
+      <h1>Bill Hive — Developer Guide</h1>
+      <p>API routes, request shapes, and database entity reference for the Spring Boot backend</p>
+    </div>
+    <div class="header-badges">
+      <span class="badge badge-dev">DEV ONLY</span>
+      <span class="badge badge-v2">v2</span>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <!-- Sidebar TOC -->
+  <nav class="toc-sidebar" aria-label="Table of contents">
+    <div class="toc-section">
+      <div class="toc-section-title">API Routes</div>
+      <a class="toc-link" href="#auth">Auth</a>
+      <a class="toc-link" href="#account">Account</a>
+      <a class="toc-link" href="#items">Items</a>
+      <a class="toc-link" href="#stock">Stock</a>
+      <a class="toc-link" href="#brands">Brands</a>
+      <a class="toc-link" href="#suppliers">Suppliers</a>
+      <a class="toc-link" href="#customers">Customers</a>
+      <a class="toc-link" href="#bills">Bills</a>
+      <a class="toc-link" href="#sales-return">Sales Return</a>
+      <a class="toc-link" href="#sale-summary">Sale Summary</a>
+      <a class="toc-link" href="#fulfillment">Fulfillment</a>
+      <a class="toc-link" href="#catalogue">Catalogue</a>
+      <a class="toc-link" href="#settings">Settings</a>
+      <a class="toc-link" href="#data">Data Export/Import</a>
+    </div>
+    <div class="toc-section">
+      <div class="toc-section-title">Database Entities</div>
+      <a class="toc-link" href="#ent-user">User / Account</a>
+      <a class="toc-link" href="#ent-item">Item</a>
+      <a class="toc-link" href="#ent-stocklog">StockLog</a>
+      <a class="toc-link" href="#ent-brand">Brand</a>
+      <a class="toc-link" href="#ent-supplier">Supplier</a>
+      <a class="toc-link" href="#ent-customer">Customer</a>
+      <a class="toc-link" href="#ent-bill">Bill</a>
+      <a class="toc-link" href="#ent-billlineitem">BillLineItem</a>
+      <a class="toc-link" href="#ent-salesreturn">SalesReturn</a>
+      <a class="toc-link" href="#ent-po">PurchaseOrder</a>
+      <a class="toc-link" href="#ent-settings">AppSettings</a>
+      <a class="toc-link" href="#ent-relationships">Relationships</a>
+    </div>
+  </nav>
+
+  <main>
+    <!-- ═══════════════════════════════════════════════════════════════
+         SECTION 1 — API ROUTES
+    ═══════════════════════════════════════════════════════════════ -->
+    <div class="section-heading" id="api-routes">
+      <span class="section-number">1</span>
+      API Route Documentation
+    </div>
+    <p class="section-desc">
+      All routes are relative to your configured <code>baseUrl</code> (e.g. <code>http://localhost:4000/api</code>).
+      The frontend <code>api.js</code> gateway adds the <code>Authorization: Bearer &lt;token&gt;</code> header automatically when
+      <code>VITE_API_KEY</code> is set. JWT auth routes issue their own tokens on login.
+    </p>
+
+    <!-- AUTH -->
+    <div id="auth" style="scroll-margin-top:100px">
+      <h2 style="font-size:15px;font-weight:800;color:var(--muted);margin-bottom:12px;text-transform:uppercase;letter-spacing:.06em">🔑 Auth</h2>
+
+      <div class="resource">
+        <div class="resource-header">
+          <span class="method POST">POST</span>
+          <span class="route-path">/auth/register</span>
+          <span class="resource-desc">Create a new user account</span>
+        </div>
+        <div class="code-label">Request Body</div>
+        <div class="code-block">{ "username": "string", "password": "string", "name": "string", "email": "string" }</div>
+        <div class="code-label">Response 201</div>
+        <div class="code-block">{ "token": "jwt-string", "user": { "id": 1, "username": "...", "name": "...", "email": "..." } }</div>
+      </div>
+
+      <div class="resource">
+        <div class="resource-header">
+          <span class="method POST">POST</span>
+          <span class="route-path">/auth/login</span>
+          <span class="resource-desc">Authenticate and receive a JWT</span>
+        </div>
+        <div class="code-label">Request Body</div>
+        <div class="code-block">{ "username": "string", "password": "string" }</div>
+        <div class="code-label">Response 200</div>
+        <div class="code-block">{ "token": "jwt-string", "user": { "id": 1, "username": "...", "name": "...", "email": "..." } }</div>
+      </div>
+
+      <div class="resource">
+        <div class="resource-header">
+          <span class="method POST">POST</span>
+          <span class="route-path">/auth/logout</span>
+          <span class="resource-desc">Invalidate the current token (requires Bearer token)</span>
+        </div>
+        <div class="code-label">Response 204</div>
+        <div class="code-block">// No body</div>
+      </div>
+
+      <div class="resource">
+        <div class="resource-header">
+          <span class="method GET">GET</span>
+          <span class="route-path">/auth/verify</span>
+          <span class="resource-desc">Verify token validity</span>
+        </div>
+        <div class="code-label">Response 200</div>
+        <div class="code-block">{ "valid": true, "expiresAt": "ISO-date" }</div>
+      </div>
+    </div>
+
+    <!-- ACCOUNT -->
+    <div id="account" style="scroll-margin-top:100px;margin-top:28px">
+      <h2 style="font-size:15px;font-weight:800;color:var(--muted);margin-bottom:12px;text-transform:uppercase;letter-spacing:.06em">👤 Account</h2>
+
+      <div class="resource">
+        <div class="resource-header">
+          <span class="method GET">GET</span>
+          <span class="route-path">/account</span>
+          <span class="resource-desc">Get the current user profile</span>
+        </div>
+        <div class="code-label">Response 200</div>
+        <div class="code-block">{ "id": 1, "username": "...", "name": "...", "email": "...", "createdAt": "ISO" }</div>
+      </div>
+
+      <div class="resource">
+        <div class="resource-header">
+          <span class="method PATCH">PATCH</span>
+          <span class="route-path">/account</span>
+          <span class="resource-desc">Update profile (name, email)</span>
+        </div>
+        <div class="code-label">Request Body</div>
+        <div class="code-block">{ "name": "string?", "email": "string?" }</div>
+      </div>
+
+      <div class="resource">
+        <div class="resource-header">
+          <span class="method POST">POST</span>
+          <span class="route-path">/account/change-password</span>
+          <span class="resource-desc">Change password</span>
+        </div>
+        <div class="code-label">Request Body</div>
+        <div class="code-block">{ "currentPassword": "string", "newPassword": "string" }</div>
+      </div>
+    </div>
+
+    <!-- ITEMS -->
+    <div id="items" style="scroll-margin-top:100px;margin-top:28px">
+      <h2 style="font-size:15px;font-weight:800;color:var(--muted);margin-bottom:12px;text-transform:uppercase;letter-spacing:.06em">📦 Items</h2>
+      <div class="resource">
+        <div class="resource-header"><span class="method GET">GET</span><span class="route-path">/items</span><span class="resource-desc">List all items</span></div>
+        <div class="param-table" style="overflow:auto">
+          <table class="param-table"><tr><th>Query Param</th><th>Type</th><th>Required</th><th>Description</th></tr>
+          <tr><td class="param-name">search</td><td class="param-type">string</td><td><span class="param-opt">optional</span></td><td>Filter by name/SKU</td></tr>
+          <tr><td class="param-name">brandId</td><td class="param-type">number</td><td><span class="param-opt">optional</span></td><td>Filter by brand</td></tr>
+          <tr><td class="param-name">page</td><td class="param-type">number</td><td><span class="param-opt">optional</span></td><td>Pagination page (default 1)</td></tr>
+          <tr><td class="param-name">limit</td><td class="param-type">number</td><td><span class="param-opt">optional</span></td><td>Items per page (default 50)</td></tr>
+          </table>
+        </div>
+        <div class="code-label">Response 200</div>
+        <div class="code-block">{ "items": [...], "total": 120, "page": 1, "limit": 50 }</div>
+      </div>
+      <div class="resource">
+        <div class="resource-header"><span class="method GET">GET</span><span class="route-path">/items/:id</span><span class="resource-desc">Get single item</span></div>
+      </div>
+      <div class="resource">
+        <div class="resource-header"><span class="method POST">POST</span><span class="route-path">/items</span><span class="resource-desc">Create item</span></div>
+        <div class="code-label">Request Body</div>
+        <div class="code-block">{ "name": "string", "sku": "string?", "price": 0.0, "cost": 0.0, "stock": 0, "unit": "pcs", "brandId": 1?, "imageUrl": "string?", "description": "string?" }</div>
+      </div>
+      <div class="resource">
+        <div class="resource-header"><span class="method PUT">PUT</span><span class="route-path">/items/:id</span><span class="resource-desc">Update item</span></div>
+      </div>
+      <div class="resource">
+        <div class="resource-header"><span class="method DELETE">DELETE</span><span class="route-path">/items/:id</span><span class="resource-desc">Delete item</span></div>
+      </div>
+    </div>
+
+    <!-- STOCK -->
+    <div id="stock" style="scroll-margin-top:100px;margin-top:28px">
+      <h2 style="font-size:15px;font-weight:800;color:var(--muted);margin-bottom:12px;text-transform:uppercase;letter-spacing:.06em">📊 Stock</h2>
+      <div class="resource">
+        <div class="resource-header"><span class="method GET">GET</span><span class="route-path">/stock</span><span class="resource-desc">Stock log entries</span></div>
+        <div class="param-table" style="overflow:auto">
+          <table class="param-table"><tr><th>Query Param</th><th>Type</th><th>Description</th></tr>
+          <tr><td class="param-name">itemId</td><td class="param-type">number</td><td>Filter by item</td></tr>
+          <tr><td class="param-name">reason</td><td class="param-type">string</td><td>SALE | PURCHASE | RETURN | ADJUSTMENT | DAMAGE</td></tr>
+          <tr><td class="param-name">from</td><td class="param-type">ISO date</td><td>Date range start</td></tr>
+          <tr><td class="param-name">to</td><td class="param-type">ISO date</td><td>Date range end</td></tr>
+          </table>
+        </div>
+      </div>
+      <div class="resource">
+        <div class="resource-header"><span class="method POST">POST</span><span class="route-path">/stock/adjust</span><span class="resource-desc">Manual stock adjustment</span></div>
+        <div class="code-label">Request Body</div>
+        <div class="code-block">{ "itemId": 1, "delta": -5, "reason": "ADJUSTMENT", "note": "string?" }</div>
+      </div>
+    </div>
+
+    <!-- BRANDS -->
+    <div id="brands" style="scroll-margin-top:100px;margin-top:28px">
+      <h2 style="font-size:15px;font-weight:800;color:var(--muted);margin-bottom:12px;text-transform:uppercase;letter-spacing:.06em">🏷️ Brands</h2>
+      <div class="resource"><div class="resource-header"><span class="method GET">GET</span><span class="route-path">/brands</span><span class="resource-desc">List all brands</span></div></div>
+      <div class="resource"><div class="resource-header"><span class="method GET">GET</span><span class="route-path">/brands/:id</span><span class="resource-desc">Get brand + its items</span></div></div>
+      <div class="resource">
+        <div class="resource-header"><span class="method POST">POST</span><span class="route-path">/brands</span><span class="resource-desc">Create brand</span></div>
+        <div class="code-label">Request Body</div>
+        <div class="code-block">{ "name": "string", "logoUrl": "string?", "description": "string?", "website": "string?" }</div>
+      </div>
+      <div class="resource"><div class="resource-header"><span class="method PUT">PUT</span><span class="route-path">/brands/:id</span><span class="resource-desc">Update brand</span></div></div>
+      <div class="resource"><div class="resource-header"><span class="method DELETE">DELETE</span><span class="route-path">/brands/:id</span><span class="resource-desc">Delete brand</span></div></div>
+    </div>
+
+    <!-- SUPPLIERS -->
+    <div id="suppliers" style="scroll-margin-top:100px;margin-top:28px">
+      <h2 style="font-size:15px;font-weight:800;color:var(--muted);margin-bottom:12px;text-transform:uppercase;letter-spacing:.06em">🚚 Suppliers</h2>
+      <div class="resource"><div class="resource-header"><span class="method GET">GET</span><span class="route-path">/suppliers</span><span class="resource-desc">List suppliers</span></div></div>
+      <div class="resource">
+        <div class="resource-header"><span class="method POST">POST</span><span class="route-path">/suppliers</span><span class="resource-desc">Create supplier</span></div>
+        <div class="code-label">Request Body</div>
+        <div class="code-block">{ "name": "string", "contact": "string?", "phone": "string?", "email": "string?", "address": "string?", "gstin": "string?" }</div>
+      </div>
+      <div class="resource"><div class="resource-header"><span class="method PUT">PUT</span><span class="route-path">/suppliers/:id</span><span class="resource-desc">Update supplier</span></div></div>
+      <div class="resource"><div class="resource-header"><span class="method DELETE">DELETE</span><span class="route-path">/suppliers/:id</span><span class="resource-desc">Delete supplier</span></div></div>
+    </div>
+
+    <!-- CUSTOMERS -->
+    <div id="customers" style="scroll-margin-top:100px;margin-top:28px">
+      <h2 style="font-size:15px;font-weight:800;color:var(--muted);margin-bottom:12px;text-transform:uppercase;letter-spacing:.06em">👥 Customers</h2>
+      <div class="resource"><div class="resource-header"><span class="method GET">GET</span><span class="route-path">/customers</span><span class="resource-desc">List customers (paginated)</span></div></div>
+      <div class="resource">
+        <div class="resource-header"><span class="method POST">POST</span><span class="route-path">/customers</span><span class="resource-desc">Create customer</span></div>
+        <div class="code-label">Request Body</div>
+        <div class="code-block">{ "name": "string", "phone": "string?", "email": "string?", "address": "string?", "gstin": "string?" }</div>
+      </div>
+      <div class="resource"><div class="resource-header"><span class="method PUT">PUT</span><span class="route-path">/customers/:id</span><span class="resource-desc">Update customer</span></div></div>
+      <div class="resource"><div class="resource-header"><span class="method DELETE">DELETE</span><span class="route-path">/customers/:id</span><span class="resource-desc">Delete customer</span></div></div>
+    </div>
+
+    <!-- BILLS -->
+    <div id="bills" style="scroll-margin-top:100px;margin-top:28px">
+      <h2 style="font-size:15px;font-weight:800;color:var(--muted);margin-bottom:12px;text-transform:uppercase;letter-spacing:.06em">🧾 Bills</h2>
+      <div class="resource">
+        <div class="resource-header"><span class="method GET">GET</span><span class="route-path">/bills</span><span class="resource-desc">List bills (paginated, filterable)</span></div>
+        <div class="param-table" style="overflow:auto">
+          <table class="param-table"><tr><th>Query Param</th><th>Type</th><th>Description</th></tr>
+          <tr><td class="param-name">customerId</td><td class="param-type">number</td><td>Filter by customer</td></tr>
+          <tr><td class="param-name">from / to</td><td class="param-type">ISO date</td><td>Date range</td></tr>
+          <tr><td class="param-name">status</td><td class="param-type">string</td><td>PAID | UNPAID | PARTIAL</td></tr>
+          <tr><td class="param-name">invoiceNo</td><td class="param-type">string</td><td>Exact invoice number lookup</td></tr>
+          </table>
+        </div>
+      </div>
+      <div class="resource"><div class="resource-header"><span class="method GET">GET</span><span class="route-path">/bills/:id</span><span class="resource-desc">Get bill with line items</span></div></div>
+      <div class="resource">
+        <div class="resource-header"><span class="method POST">POST</span><span class="route-path">/bills</span><span class="resource-desc">Create bill (auto-generates invoice number)</span></div>
+        <div class="code-label">Request Body</div>
+        <div class="code-block">{
+  "customerId": 1?,
+  "customerName": "string?",
+  "date": "ISO-date",
+  "dueDate": "ISO-date?",
+  "taxRate": 18.0,
+  "discountAmount": 0.0,
+  "paymentStatus": "PAID",
+  "notes": "string?",
+  "lineItems": [
+    { "itemId": 1, "name": "...", "qty": 2, "price": 50.0, "discount": 0 }
+  ]
+}</div>
+      </div>
+      <div class="resource"><div class="resource-header"><span class="method PUT">PUT</span><span class="route-path">/bills/:id</span><span class="resource-desc">Update bill</span></div></div>
+      <div class="resource"><div class="resource-header"><span class="method DELETE">DELETE</span><span class="route-path">/bills/:id</span><span class="resource-desc">Delete bill</span></div></div>
+    </div>
+
+    <!-- SALES RETURN -->
+    <div id="sales-return" style="scroll-margin-top:100px;margin-top:28px">
+      <h2 style="font-size:15px;font-weight:800;color:var(--muted);margin-bottom:12px;text-transform:uppercase;letter-spacing:.06em">↩️ Sales Return</h2>
+      <div class="resource"><div class="resource-header"><span class="method GET">GET</span><span class="route-path">/sales-returns</span><span class="resource-desc">List returns</span></div></div>
+      <div class="resource">
+        <div class="resource-header"><span class="method POST">POST</span><span class="route-path">/sales-returns</span><span class="resource-desc">Create return (restores stock)</span></div>
+        <div class="code-label">Request Body</div>
+        <div class="code-block">{ "billId": 1, "reason": "string?", "items": [{ "itemId": 1, "qty": 1 }] }</div>
+      </div>
+    </div>
+
+    <!-- SALE SUMMARY -->
+    <div id="sale-summary" style="scroll-margin-top:100px;margin-top:28px">
+      <h2 style="font-size:15px;font-weight:800;color:var(--muted);margin-bottom:12px;text-transform:uppercase;letter-spacing:.06em">📈 Sale Summary</h2>
+      <div class="resource">
+        <div class="resource-header"><span class="method GET">GET</span><span class="route-path">/summary/sales</span><span class="resource-desc">Aggregated sales metrics</span></div>
+        <div class="param-table" style="overflow:auto">
+          <table class="param-table"><tr><th>Query Param</th><th>Description</th></tr>
+          <tr><td class="param-name">period</td><td>today | week | month | year | custom</td></tr>
+          <tr><td class="param-name">from / to</td><td>ISO dates (required when period=custom)</td></tr>
+          </table>
+        </div>
+        <div class="code-label">Response 200</div>
+        <div class="code-block">{ "totalRevenue": 0.0, "totalBills": 0, "avgOrderValue": 0.0, "topItems": [...], "dailyBreakdown": [...] }</div>
+      </div>
+    </div>
+
+    <!-- FULFILLMENT -->
+    <div id="fulfillment" style="scroll-margin-top:100px;margin-top:28px">
+      <h2 style="font-size:15px;font-weight:800;color:var(--muted);margin-bottom:12px;text-transform:uppercase;letter-spacing:.06em">📫 Fulfillment</h2>
+      <div class="resource"><div class="resource-header"><span class="method GET">GET</span><span class="route-path">/fulfillment</span><span class="resource-desc">List open purchase orders by supplier</span></div></div>
+      <div class="resource">
+        <div class="resource-header"><span class="method POST">POST</span><span class="route-path">/fulfillment/receive</span><span class="resource-desc">Mark PO items as received (updates stock)</span></div>
+        <div class="code-label">Request Body</div>
+        <div class="code-block">{ "poId": 1, "receivedItems": [{ "poItemId": 1, "receivedQty": 10 }] }</div>
+      </div>
+    </div>
+
+    <!-- CATALOGUE -->
+    <div id="catalogue" style="scroll-margin-top:100px;margin-top:28px">
+      <h2 style="font-size:15px;font-weight:800;color:var(--muted);margin-bottom:12px;text-transform:uppercase;letter-spacing:.06em">📚 Catalogue</h2>
+      <div class="resource"><div class="resource-header"><span class="method GET">GET</span><span class="route-path">/catalogue</span><span class="resource-desc">Public item catalogue (no auth)</span></div></div>
+      <div class="resource"><div class="resource-header"><span class="method GET">GET</span><span class="route-path">/catalogue/:itemId</span><span class="resource-desc">Single catalogue item</span></div></div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div id="settings" style="scroll-margin-top:100px;margin-top:28px">
+      <h2 style="font-size:15px;font-weight:800;color:var(--muted);margin-bottom:12px;text-transform:uppercase;letter-spacing:.06em">⚙️ Settings</h2>
+      <div class="resource"><div class="resource-header"><span class="method GET">GET</span><span class="route-path">/settings</span><span class="resource-desc">Get all app settings</span></div></div>
+      <div class="resource">
+        <div class="resource-header"><span class="method PUT">PUT</span><span class="route-path">/settings</span><span class="resource-desc">Save settings object</span></div>
+        <div class="code-label">Request Body</div>
+        <div class="code-block">{ "company": {...}, "print": {...}, "invoice": {...}, "ui": {...} }</div>
+      </div>
+    </div>
+
+    <!-- DATA EXPORT/IMPORT -->
+    <div id="data" style="scroll-margin-top:100px;margin-top:28px">
+      <h2 style="font-size:15px;font-weight:800;color:var(--muted);margin-bottom:12px;text-transform:uppercase;letter-spacing:.06em">💾 Data Export / Import</h2>
+      <div class="resource"><div class="resource-header"><span class="method GET">GET</span><span class="route-path">/export</span><span class="resource-desc">Full data dump (JSON)</span></div></div>
+      <div class="resource"><div class="resource-header"><span class="method POST">POST</span><span class="route-path">/import</span><span class="resource-desc">Import full dump</span></div></div>
+      <div class="resource"><div class="resource-header"><span class="method POST">POST</span><span class="route-path">/clear-all</span><span class="resource-desc">⚠️ Wipe all user data</span></div></div>
+      <div class="resource"><div class="resource-header"><span class="method GET">GET</span><span class="route-path">/health</span><span class="resource-desc">Health check (used by Dev FAB connection test)</span></div>
+        <div class="code-label">Response 200</div>
+        <div class="code-block">{ "status": "ok", "timestamp": "ISO" }</div>
+      </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         SECTION 2 — DATABASE ENTITIES
+    ═══════════════════════════════════════════════════════════════ -->
+    <div class="section-heading" id="entities">
+      <span class="section-number">2</span>
+      Database Entities &amp; Tables
+    </div>
+    <p class="section-desc">
+      MySQL schema for the Spring Boot backend. Uses Hibernate / JPA. All tables
+      have <code>created_at</code> and <code>updated_at</code> managed by Hibernate's
+      <code>@CreationTimestamp</code> / <code>@UpdateTimestamp</code> (omitted from
+      each table for brevity).
+    </p>
+
+    <div class="legend">
+      <div class="legend-item"><span class="field-pk">PK</span> Primary Key</div>
+      <div class="legend-item"><span class="field-fk">FK</span> Foreign Key</div>
+      <div class="legend-item"><span class="field-uni">UNI</span> Unique</div>
+      <div class="legend-item"><span class="field-nn">NN</span> Not Null</div>
+    </div>
+
+    <!-- USER -->
+    <div class="entity-card" id="ent-user" style="scroll-margin-top:100px">
+      <div class="entity-header">
+        <div>
+          <div class="entity-name">User / Account</div>
+          <div class="entity-table-name">TABLE: users</div>
+        </div>
+        <div class="entity-desc">One user per installation</div>
+      </div>
+      <table class="field-table"><tr><th>Column</th><th>Type</th><th>Constraints</th><th>Description</th></tr>
+      <tr><td class="field-name">id</td><td class="field-type">BIGINT</td><td><span class="field-pk">PK</span> AUTO_INCREMENT</td><td>Primary key</td></tr>
+      <tr><td class="field-name">username</td><td class="field-type">VARCHAR(50)</td><td><span class="field-uni">UNI</span> <span class="field-nn">NN</span></td><td>Login handle</td></tr>
+      <tr><td class="field-name">password_hash</td><td class="field-type">VARCHAR(255)</td><td><span class="field-nn">NN</span></td><td>PBKDF2/bcrypt hash</td></tr>
+      <tr><td class="field-name">salt</td><td class="field-type">VARCHAR(64)</td><td><span class="field-nn">NN</span></td><td>Salt used for hash</td></tr>
+      <tr><td class="field-name">name</td><td class="field-type">VARCHAR(120)</td><td><span class="field-nn">NN</span></td><td>Display name</td></tr>
+      <tr><td class="field-name">email</td><td class="field-type">VARCHAR(180)</td><td></td><td>Contact email</td></tr>
+      </table>
+    </div>
+
+    <!-- ITEM -->
+    <div class="entity-card" id="ent-item" style="scroll-margin-top:100px">
+      <div class="entity-header">
+        <div>
+          <div class="entity-name">Item</div>
+          <div class="entity-table-name">TABLE: items</div>
+        </div>
+        <div class="entity-desc">Product / inventory record</div>
+      </div>
+      <table class="field-table"><tr><th>Column</th><th>Type</th><th>Constraints</th><th>Description</th></tr>
+      <tr><td class="field-name">id</td><td class="field-type">BIGINT</td><td><span class="field-pk">PK</span></td><td></td></tr>
+      <tr><td class="field-name">name</td><td class="field-type">VARCHAR(200)</td><td><span class="field-nn">NN</span></td><td>Product name</td></tr>
+      <tr><td class="field-name">sku</td><td class="field-type">VARCHAR(80)</td><td><span class="field-uni">UNI</span></td><td>Stock keeping unit</td></tr>
+      <tr><td class="field-name">price</td><td class="field-type">DECIMAL(12,2)</td><td><span class="field-nn">NN</span></td><td>Selling price (INR)</td></tr>
+      <tr><td class="field-name">cost</td><td class="field-type">DECIMAL(12,2)</td><td></td><td>Purchase cost</td></tr>
+      <tr><td class="field-name">stock</td><td class="field-type">INT</td><td>DEFAULT 0</td><td>Current qty on hand</td></tr>
+      <tr><td class="field-name">unit</td><td class="field-type">VARCHAR(20)</td><td>DEFAULT 'pcs'</td><td>Unit of measure</td></tr>
+      <tr><td class="field-name">brand_id</td><td class="field-type">BIGINT</td><td><span class="field-fk">FK</span> → brands.id</td><td>Owning brand (nullable)</td></tr>
+      <tr><td class="field-name">image_url</td><td class="field-type">TEXT</td><td></td><td>Base64 or path</td></tr>
+      <tr><td class="field-name">description</td><td class="field-type">TEXT</td><td></td><td>Optional description</td></tr>
+      <tr><td class="field-name">active</td><td class="field-type">BOOLEAN</td><td>DEFAULT true</td><td>Soft-delete flag</td></tr>
+      </table>
+    </div>
+
+    <!-- STOCK LOG -->
+    <div class="entity-card" id="ent-stocklog" style="scroll-margin-top:100px">
+      <div class="entity-header">
+        <div>
+          <div class="entity-name">StockLog</div>
+          <div class="entity-table-name">TABLE: stock_logs</div>
+        </div>
+        <div class="entity-desc">Immutable movement ledger</div>
+      </div>
+      <table class="field-table"><tr><th>Column</th><th>Type</th><th>Constraints</th><th>Description</th></tr>
+      <tr><td class="field-name">id</td><td class="field-type">BIGINT</td><td><span class="field-pk">PK</span></td><td></td></tr>
+      <tr><td class="field-name">item_id</td><td class="field-type">BIGINT</td><td><span class="field-fk">FK</span> <span class="field-nn">NN</span></td><td>→ items.id</td></tr>
+      <tr><td class="field-name">delta</td><td class="field-type">INT</td><td><span class="field-nn">NN</span></td><td>+add / −remove</td></tr>
+      <tr><td class="field-name">reason</td><td class="field-type">ENUM</td><td><span class="field-nn">NN</span></td><td>SALE | PURCHASE | RETURN | ADJUSTMENT | DAMAGE</td></tr>
+      <tr><td class="field-name">ref_id</td><td class="field-type">BIGINT</td><td></td><td>bill_id or po_id that caused this</td></tr>
+      <tr><td class="field-name">note</td><td class="field-type">VARCHAR(255)</td><td></td><td>Optional free-text note</td></tr>
+      </table>
+    </div>
+
+    <!-- BRAND -->
+    <div class="entity-card" id="ent-brand" style="scroll-margin-top:100px">
+      <div class="entity-header">
+        <div><div class="entity-name">Brand</div><div class="entity-table-name">TABLE: brands</div></div>
+      </div>
+      <table class="field-table"><tr><th>Column</th><th>Type</th><th>Constraints</th><th>Description</th></tr>
+      <tr><td class="field-name">id</td><td class="field-type">BIGINT</td><td><span class="field-pk">PK</span></td><td></td></tr>
+      <tr><td class="field-name">name</td><td class="field-type">VARCHAR(120)</td><td><span class="field-uni">UNI</span> <span class="field-nn">NN</span></td><td>Brand name</td></tr>
+      <tr><td class="field-name">logo_url</td><td class="field-type">TEXT</td><td></td><td>Base64 or path</td></tr>
+      <tr><td class="field-name">description</td><td class="field-type">TEXT</td><td></td><td></td></tr>
+      <tr><td class="field-name">website</td><td class="field-type">VARCHAR(255)</td><td></td><td></td></tr>
+      </table>
+    </div>
+
+    <!-- SUPPLIER -->
+    <div class="entity-card" id="ent-supplier" style="scroll-margin-top:100px">
+      <div class="entity-header">
+        <div><div class="entity-name">Supplier</div><div class="entity-table-name">TABLE: suppliers</div></div>
+      </div>
+      <table class="field-table"><tr><th>Column</th><th>Type</th><th>Constraints</th><th>Description</th></tr>
+      <tr><td class="field-name">id</td><td class="field-type">BIGINT</td><td><span class="field-pk">PK</span></td><td></td></tr>
+      <tr><td class="field-name">name</td><td class="field-type">VARCHAR(150)</td><td><span class="field-nn">NN</span></td><td>Company name</td></tr>
+      <tr><td class="field-name">contact</td><td class="field-type">VARCHAR(100)</td><td></td><td>Contact person</td></tr>
+      <tr><td class="field-name">phone</td><td class="field-type">VARCHAR(20)</td><td></td><td></td></tr>
+      <tr><td class="field-name">email</td><td class="field-type">VARCHAR(180)</td><td></td><td></td></tr>
+      <tr><td class="field-name">address</td><td class="field-type">TEXT</td><td></td><td></td></tr>
+      <tr><td class="field-name">gstin</td><td class="field-type">VARCHAR(20)</td><td></td><td>GST Identification Number</td></tr>
+      </table>
+    </div>
+
+    <!-- CUSTOMER -->
+    <div class="entity-card" id="ent-customer" style="scroll-margin-top:100px">
+      <div class="entity-header">
+        <div><div class="entity-name">Customer</div><div class="entity-table-name">TABLE: customers</div></div>
+      </div>
+      <table class="field-table"><tr><th>Column</th><th>Type</th><th>Constraints</th><th>Description</th></tr>
+      <tr><td class="field-name">id</td><td class="field-type">BIGINT</td><td><span class="field-pk">PK</span></td><td></td></tr>
+      <tr><td class="field-name">name</td><td class="field-type">VARCHAR(150)</td><td><span class="field-nn">NN</span></td><td></td></tr>
+      <tr><td class="field-name">phone</td><td class="field-type">VARCHAR(20)</td><td></td><td></td></tr>
+      <tr><td class="field-name">email</td><td class="field-type">VARCHAR(180)</td><td></td><td></td></tr>
+      <tr><td class="field-name">address</td><td class="field-type">TEXT</td><td></td><td></td></tr>
+      <tr><td class="field-name">gstin</td><td class="field-type">VARCHAR(20)</td><td></td><td>GST ID (B2B)</td></tr>
+      </table>
+    </div>
+
+    <!-- BILL -->
+    <div class="entity-card" id="ent-bill" style="scroll-margin-top:100px">
+      <div class="entity-header">
+        <div><div class="entity-name">Bill</div><div class="entity-table-name">TABLE: bills</div></div>
+        <div class="entity-desc">Invoice header</div>
+      </div>
+      <table class="field-table"><tr><th>Column</th><th>Type</th><th>Constraints</th><th>Description</th></tr>
+      <tr><td class="field-name">id</td><td class="field-type">BIGINT</td><td><span class="field-pk">PK</span></td><td></td></tr>
+      <tr><td class="field-name">invoice_no</td><td class="field-type">VARCHAR(20)</td><td><span class="field-uni">UNI</span> <span class="field-nn">NN</span></td><td>e.g. 2507-001 (yyMM + seq)</td></tr>
+      <tr><td class="field-name">customer_id</td><td class="field-type">BIGINT</td><td><span class="field-fk">FK</span></td><td>→ customers.id (nullable)</td></tr>
+      <tr><td class="field-name">customer_name</td><td class="field-type">VARCHAR(150)</td><td></td><td>Snapshot (walk-in name)</td></tr>
+      <tr><td class="field-name">date</td><td class="field-type">DATE</td><td><span class="field-nn">NN</span></td><td>Invoice date</td></tr>
+      <tr><td class="field-name">due_date</td><td class="field-type">DATE</td><td></td><td>Payment due date</td></tr>
+      <tr><td class="field-name">subtotal</td><td class="field-type">DECIMAL(14,2)</td><td><span class="field-nn">NN</span></td><td>Pre-tax, pre-discount</td></tr>
+      <tr><td class="field-name">discount_amount</td><td class="field-type">DECIMAL(12,2)</td><td>DEFAULT 0</td><td>Overall discount</td></tr>
+      <tr><td class="field-name">tax_rate</td><td class="field-type">DECIMAL(5,2)</td><td>DEFAULT 0</td><td>GST % applied</td></tr>
+      <tr><td class="field-name">tax_amount</td><td class="field-type">DECIMAL(12,2)</td><td><span class="field-nn">NN</span></td><td>Computed tax</td></tr>
+      <tr><td class="field-name">total</td><td class="field-type">DECIMAL(14,2)</td><td><span class="field-nn">NN</span></td><td>Final payable</td></tr>
+      <tr><td class="field-name">payment_status</td><td class="field-type">ENUM</td><td><span class="field-nn">NN</span></td><td>PAID | UNPAID | PARTIAL</td></tr>
+      <tr><td class="field-name">notes</td><td class="field-type">TEXT</td><td></td><td>Print footer notes</td></tr>
+      </table>
+    </div>
+
+    <!-- BILL LINE ITEM -->
+    <div class="entity-card" id="ent-billlineitem" style="scroll-margin-top:100px">
+      <div class="entity-header">
+        <div><div class="entity-name">BillLineItem</div><div class="entity-table-name">TABLE: bill_line_items</div></div>
+        <div class="entity-desc">Each product row in a bill</div>
+      </div>
+      <table class="field-table"><tr><th>Column</th><th>Type</th><th>Constraints</th><th>Description</th></tr>
+      <tr><td class="field-name">id</td><td class="field-type">BIGINT</td><td><span class="field-pk">PK</span></td><td></td></tr>
+      <tr><td class="field-name">bill_id</td><td class="field-type">BIGINT</td><td><span class="field-fk">FK</span> <span class="field-nn">NN</span></td><td>→ bills.id ON DELETE CASCADE</td></tr>
+      <tr><td class="field-name">item_id</td><td class="field-type">BIGINT</td><td><span class="field-fk">FK</span></td><td>→ items.id (nullable snapshot)</td></tr>
+      <tr><td class="field-name">name</td><td class="field-type">VARCHAR(200)</td><td><span class="field-nn">NN</span></td><td>Snapshot of item name at bill time</td></tr>
+      <tr><td class="field-name">qty</td><td class="field-type">INT</td><td><span class="field-nn">NN</span></td><td>Quantity sold</td></tr>
+      <tr><td class="field-name">price</td><td class="field-type">DECIMAL(12,2)</td><td><span class="field-nn">NN</span></td><td>Unit price at bill time</td></tr>
+      <tr><td class="field-name">discount</td><td class="field-type">DECIMAL(5,2)</td><td>DEFAULT 0</td><td>Line-level discount %</td></tr>
+      <tr><td class="field-name">line_total</td><td class="field-type">DECIMAL(14,2)</td><td><span class="field-nn">NN</span></td><td>Computed: qty × price × (1 − discount/100)</td></tr>
+      </table>
+    </div>
+
+    <!-- SALES RETURN -->
+    <div class="entity-card" id="ent-salesreturn" style="scroll-margin-top:100px">
+      <div class="entity-header">
+        <div><div class="entity-name">SalesReturn / SalesReturnItem</div><div class="entity-table-name">TABLE: sales_returns + sales_return_items</div></div>
+      </div>
+      <table class="field-table"><tr><th>Column</th><th>Type</th><th>Constraints</th><th>Description</th></tr>
+      <tr><td class="field-name">id</td><td class="field-type">BIGINT</td><td><span class="field-pk">PK</span></td><td></td></tr>
+      <tr><td class="field-name">bill_id</td><td class="field-type">BIGINT</td><td><span class="field-fk">FK</span> <span class="field-nn">NN</span></td><td>→ bills.id</td></tr>
+      <tr><td class="field-name">reason</td><td class="field-type">TEXT</td><td></td><td>Return reason</td></tr>
+      <tr><td class="field-name">refund_amount</td><td class="field-type">DECIMAL(12,2)</td><td></td><td>Auto-computed from returned items</td></tr>
+      <tr><td colspan="4" style="padding:6px 16px;color:var(--muted);font-size:11.5px;font-style:italic">SalesReturnItem: id, return_id (FK), item_id (FK), qty</td></tr>
+      </table>
+    </div>
+
+    <!-- PURCHASE ORDER -->
+    <div class="entity-card" id="ent-po" style="scroll-margin-top:100px">
+      <div class="entity-header">
+        <div><div class="entity-name">PurchaseOrder / PurchaseOrderItem</div><div class="entity-table-name">TABLE: purchase_orders + purchase_order_items</div></div>
+      </div>
+      <table class="field-table"><tr><th>Column</th><th>Type</th><th>Constraints</th><th>Description</th></tr>
+      <tr><td class="field-name">id</td><td class="field-type">BIGINT</td><td><span class="field-pk">PK</span></td><td></td></tr>
+      <tr><td class="field-name">supplier_id</td><td class="field-type">BIGINT</td><td><span class="field-fk">FK</span></td><td>→ suppliers.id</td></tr>
+      <tr><td class="field-name">po_number</td><td class="field-type">VARCHAR(30)</td><td><span class="field-uni">UNI</span></td><td>Auto-generated PO number</td></tr>
+      <tr><td class="field-name">status</td><td class="field-type">ENUM</td><td><span class="field-nn">NN</span></td><td>PENDING | PARTIAL | RECEIVED | CANCELLED</td></tr>
+      <tr><td class="field-name">expected_date</td><td class="field-type">DATE</td><td></td><td>Expected delivery</td></tr>
+      <tr><td class="field-name">notes</td><td class="field-type">TEXT</td><td></td><td></td></tr>
+      <tr><td colspan="4" style="padding:6px 16px;color:var(--muted);font-size:11.5px;font-style:italic">PurchaseOrderItem: id, po_id (FK), item_id (FK), ordered_qty, received_qty, unit_cost</td></tr>
+      </table>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="entity-card" id="ent-settings" style="scroll-margin-top:100px">
+      <div class="entity-header">
+        <div><div class="entity-name">AppSettings</div><div class="entity-table-name">TABLE: app_settings</div></div>
+        <div class="entity-desc">Single-row settings blob</div>
+      </div>
+      <table class="field-table"><tr><th>Column</th><th>Type</th><th>Description</th></tr>
+      <tr><td class="field-name">id</td><td class="field-type">BIGINT PK</td><td>Always 1</td></tr>
+      <tr><td class="field-name">company_json</td><td class="field-type">JSON</td><td>Name, address, logo, GSTIN, phone, email</td></tr>
+      <tr><td class="field-name">print_json</td><td class="field-type">JSON</td><td>Paper size, font, margins, toggles, line-height</td></tr>
+      <tr><td class="field-name">invoice_json</td><td class="field-type">JSON</td><td>Prefix, start number, thank-you messages, terms</td></tr>
+      <tr><td class="field-name">ui_json</td><td class="field-type">JSON</td><td>Theme, section/column order overrides</td></tr>
+      </table>
+    </div>
+
+    <!-- RELATIONSHIPS -->
+    <div id="ent-relationships" style="scroll-margin-top:100px;margin-top:28px">
+      <h2 style="font-size:15px;font-weight:800;color:var(--muted);margin-bottom:12px;text-transform:uppercase;letter-spacing:.06em">🔗 Entity Relationships</h2>
+      <div class="rel-box">users (1) ──────────────────── (1) app_settings
+
+brands (1) ──────────────── (N) items
+suppliers (1) ───────────── (N) purchase_orders
+customers (1) ───────────── (N) bills
+
+bills (1) ───────────────── (N) bill_line_items
+bills (1) ───────────────── (N) sales_returns
+items (1) ───────────────── (N) bill_line_items
+items (1) ───────────────── (N) stock_logs
+items (1) ───────────────── (N) purchase_order_items
+
+purchase_orders (1) ─────── (N) purchase_order_items
+sales_returns (1) ────────── (N) sales_return_items</div>
+    </div>
+
+  </main>
+</div>
+
+</body>
+</html>
