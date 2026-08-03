@@ -1,13 +1,12 @@
 /**
  * src/context/DevContext.jsx
  *
- * Global Developer Mode state.
- *   - baseUrl  : the local/ngrok backend URL (persisted in localStorage)
- *   - apiMode  : 'internal' | 'external' (via existing api.js helpers)
- *   - pageCompletion : { [route]: boolean } — persisted in localStorage
+ * Developer Mode state. Works in both local dev AND production Vercel preview.
  *
- * Only rendered in DEV builds. In production the provider still wraps the
- * tree (so children never crash), but all state is inert.
+ * To enable on a production/preview deploy, run in browser console:
+ *   localStorage.setItem('billhive:dev-enabled', '1'); location.reload();
+ * To disable:
+ *   localStorage.removeItem('billhive:dev-enabled'); location.reload();
  */
 
 import {
@@ -19,14 +18,16 @@ import {
   getApiMode,
   setApiMode,
   API_MODE_CHANGE_EVENT,
-  API_BASE_URL_STORAGE_KEY,
 } from '../api/api';
 
-const IS_DEV = Boolean(import.meta.env && import.meta.env.DEV);
+// IS_DEV is true when running `vite dev` OR when the override flag is set in localStorage.
+// This lets you test dev mode on a Vercel preview URL without a code change.
+const IS_DEV =
+  Boolean(import.meta.env && import.meta.env.DEV) ||
+  localStorage.getItem('billhive:dev-enabled') === '1';
 
 const PAGE_COMPLETION_KEY = 'billhive:dev-page-completion';
 
-// ── All app routes (mirrors NAV_SECTIONS in Sidebar.jsx) ──────────────────
 export const ALL_ROUTES = [
   { path: '/',             label: 'Dashboard' },
   { path: '/create-bill',  label: 'Create Bill' },
@@ -49,44 +50,33 @@ export const ALL_ROUTES = [
 const DevContext = createContext(null);
 
 function loadPageCompletion() {
-  try {
-    return JSON.parse(localStorage.getItem(PAGE_COMPLETION_KEY) || '{}');
-  } catch {
-    return {};
-  }
+  try { return JSON.parse(localStorage.getItem(PAGE_COMPLETION_KEY) || '{}'); }
+  catch { return {}; }
 }
 
 export function DevProvider({ children }) {
-  const [baseUrl, _setBaseUrl]       = useState(() => IS_DEV ? getApiBaseUrl() : '');
-  const [apiMode, _setApiMode]        = useState(() => IS_DEV ? getApiMode() : 'internal');
+  const [baseUrl, _setBaseUrl]           = useState(() => getApiBaseUrl());
+  const [apiMode, _setApiMode]           = useState(() => getApiMode());
   const [pageCompletion, setPageCompletion] = useState(loadPageCompletion);
-  const [connStatus, setConnStatus]   = useState('idle'); // 'idle'|'checking'|'ok'|'error'
+  const [connStatus, setConnStatus]      = useState('idle');
 
-  // Keep local state in sync when localStorage changes from other places
   useEffect(() => {
-    if (!IS_DEV) return;
-    const sync = () => {
-      _setBaseUrl(getApiBaseUrl());
-      _setApiMode(getApiMode());
-    };
+    const sync = () => { _setBaseUrl(getApiBaseUrl()); _setApiMode(getApiMode()); };
     window.addEventListener(API_MODE_CHANGE_EVENT, sync);
     return () => window.removeEventListener(API_MODE_CHANGE_EVENT, sync);
   }, []);
 
-  // Persist page completion
   useEffect(() => {
     localStorage.setItem(PAGE_COMPLETION_KEY, JSON.stringify(pageCompletion));
   }, [pageCompletion]);
 
   const updateBaseUrl = useCallback((url) => {
-    if (!IS_DEV) return;
     setApiBaseUrl(url);
     _setBaseUrl(url || getApiBaseUrl());
     setConnStatus('idle');
   }, []);
 
   const updateApiMode = useCallback((mode) => {
-    if (!IS_DEV) return;
     setApiMode(mode);
     _setApiMode(mode);
   }, []);
@@ -110,20 +100,14 @@ export function DevProvider({ children }) {
     }
   }, [baseUrl]);
 
-  const value = {
-    IS_DEV,
-    baseUrl,
-    apiMode,
-    connStatus,
-    pageCompletion,
-    updateBaseUrl,
-    updateApiMode,
-    checkConnection,
-    togglePageComplete,
-    setConnStatus,
-  };
-
-  return <DevContext.Provider value={value}>{children}</DevContext.Provider>;
+  return (
+    <DevContext.Provider value={{
+      IS_DEV, baseUrl, apiMode, connStatus, pageCompletion,
+      updateBaseUrl, updateApiMode, checkConnection, togglePageComplete, setConnStatus,
+    }}>
+      {children}
+    </DevContext.Provider>
+  );
 }
 
 export function useDev() {
