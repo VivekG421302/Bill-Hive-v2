@@ -21,6 +21,7 @@ import SaleSummary from './pages/SaleSummary';
 import Suppliers from './pages/Suppliers';
 import Fulfillment from './pages/Fulfillment';
 import Catalogue from './pages/Catalogue';
+import DevPage from './pages/DevPage';
 
 export default function App() {
   return (
@@ -54,6 +55,7 @@ export default function App() {
                 <Route path="catalogue" element={<Catalogue />} />
                 <Route path="settings" element={<SettingsPage />} />
                 <Route path="account" element={<Account />} />
+                <Route path="dev" element={<DevPage />} />
               </Route>
             </Routes>
           </BrowserRouter>
