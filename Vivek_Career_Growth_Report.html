@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vivek Gupta — Career Growth Playbook</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  :root {
+    --navy: #0f1f3d;
+    --navy-mid: #1a3260;
+    --accent: #2563eb;
+    --accent-light: #dbeafe;
+    --gold: #d97706;
+    --gold-light: #fef3c7;
+    --green: #059669;
+    --green-light: #d1fae5;
+    --red: #dc2626;
+    --red-light: #fee2e2;
+    --ink: #1e2028;
+    --muted: #64748b;
+    --line: #e2e8f0;
+    --bg: #f8faff;
+    --white: #ffffff;
+    --card: #ffffff;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.7;
+    font-size: 15px;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: var(--navy);
+    padding: 64px 48px 52px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    right: -60px; top: -60px;
+    width: 400px; height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(37,99,235,0.25) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .hero h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 5vw, 3rem);
+    color: #fff;
+    line-height: 1.15;
+    max-width: 700px;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: #93c5fd;
+  }
+  .hero-sub {
+    color: #94a3b8;
+    margin-top: 16px;
+    max-width: 540px;
+    font-size: 15px;
+    font-weight: 300;
+  }
+  .hero-meta {
+    margin-top: 32px;
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .hero-chip {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: #cbd5e1;
+    padding: 6px 14px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  /* ── LAYOUT ── */
+  .container { max-width: 900px; margin: 0 auto; padding: 48px 24px; }
+
+  /* ── TOC ── */
+  .toc {
+    background: var(--navy);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-bottom: 48px;
+  }
+  .toc-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #64748b;
+    margin-bottom: 16px;
+  }
+  .toc-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 24px;
+  }
+  .toc-list li a {
+    color: #93c5fd;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .toc-list li a:hover { color: #fff; }
+  .toc-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: #475569;
+  }
+
+  /* ── SECTION HEADER ── */
+  .section-header {
+    margin-bottom: 28px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--line);
+    display: flex;
+    align-items: flex-end;
+    gap: 16px;
+  }
+  .section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    font-weight: 600;
+    padding-bottom: 2px;
+  }
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.7rem;
+    color: var(--navy);
+    line-height: 1.2;
+  }
+  .section { margin-bottom: 64px; }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin-bottom: 16px;
+  }
+  .card-title {
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--navy);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .card-title .icon {
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .card p { color: #475569; font-size: 14px; margin-bottom: 10px; }
+  .card p:last-child { margin-bottom: 0; }
+
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 9px;
+    border-radius: 100px;
+    margin: 2px;
+  }
+  .tag-blue { background: var(--accent-light); color: var(--accent); }
+  .tag-green { background: var(--green-light); color: var(--green); }
+  .tag-gold { background: var(--gold-light); color: var(--gold); }
+  .tag-red { background: var(--red-light); color: var(--red); }
+
+  /* ── CODE BLOCK ── */
+  .code-block {
+    background: var(--navy);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin: 16px 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.65;
+    color: #e2e8f0;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .code-block .hl { color: #93c5fd; }
+  .code-block .hl2 { color: #6ee7b7; }
+  .code-block .dim { color: #475569; }
+
+  /* ── PLATFORM CARD ── */
+  .platform-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+  .platform-header {
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    border-bottom: 1px solid var(--line);
+  }
+  .platform-logo {
+    width: 42px; height: 42px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .platform-name { font-weight: 700; font-size: 16px; color: var(--navy); }
+  .platform-desc { font-size: 12px; color: var(--muted); margin-top: 1px; }
+  .platform-priority {
+    margin-left: auto;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 100px;
+  }
+  .p-high { background: #dcfce7; color: #15803d; }
+  .p-med  { background: #fef9c3; color: #a16207; }
+  .p-low  { background: #f1f5f9; color: #475569; }
+  .platform-body { padding: 20px 24px; }
+  .platform-body ul { padding-left: 18px; }
+  .platform-body li { font-size: 13.5px; color: #334155; margin-bottom: 8px; }
+  .platform-body li strong { color: var(--navy); }
+
+  /* ── FIELD ROW ── */
+  .field-row {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 0;
+    border-bottom: 1px solid var(--line);
+    padding: 14px 0;
+  }
+  .field-row:last-child { border-bottom: none; }
+  .field-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding-right: 16px;
+    line-height: 1.6;
+    padding-top: 1px;
+  }
+  .field-value { font-size: 14px; color: var(--ink); }
+  .field-value strong { color: var(--navy); }
+  .field-value .note { color: var(--muted); font-size: 12px; margin-top: 4px; }
+
+  /* ── CHECKLIST ── */
+  .checklist { list-style: none; padding: 0; }
+  .checklist li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 14px;
+    color: #334155;
+  }
+  .checklist li:last-child { border-bottom: none; }
+  .checklist li .cb {
+    width: 18px; height: 18px;
+    border: 2px solid var(--line);
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    background: #fff;
+  }
+  .checklist li span { flex: 1; }
+  .checklist li strong { color: var(--navy); }
+
+  /* ── DO/DONT ── */
+  .do-dont {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 16px;
+  }
+  .do-box, .dont-box {
+    border-radius: 10px;
+    padding: 18px 20px;
+  }
+  .do-box { background: var(--green-light); border: 1px solid #a7f3d0; }
+  .dont-box { background: var(--red-light); border: 1px solid #fca5a5; }
+  .do-box .label { color: var(--green); font-weight: 700; font-size: 12px; margin-bottom: 10px; letter-spacing: 0.05em; }
+  .dont-box .label { color: var(--red); font-weight: 700; font-size: 12px; margin-bottom: 10px; letter-spacing: 0.05em; }
+  .do-box ul, .dont-box ul { padding-left: 16px; }
+  .do-box li, .dont-box li { font-size: 13px; margin-bottom: 6px; color: #1e2028; }
+
+  /* ── TIMELINE ── */
+  .timeline { position: relative; padding-left: 28px; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 7px; top: 8px; bottom: 8px;
+    width: 2px;
+    background: var(--line);
+  }
+  .tl-item { position: relative; margin-bottom: 28px; }
+  .tl-dot {
+    position: absolute;
+    left: -24px; top: 6px;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--bg);
+    box-shadow: 0 0 0 2px var(--accent);
+  }
+  .tl-week {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 4px;
+  }
+  .tl-title { font-weight: 600; color: var(--navy); font-size: 15px; margin-bottom: 6px; }
+  .tl-body { font-size: 13.5px; color: #475569; }
+
+  /* ── KEYWORD GRID ── */
+  .kw-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .kw {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    padding: 5px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--accent-light);
+    background: var(--accent-light);
+    color: var(--accent);
+    font-weight: 500;
+  }
+  .kw.must { background: var(--navy); color: #93c5fd; border-color: var(--navy); }
+
+  /* ── CALLOUT ── */
+  .callout {
+    border-left: 3px solid var(--accent);
+    background: var(--accent-light);
+    border-radius: 0 8px 8px 0;
+    padding: 14px 18px;
+    margin: 16px 0;
+    font-size: 13.5px;
+    color: #1e40af;
+  }
+  .callout strong { display: block; margin-bottom: 4px; color: var(--navy); }
+
+  .callout-gold {
+    border-left: 3px solid var(--gold);
+    background: var(--gold-light);
+    color: #78350f;
+  }
+  .callout-gold strong { color: #92400e; }
+
+  /* ── TABLE ── */
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  th {
+    background: var(--navy);
+    color: #fff;
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+  }
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--line);
+    color: #334155;
+    vertical-align: top;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:nth-child(even) td { background: #f8faff; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  @media (max-width: 600px) {
+    .hero { padding: 40px 20px 36px; }
+    .toc-list { grid-template-columns: 1fr; }
+    .do-dont { grid-template-columns: 1fr; }
+    .two-col { grid-template-columns: 1fr; }
+    .field-row { grid-template-columns: 1fr; gap: 4px; }
+    .field-label { padding-bottom: 2px; }
+    .platform-priority { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-label">Career Growth Playbook · August 2026</div>
+  <h1>Your full guide to<br><em>growing as a Java Developer</em><br>and getting hired.</h1>
+  <p class="hero-sub">LinkedIn redesign · Naukri & platform strategy · assets to create · keywords to own · a 90-day action plan — all written specifically for Vivek Gupta.</p>
+  <div class="hero-meta">
+    <span class="hero-chip">☕ Java · Spring Boot · Hibernate</span>
+    <span class="hero-chip">📍 Mumbai / Kalyan</span>
+    <span class="hero-chip">⚡ ~1 yr experience</span>
+    <span class="hero-chip">🏗 2 products shipped</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- TOC -->
+  <div class="toc">
+    <div class="toc-title">What's inside</div>
+    <ul class="toc-list">
+      <li><a href="#linkedin"><span class="toc-num">01</span> LinkedIn — Full Redesign</a></li>
+      <li><a href="#assets"><span class="toc-num">02</span> Assets to Create</a></li>
+      <li><a href="#keywords"><span class="toc-num">03</span> Keywords to Own</a></li>
+      <li><a href="#platforms"><span class="toc-num">04</span> Hiring Platforms Guide</a></li>
+      <li><a href="#naukri"><span class="toc-num">05</span> Naukri Deep Dive</a></li>
+      <li><a href="#growth"><span class="toc-num">06</span> Growing on LinkedIn</a></li>
+      <li><a href="#plan"><span class="toc-num">07</span> 90-Day Action Plan</a></li>
+    </ul>
+  </div>
+
+  <!-- ──────────────────────────────── -->
+  <!-- 01 LINKEDIN REDESIGN -->
+  <!-- ──────────────────────────────── -->
+  <div class="section" id="linkedin">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2 class="section-title">LinkedIn — Full Redesign</h2>
+    </div>
+
+    <p style="color:#475569; margin-bottom:24px; font-size:14px;">Every field below is written exactly as you should enter it. Copy-paste where you can.</p>
+
+    <!-- PHOTO -->
+    <div class="card">
+      <div class="card-title"><span class="icon" style="background:#dbeafe">📷</span>Profile Photo</div>
+      <p>Your photo gets you <strong>21× more profile views</strong> and <strong>36× more messages</strong>. This is the single highest-ROI change you can make.</p>
+      <div class="field-row" style="border-top:1px solid var(--line); margin-top:12px;">
+        <div class="field-label">Frame</div>
+        <div class="field-value">Face fills 60–70% of frame. Shoulders-up shot. Look directly at camera.</div>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Attire</div>
+        <div class="field-value">Solid-colour shirt. Dark navy, white, or charcoal. Avoid busy patterns.</div>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Background</div>
+        <div class="field-value">Plain light grey or white. Soft blurred office/wall is also fine. No selfie backgrounds.</div>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Expression</div>
+        <div class="field-value">Natural smile. Profiles with smiling photos are rated twice as likeable.</div>
+      </div>
+      <div class="field-row">
+        <div class="field-label">How to take it</div>
+        <div class="field-value">Phone camera, portrait mode. Ask someone to take it, or use a tripod + timer. No selfie stick. Good window light from the side.</div>
+      </div>
+    </div>
+
+    <!-- BANNER -->
+    <div class="card">
+      <div class="card-title"><span class="icon" style="background:#fef3c7">🎨</span>Banner Image <span class="tag tag-gold">1584 × 396 px</span></div>
+      <p>90% of Indian developers leave this as the default grey. A custom banner immediately signals professionalism.</p>
+      <div class="field-row" style="border-top:1px solid var(--line); margin-top:12px;">
+        <div class="field-label">Tool</div>
+        <div class="field-value">Canva (free). Search "LinkedIn Banner" → pick a dark tech template.</div>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Content to include</div>
+        <div class="field-value"><strong>Java Developer</strong> in large text · Your stack: Spring Boot · REST APIs · MySQL · A short tagline like "Building reliable backends for ERP &amp; SaaS" · Keep it dark navy or midnight blue — professional, not colourful.</div>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Do NOT include</div>
+        <div class="field-value">Your phone number · "Open to Work" text · Too many icons or colours · Stock photos of people.</div>
+      </div>
+    </div>
+
+    <!-- HEADLINE -->
+    <div class="card">
+      <div class="card-title"><span class="icon" style="background:#dcfce7">🔤</span>Headline <span class="tag tag-green">220 chars — use all of it</span></div>
+      <p>The headline appears in every search result and in every comment you make. It carries more algorithmic weight than any other field. This is what yours should say:</p>
+      <div class="code-block"><span class="hl">Java Backend Developer</span> | <span class="hl2">Spring Boot · Hibernate · REST APIs · MySQL</span> | <span class="dim">Building ERP & SaaS Products</span> | Open to Backend Roles in Mumbai · Thane · Remote</div>
+      <p style="margin-top:8px; font-size:13px;">That's ~165 characters. It leads with your exact job title, then your stack, then your domain (ERP/SaaS is a strong differentiator), then your location intent. Recruiters searching "Java Spring Boot Mumbai" will find you.</p>
+    </div>
+
+    <!-- URL -->
+    <div class="card">
+      <div class="card-title"><span class="icon" style="background:#f3e8ff">🔗</span>Custom URL</div>
+      <div class="field-row" style="border-top:1px solid var(--line); margin-top:12px;">
+        <div class="field-label">Set it to</div>
+        <div class="field-value"><strong>linkedin.com/in/vivek-gupta-in</strong> — already done ✓</div>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Why it matters</div>
+        <div class="field-value">A clean URL ranks higher in Google search. When someone Googles "Vivek Gupta Java Developer" your profile appears. Put this URL on your CV, GitHub, and email signature.</div>
+      </div>
+    </div>
+
+    <!-- ABOUT -->
+    <div class="card">
+      <div class="card-title"><span class="icon" style="background:#dbeafe">📝</span>About Section <span class="tag tag-blue">2,600 chars allowed — use 1,800+</span></div>
+      <p>Copy this and adapt it. The first two lines are most important — they show before "See more" on mobile.</p>
+      <div class="code-block">Java Backend Developer with ~1 year of professional experience building ERP and SaaS products from the ground up. I work with <span class="hl">Java, Spring Boot, Hibernate, REST APIs, and MySQL</span> to deliver reliable, scalable systems.
+
+<span class="dim">─────</span>
+
+<span class="hl2">What I've done:</span>
+
+At LNV Digital Systems, I independently architected and built the backend for two production products, playing a core role in transitioning the company from a service-based to a product-based model. This means I've owned backend systems end-to-end — from DB schema design to API contracts to performance debugging — with senior input when needed, but mostly self-driven.
+
+Beyond my job, I maintain Bill-Hive: a billing &amp; POS Progressive Web App I built from scratch (now on v2 in React + Vite, with a full Spring Boot backend — JWT auth, MySQL, 14 entities, indexed DB). It's production-ready and open source on GitHub.
+
+<span class="hl2">My stack:</span>
+▸ Backend: Java 17, Spring Boot, Hibernate, Microservices, REST APIs, MySQL, SQL
+▸ Frontend (working knowledge): React.js, HTML5, CSS3, JavaScript, Axios
+▸ Tools: Git, GitHub, IntelliJ IDEA, Postman, VS Code
+▸ Learning: Redis, AWS, Docker, CI/CD with GitHub Actions
+
+<span class="hl2">Background:</span>
+I come from a BMS (commerce/management) background — which means I understand how businesses actually run. Auditing 120+ clients gave me communication skills that most developers don't have. I crossed into tech by choice, not by default.
+
+<span class="hl2">What I'm looking for:</span>
+Backend Java roles (1–3 yrs bracket) in Mumbai, Thane, Navi Mumbai or remote. I'm most energised by product companies, fintech, or SaaS — places where the backend work actually matters to the business.
+
+📬 vivekg421302@gmail.com
+🔗 github.com/VivekG421302</div>
+    </div>
+
+    <!-- EXPERIENCE -->
+    <div class="card">
+      <div class="card-title"><span class="icon" style="background:#d1fae5">💼</span>Experience Section</div>
+      <p>Each role needs bullet points. LinkedIn's algorithm and recruiters both scan these for keywords. Here's exactly what to write:</p>
+
+      <p style="margin-top:16px; font-weight:600; color:var(--navy);">LNV Digital Systems — Java Developer (Sep 2025 – Present)</p>
+      <div class="code-block">• Independently designed and developed the backend for two ERP/SaaS products using Java 17, Spring Boot, Hibernate, and MySQL — with minimal supervision.
+
+• Played a central role in the company's transition from service-based to product-based by building scalable, production-ready backend architecture.
+
+• Designed and maintained RESTful APIs consumed by frontend teams, covering modules for inventory, billing, reporting, and user management.
+
+• Modelled database schemas in MySQL, optimised queries, and implemented business logic across multiple ERP modules.
+
+• Collaborated with senior developers on system design, code reviews, and performance decisions.</div>
+
+      <p style="margin-top:16px; font-weight:600; color:var(--navy);">Studio Atelier — UI/UX Designer (Aug 2025, Contract)</p>
+      <div class="code-block">• Contributed to UI design projects, developing cross-functional skills in product design and user-centred workflows.</div>
+
+      <p style="margin-top:16px; font-weight:600; color:var(--navy);">Projects (add as separate entries under "Projects" section)</p>
+      <p style="font-size:13px; color:#475569; margin-top:6px;">LinkedIn has a dedicated Projects section — use it. It adds keyword surface area and shows work beyond your job.</p>
+    </div>
+
+    <!-- SKILLS -->
+    <div class="card">
+      <div class="card-title"><span class="icon" style="background:#fef3c7">🛠</span>Skills Section <span class="tag tag-gold">Pin your top 3</span></div>
+      <p>Add these in this order. Your <strong>top 3 pinned skills</strong> appear prominently and are the primary recruiter filter.</p>
+      <div class="field-row" style="border-top:1px solid var(--line); margin-top:12px;">
+        <div class="field-label">Pin (Top 3)</div>
+        <div class="field-value"><strong>Java</strong> · <strong>Spring Boot</strong> · <strong>REST APIs</strong></div>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Also add</div>
+        <div class="field-value">Hibernate · MySQL · SQL · Microservices · Backend Development · React.js · JavaScript · HTML5 · CSS3 · Git · GitHub · Postman · IntelliJ IDEA · API Development · Software Development · ERP Systems · Problem Solving · Communication</div>
+      </div>
+      <div class="callout" style="margin-top:12px;"><strong>Get endorsements.</strong> Message 2–3 classmates from Net Tech India or any developer you know and ask them to endorse Java, Spring Boot, and Hibernate. Endorsed skills promote you 8% higher in recruiter results.</div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="card">
+      <div class="card-title"><span class="icon" style="background:#fee2e2">⚙️</span>Settings to Turn On</div>
+      <ul class="checklist">
+        <li><div class="cb"></div><span><strong>Open to Work</strong> — set to "Recruiters only" (no green frame) since you're currently employed. Visibility: Recruiters only.</span></li>
+        <li><div class="cb"></div><span><strong>Job titles to add:</strong> Java Developer, Backend Developer, Java Backend Developer, Software Engineer, Spring Boot Developer.</span></li>
+        <li><div class="cb"></div><span><strong>Locations:</strong> Mumbai, Thane, Navi Mumbai, Pune, Remote.</span></li>
+        <li><div class="cb"></div><span><strong>Creator Mode:</strong> Turn ON. This changes your profile from "Connect" to "Follow" — grows audience faster. Unlocks analytics and newsletter feature.</span></li>
+        <li><div class="cb"></div><span><strong>Profile viewing mode:</strong> Keep it public — private mode hides you from recruiters looking at who viewed them.</span></li>
+        <li><div class="cb"></div><span><strong>Contact info:</strong> Add your email, GitHub link, and personal website if you have one.</span></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- ──────────────────────────────── -->
+  <!-- 02 ASSETS -->
+  <!-- ──────────────────────────────── -->
+  <div class="section" id="assets">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2 class="section-title">Assets You Need to Create</h2>
+    </div>
+
+    <p style="color:#475569; margin-bottom:24px; font-size:14px;">These are the tangible things to build. Each one multiplies your visibility across platforms.</p>
+
+    <div class="card">
+      <div class="card-title"><span class="icon" style="background:#dbeafe">📄</span>1. ATS-Optimized CV <span class="tag tag-green">✓ Done</span></div>
+      <p>You have this. Keep a master version and customise the summary + first bullet per application to mirror the JD's language.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon" style="background:#fef3c7">🎨</span>2. LinkedIn Banner <span class="tag tag-gold">Priority: High</span></div>
+      <p><strong>Size:</strong> 1584 × 396 px. <strong>Tool:</strong> Canva (free). Design details in Section 01 above. This takes 20 minutes and has a massive visual impact on every recruiter who visits your profile.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon" style="background:#d1fae5">💻</span>3. GitHub Profile README <span class="tag tag-gold">Priority: High</span></div>
+      <p>Create a <strong>VivekG421302/VivekG421302</strong> repo with a README.md. This is the first thing a technical recruiter or CTO sees when they click your GitHub. It should have:</p>
+      <ul style="padding-left:20px; margin-top:10px;">
+        <li style="margin-bottom:8px; font-size:13.5px;">A short intro: who you are, what you build, where you work</li>
+        <li style="margin-bottom:8px; font-size:13.5px;">Your tech stack as badge icons (use shields.io — looks professional)</li>
+        <li style="margin-bottom:8px; font-size:13.5px;">Links to Bill-Hive v1 and v2 with 1-line descriptions</li>
+        <li style="margin-bottom:8px; font-size:13.5px;">GitHub stats card (github-readme-stats by anuraghazra — free)</li>
+        <li style="margin-bottom:8px; font-size:13.5px;">Contact links: LinkedIn, email</li>
+      </ul>
+      <div class="callout" style="margin-top:12px;"><strong>Pin 2–3 repos.</strong> Pin Bill-Hive v2 and Anigaze to your profile. Add a description and topic tags (java, spring-boot, pwa, rest-api) to each repo.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon" style="background:#f3e8ff">📸</span>4. Professional Headshot <span class="tag tag-gold">Priority: Highest</span></div>
+      <p>If you don't have one, this is the single most impactful thing you can do this week. You don't need a photographer — follow the photo guidelines in Section 01, use a clean wall, phone on portrait mode, someone takes it. Get 10–15 shots and pick the best one.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon" style="background:#fee2e2">✉️</span>5. Email Signature</div>
+      <p>Every email you send is a branding opportunity. Your signature should be:</p>
+      <div class="code-block"><span class="hl">Vivek Gupta</span>  |  Java Backend Developer
+<span class="hl2">linkedin.com/in/vivek-gupta-in</span>  •  github.com/VivekG421302
+<span class="dim">vivekg421302@gmail.com  •  7757985186</span></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon" style="background:#dbeafe">📝</span>6. Two LinkedIn Posts to Publish First</div>
+      <p>Your first two posts establish your voice. Here are the exact angles to write about:</p>
+      <div class="two-col" style="margin-top:12px;">
+        <div style="background:#f8faff; border:1px solid var(--line); border-radius:10px; padding:16px;">
+          <p style="font-weight:600; color:var(--navy); margin-bottom:8px; font-size:13px;">Post 1: The Origin Story</p>
+          <p style="font-size:13px; color:#475569;">"I come from a BMS background. Most people told me commerce grads don't become developers. Here's how I went from auditing 120+ clients to building ERP backends for a living." Tell the real story — it's memorable and human.</p>
+        </div>
+        <div style="background:#f8faff; border:1px solid var(--line); border-radius:10px; padding:16px;">
+          <p style="font-weight:600; color:var(--navy); margin-bottom:8px; font-size:13px;">Post 2: The Technical Win</p>
+          <p style="font-size:13px; color:#475569;">"Our company shifted from service to product. I built both backends. Here's what I learned about designing systems when you're the only backend developer in the room." Specific. Credible. Stands out.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ──────────────────────────────── -->
+  <!-- 03 KEYWORDS -->
+  <!-- ──────────────────────────────── -->
+  <div class="section" id="keywords">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2 class="section-title">Keywords to Own</h2>
+    </div>
+
+    <p style="color:#475569; margin-bottom:24px; font-size:14px;">These must appear in your LinkedIn headline, About, Experience, and Naukri profile. Recruiters run keyword searches — if these words aren't in your profile, you don't appear.</p>
+
+    <div class="card">
+      <div class="card-title">Must-Have (Primary ATS Keywords)</div>
+      <div class="kw-grid">
+        <span class="kw must">Java</span>
+        <span class="kw must">Spring Boot</span>
+        <span class="kw must">Hibernate</span>
+        <span class="kw must">REST API</span>
+        <span class="kw must">MySQL</span>
+        <span class="kw must">Microservices</span>
+        <span class="kw must">Backend Developer</span>
+        <span class="kw must">Java Developer</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Supporting Keywords (add to skills & About)</div>
+      <div class="kw-grid">
+        <span class="kw">Spring Framework</span>
+        <span class="kw">JPA</span>
+        <span class="kw">ORM</span>
+        <span class="kw">SQL</span>
+        <span class="kw">API Development</span>
+        <span class="kw">ERP</span>
+        <span class="kw">SaaS</span>
+        <span class="kw">Git</span>
+        <span class="kw">GitHub</span>
+        <span class="kw">Postman</span>
+        <span class="kw">IntelliJ IDEA</span>
+        <span class="kw">Java 17</span>
+        <span class="kw">Backend Development</span>
+        <span class="kw">Software Development</span>
+        <span class="kw">Web Services</span>
+        <span class="kw">Database Design</span>
+        <span class="kw">Object-Oriented Programming</span>
+        <span class="kw">OOP</span>
+        <span class="kw">JWT</span>
+        <span class="kw">Authentication</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Future Keywords — Start Learning, Then Add</div>
+      <div class="kw-grid">
+        <span class="kw">Redis</span>
+        <span class="kw">Docker</span>
+        <span class="kw">AWS</span>
+        <span class="kw">CI/CD</span>
+        <span class="kw">GitHub Actions</span>
+        <span class="kw">Kafka</span>
+        <span class="kw">Spring Security</span>
+        <span class="kw">Cloud</span>
+      </div>
+      <div class="callout callout-gold" style="margin-top:12px;"><strong>Rule:</strong> Only add a keyword if you can answer an interview question about it. Recruiter may screen you on any skill you list. Start with Redis — it's a fast, high-value add for someone at your level.</div>
+    </div>
+
+  </div>
+
+  <!-- ──────────────────────────────── -->
+  <!-- 04 PLATFORMS -->
+  <!-- ──────────────────────────────── -->
+  <div class="section" id="platforms">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2 class="section-title">Hiring Platforms — Full Guide</h2>
+    </div>
+
+    <!-- LINKEDIN -->
+    <div class="platform-card">
+      <div class="platform-header">
+        <div class="platform-logo" style="background:#0a66c2; color:#fff;">in</div>
+        <div>
+          <div class="platform-name">LinkedIn</div>
+          <div class="platform-desc">Primary sourcing tool for 87% of recruiters globally</div>
+        </div>
+        <span class="platform-priority p-high">🥇 Priority 1</span>
+      </div>
+      <div class="platform-body">
+        <ul>
+          <li><strong>Profile completion:</strong> Get to "All-Star" status. Photo + banner + headline + About + 3 experiences + 5 skills + education = All-Star. All-Star profiles get 40× more recruiter reach.</li>
+          <li><strong>Open to Work:</strong> Enable for recruiters only. Add all job titles you're open to, not just one. Mumbai + Thane + Navi Mumbai + Remote.</li>
+          <li><strong>Activity matters now:</strong> LinkedIn's 2025–26 algorithm change means active profiles rank higher even in passive search. 1 post per week minimum. Comment on 3–5 posts by people at target companies weekly.</li>
+          <li><strong>Connections to target:</strong> 500+ connections improves ranking. Connect with every developer you've met, every classmate from Net Tech India, and every recruiter who reaches out. Accept all relevant requests.</li>
+          <li><strong>Follow target companies:</strong> LTIMindtree, Persistent, Mphasis, KPIT, fintech startups. This signals to LinkedIn's algorithm your job intent.</li>
+          <li><strong>Recommendations:</strong> Ask one classmate from Net Tech India or one colleague to write you a short recommendation. Even one makes a difference. Profiles with recommendations show up higher in searches.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- NAUKRI -->
+    <div class="platform-card">
+      <div class="platform-header">
+        <div class="platform-logo" style="background:#ff7555; color:#fff; font-size:13px; font-weight:800;">N</div>
+        <div>
+          <div class="platform-name">Naukri.com</div>
+          <div class="platform-desc">India's largest job portal — #1 for corporate hiring</div>
+        </div>
+        <span class="platform-priority p-high">🥇 Priority 1</span>
+      </div>
+      <div class="platform-body">
+        <ul>
+          <li><strong>Resume freshness is everything.</strong> Upload a new PDF every 3–5 days. Naukri's algorithm ranks recently-updated profiles higher in ResDeX (recruiter search). Even a minor edit triggers a refresh.</li>
+          <li><strong>Headline (80 chars):</strong> <em>Java Developer | Spring Boot | REST APIs | MySQL | 1 yr ERP Backend</em></li>
+          <li><strong>Key skills:</strong> Add 15–20 skills exactly matching JD language. Java, Spring Boot, Hibernate, REST API, MySQL, Microservices, Hibernate ORM, JPA, Git, Postman, Backend Development, ERP, API Integration.</li>
+          <li><strong>Notice period:</strong> Set to your actual notice period or shorter — shorter notice period profiles rank higher in recruiter dashboards. If you're unsure, list 30 days.</li>
+          <li><strong>Expected CTC:</strong> Research the range first (see below). Don't under-price yourself — set it at market rate.</li>
+          <li><strong>Preferred locations:</strong> Mumbai, Thane, Navi Mumbai, Pune, Remote. Don't select everywhere — it signals desperation and reduces targeted matches.</li>
+          <li><strong>Apply manually, not auto-apply.</strong> Naukri's auto-apply has very low conversion. Manual, targeted applications to relevant JDs perform 3–5× better.</li>
+        </ul>
+        <div class="callout" style="margin-top:12px;"><strong>Salary benchmark for your level (Mumbai, Java, 1 yr):</strong> ₹4.5L – ₹7.5L depending on company tier. Service companies (TCS, Infosys): ₹4–5.5L. Mid-size product: ₹5.5–7.5L. Startup/fintech: ₹6–9L. Set your expected CTC at ₹6–7.5L and current CTC accurately.</div>
+      </div>
+    </div>
+
+    <!-- WELLFOUND -->
+    <div class="platform-card">
+      <div class="platform-header">
+        <div class="platform-logo" style="background:#000; color:#fff; font-size:12px; font-weight:800;">WF</div>
+        <div>
+          <div class="platform-name">Wellfound (formerly AngelList)</div>
+          <div class="platform-desc">Startup & product company jobs — direct founder contact</div>
+        </div>
+        <span class="platform-priority p-med">🥈 Priority 2</span>
+      </div>
+      <div class="platform-body">
+        <ul>
+          <li><strong>Best for:</strong> Startups, product companies, fintech — the exact companies where your ERP/product background stands out.</li>
+          <li><strong>Profile must-haves:</strong> Stack (Java, Spring Boot, MySQL), GitHub link, your two projects with descriptions, salary expectation range, role preferences.</li>
+          <li><strong>No cover letter needed</strong> — applications are sent with your profile. Make the profile strong and apply quickly to fresh postings (within 24–48 hrs of posting).</li>
+          <li><strong>Direct messaging:</strong> Wellfound allows you to message hiring managers directly. Your Bill-Hive product story is perfect for startup hiring managers — they appreciate builders.</li>
+          <li>Search: <em>Java Developer India · Backend Developer Mumbai · Spring Boot</em> — sort by "Recently Posted".</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- INSTAHYRE -->
+    <div class="platform-card">
+      <div class="platform-header">
+        <div class="platform-logo" style="background:#6c47ff; color:#fff; font-size:12px; font-weight:800;">IH</div>
+        <div>
+          <div class="platform-name">Instahyre</div>
+          <div class="platform-desc">AI-matched — quality over quantity</div>
+        </div>
+        <span class="platform-priority p-med">🥈 Priority 2</span>
+      </div>
+      <div class="platform-body">
+        <ul>
+          <li><strong>How it works:</strong> AI matches your profile to jobs at 10,000+ companies including Google, Amazon, Swiggy, Zepto, Razorpay. You can see recruiter actions on applications.</li>
+          <li><strong>Best for:</strong> Mid to high-growth startups and MNCs. Less competition than Naukri. Higher-quality matches.</li>
+          <li><strong>Profile:</strong> Complete 100% of the profile. The AI ranks you higher with a complete profile. Add GitHub and LinkedIn links.</li>
+          <li><strong>One-click apply</strong> is available but treat each application seriously — tailor your headline for the JD category you're applying in.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- CUTSHORT -->
+    <div class="platform-card">
+      <div class="platform-header">
+        <div class="platform-logo" style="background:#1a1a2e; color:#00d4ff; font-size:12px; font-weight:800;">CS</div>
+        <div>
+          <div class="platform-name">CutShort</div>
+          <div class="platform-desc">Smart matching — connects you directly to hiring managers</div>
+        </div>
+        <span class="platform-priority p-med">🥈 Priority 2</span>
+      </div>
+      <div class="platform-body">
+        <ul>
+          <li>AI-driven platform where hiring managers post and respond directly. Faster feedback loop than Naukri.</li>
+          <li>Strong for roles at funded startups and tech-first companies. Fill in your stack, GitHub, and availability clearly.</li>
+          <li>Create profile at cutshort.io and set job preferences to Java Developer, Backend, Mumbai/Remote.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- INTERNSHALA -->
+    <div class="platform-card">
+      <div class="platform-header">
+        <div class="platform-logo" style="background:#0fa4a0; color:#fff; font-size:11px; font-weight:800;">IS</div>
+        <div>
+          <div class="platform-name">Internshala Jobs</div>
+          <div class="platform-desc">Good for junior-level full-time roles</div>
+        </div>
+        <span class="platform-priority p-low">Priority 3</span>
+      </div>
+      <div class="platform-body">
+        <ul>
+          <li>Has full-time Java developer jobs alongside internships. Filter for "Full-time" and "Java" in Mumbai.</li>
+          <li>Less competition at your experience level than Naukri. Worth spending 20 minutes a week checking for new postings.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- COMPANY CAREERS -->
+    <div class="platform-card">
+      <div class="platform-header">
+        <div class="platform-logo" style="background:#334155; color:#fff; font-size:15px;">🏢</div>
+        <div>
+          <div class="platform-name">Direct Company Career Pages</div>
+          <div class="platform-desc">Often unlisted roles — zero competition</div>
+        </div>
+        <span class="platform-priority p-med">🥈 Priority 2</span>
+      </div>
+      <div class="platform-body">
+        <ul>
+          <li>Many product companies and startups in Mumbai don't post on Naukri to avoid floods of applications. Check their careers pages directly.</li>
+          <li><strong>Target companies to bookmark:</strong> Razorpay, Zepto, Meesho, Slice, Groww, OYO, Postman, Vahak, Mudrex, Zaggle — all Mumbai-area or remote-friendly, all Java/Spring Boot stacks.</li>
+          <li>Set a reminder every 2 weeks to check each one. When you apply cold, you'll be 1 of 30 applicants, not 1 of 3,000.</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ──────────────────────────────── -->
+  <!-- 05 NAUKRI DEEP DIVE -->
+  <!-- ──────────────────────────────── -->
+  <div class="section" id="naukri">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <h2 class="section-title">Naukri — Full Field Guide</h2>
+    </div>
+
+    <p style="color:#475569; margin-bottom:24px; font-size:14px;">Naukri is still India's #1 recruiter sourcing tool. Here's exactly what to put in every field.</p>
+
+    <div class="card">
+      <div class="field-row">
+        <div class="field-label">Headline</div>
+        <div class="field-value"><strong>Java Developer | Spring Boot | REST APIs | MySQL | 1 yr ERP Backend</strong><div class="note">80 character limit. Front-load your most searchable terms. Do NOT write "Fresher" or "Looking for opportunities".</div></div>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Summary</div>
+        <div class="field-value">Java Backend Developer with ~1 year of professional experience building ERP and SaaS products. Worked with Java, Spring Boot, Hibernate, REST APIs, and MySQL to deliver production-grade systems. Transitioned from a BMS background through focused full-stack Java training at Net Tech India. Looking for backend Java roles in Mumbai, Thane, or remote.<div class="note">Naukri's search engine indexes this. Mention Java, Spring Boot, MySQL, REST API, ERP at minimum.</div></div>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Current Role</div>
+        <div class="field-value">Java Developer at LNV Digital Systems</div>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Experience</div>
+        <div class="field-value">Add 4–6 bullets per role — same as your CV. Naukri scans these for keyword matching.</div>
+      </div>
+      <div class="field-label" style="padding-top:14px; display:block;">Key Skills (add all)</div>
+      <div class="kw-grid" style="margin-top:8px; margin-bottom:8px;">
+        <span class="kw must">Java</span><span class="kw must">Spring Boot</span><span class="kw must">Hibernate</span>
+        <span class="kw must">REST API</span><span class="kw must">MySQL</span><span class="kw must">Microservices</span>
+        <span class="kw">JPA</span><span class="kw">SQL</span><span class="kw">Git</span><span class="kw">GitHub</span>
+        <span class="kw">Postman</span><span class="kw">ERP</span><span class="kw">API Development</span>
+        <span class="kw">Backend Development</span><span class="kw">React.js</span><span class="kw">JavaScript</span><span class="kw">HTML5</span>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Notice Period</div>
+        <div class="field-value">Your actual notice period. Shorter = better ranking. 30 days if standard.</div>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Current CTC</div>
+        <div class="field-value">Enter honestly (Naukri verifies during offer stage).</div>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Expected CTC</div>
+        <div class="field-value"><strong>₹6,00,000 – ₹8,00,000</strong><div class="note">This is market rate for your level at a product/mid-tier company in Mumbai. Don't anchor low. You can negotiate.</div></div>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Preferred Locations</div>
+        <div class="field-value">Mumbai · Thane · Navi Mumbai · Pune · Remote<div class="note">Avoid selecting Bengaluru or Hyderabad unless you're genuinely open to relocation. Selective preferences improve match quality.</div></div>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Resume Upload</div>
+        <div class="field-value">Upload your ATS CV as a PDF. <strong>Re-upload every 3–5 days</strong> — this is the most impactful thing you can do on Naukri for ongoing visibility.</div>
+      </div>
+    </div>
+
+    <div class="callout-gold callout" style="margin-top:8px;">
+      <strong>Companies actively hiring Java Developers in Mumbai area (recurring on Naukri):</strong>
+      Accenture · Capgemini · Wipro · Infosys · TCS · KPMG India · PwC SDC · IBM · HCLTech · Persistent · Photon · Oracle · Mphasis · EPAM Systems. Also check: Bajaj Finance, BNP Paribas, JPMorgan for BFSI Java roles (higher pay, great for your background in finance/auditing).
+    </div>
+
+  </div>
+
+  <!-- ──────────────────────────────── -->
+  <!-- 06 GROWING -->
+  <!-- ──────────────────────────────── -->
+  <div class="section" id="growth">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <h2 class="section-title">Growing on LinkedIn</h2>
+    </div>
+
+    <p style="color:#475569; margin-bottom:24px; font-size:14px;">LinkedIn's 2025–26 algorithm change means activity now directly affects how often your profile appears in passive recruiter searches. You don't need to go viral — you need to be consistently visible.</p>
+
+    <div class="card">
+      <div class="card-title">Content Strategy — What to Post</div>
+      <table style="margin-top:12px;">
+        <tr>
+          <th>Post Type</th>
+          <th>Frequency</th>
+          <th>Example for You</th>
+        </tr>
+        <tr>
+          <td><strong>Technical lesson</strong></td>
+          <td>1× / week</td>
+          <td>"One thing I learned building an ERP backend: always index your foreign keys. Here's why it cut our query time in half."</td>
+        </tr>
+        <tr>
+          <td><strong>Project showcase</strong></td>
+          <td>1× / month</td>
+          <td>Show Bill-Hive's PWA capabilities. Screen recording + short explanation of the technical challenge you solved.</td>
+        </tr>
+        <tr>
+          <td><strong>Career story</strong></td>
+          <td>1× / month</td>
+          <td>"BMS grad → Java developer in 2 years. Here's the honest story." — Non-IT background posts do very well with Indian developer audiences.</td>
+        </tr>
+        <tr>
+          <td><strong>Opinion / take</strong></td>
+          <td>2× / month</td>
+          <td>"Why I think every junior developer should work on a product, not just a service. What 1 year at a product company taught me."</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Post Format That Gets Reach</div>
+      <div class="code-block"><span class="hl">Hook (line 1 — make them click "see more"):</span>
+I built two backend products in one year. Almost entirely alone.
+
+<span class="hl2">Body (short paragraphs, 1-2 lines each):</span>
+When I joined LNV Digital Systems, they wanted to shift from service to product.
+
+I was the backend guy.
+
+No playbook. No team. Just Java, Spring Boot, and a lot of Stack Overflow.
+
+Here's what I learned building ERP systems from scratch:
+
+→ Design your DB schema before writing a single line of service code
+→ REST contracts matter more than you think — your frontend team is your client
+→ Write for the person who maintains this 6 months from now (often you)
+→ Senior guidance is gold — ask dumb questions early, not late
+
+<span class="dim">Call to action:</span>
+What's one thing you wish you knew before your first backend project?</div>
+      <div class="callout" style="margin-top:12px;"><strong>Format rules:</strong> Short lines. White space. No walls of text. Posts with questions at the end get 2–3× more comments. Comments = reach.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Who to Connect With & Follow</div>
+      <div class="two-col">
+        <div>
+          <p style="font-weight:600; color:var(--navy); margin-bottom:8px; font-size:13px;">Connect with:</p>
+          <ul style="padding-left:16px;">
+            <li style="font-size:13px; margin-bottom:6px;">Every classmate from Net Tech India</li>
+            <li style="font-size:13px; margin-bottom:6px;">Java developers in Mumbai (search LinkedIn, connect with a short note)</li>
+            <li style="font-size:13px; margin-bottom:6px;">Recruiters at target companies</li>
+            <li style="font-size:13px; margin-bottom:6px;">Anyone who comments on your posts</li>
+            <li style="font-size:13px; margin-bottom:6px;">Tech leads and engineering managers at companies you want to join</li>
+          </ul>
+        </div>
+        <div>
+          <p style="font-weight:600; color:var(--navy); margin-bottom:8px; font-size:13px;">Follow (for content ideas & visibility):</p>
+          <ul style="padding-left:16px;">
+            <li style="font-size:13px; margin-bottom:6px;">Arpit Bhayani (system design, India-based)</li>
+            <li style="font-size:13px; margin-bottom:6px;">Gaurav Sen (system design)</li>
+            <li style="font-size:13px; margin-bottom:6px;">Java developer communities on LinkedIn</li>
+            <li style="font-size:13px; margin-bottom:6px;">Target company pages</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Do's and Don'ts</div>
+      <div class="do-dont">
+        <div class="do-box">
+          <div class="label">✓ DO</div>
+          <ul>
+            <li>Post consistently — even once a week</li>
+            <li>Comment meaningfully on others' posts</li>
+            <li>Show your actual work and real learning</li>
+            <li>Use specific numbers when you have them</li>
+            <li>Engage back on every comment you get</li>
+            <li>Update profile when you learn something new</li>
+          </ul>
+        </div>
+        <div class="dont-box">
+          <div class="label">✗ DON'T</div>
+          <ul>
+            <li>Post motivational quotes unrelated to tech</li>
+            <li>Say "I'm looking for opportunities" as your only post</li>
+            <li>Use hashtag spam (#hiring #opentowork #java × 15)</li>
+            <li>Repost without adding your own take</li>
+            <li>Connect without a personalised note to senior people</li>
+            <li>Ignore messages from recruiters — even to decline politely</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ──────────────────────────────── -->
+  <!-- 07 90-DAY PLAN -->
+  <!-- ──────────────────────────────── -->
+  <div class="section" id="plan">
+    <div class="section-header">
+      <span class="section-num">07</span>
+      <h2 class="section-title">90-Day Action Plan</h2>
+    </div>
+
+    <p style="color:#475569; margin-bottom:28px; font-size:14px;">Concrete, sequenced. Do things in order — the early weeks compound into the later ones.</p>
+
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-week">Week 1</div>
+        <div class="tl-title">Foundation — Profile & Assets</div>
+        <div class="tl-body">
+          <ul style="padding-left:18px; margin-top:6px;">
+            <li style="margin-bottom:6px;">Take a professional headshot (follow photo guide above)</li>
+            <li style="margin-bottom:6px;">Update LinkedIn: new photo, headline, About section, Experience bullets, Skills (use this guide)</li>
+            <li style="margin-bottom:6px;">Create LinkedIn banner on Canva (1584×396px, dark navy, stack listed)</li>
+            <li style="margin-bottom:6px;">Enable Open to Work (recruiters only) + Creator Mode</li>
+            <li style="margin-bottom:6px;">Update Naukri profile fully — all fields, re-upload CV</li>
+            <li style="margin-bottom:6px;">Set up GitHub README for your profile</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-week">Week 2</div>
+        <div class="tl-title">Presence — First Posts & Connections</div>
+        <div class="tl-body">
+          <ul style="padding-left:18px; margin-top:6px;">
+            <li style="margin-bottom:6px;">Write and publish your Origin Story post (BMS → Java Developer)</li>
+            <li style="margin-bottom:6px;">Connect with 50+ people: Net Tech India classmates, Mumbai Java developers, recruiters at target companies</li>
+            <li style="margin-bottom:6px;">Create profiles on Wellfound, Instahyre, CutShort</li>
+            <li style="margin-bottom:6px;">Start applying: 5–8 targeted applications per week (Naukri + Wellfound)</li>
+            <li style="margin-bottom:6px;">Re-upload Naukri CV (do this every 3–5 days from now on)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-week">Weeks 3–4</div>
+        <div class="tl-title">Momentum — Technical Content + Applications</div>
+        <div class="tl-body">
+          <ul style="padding-left:18px; margin-top:6px;">
+            <li style="margin-bottom:6px;">Publish Technical Win post (building products as solo backend dev)</li>
+            <li style="margin-bottom:6px;">Write your first technical post: one thing you learned about Spring Boot, Hibernate, or system design</li>
+            <li style="margin-bottom:6px;">Comment on 3–5 posts per week by people at target companies</li>
+            <li style="margin-bottom:6px;">Apply to 5–8 more roles. Track in a spreadsheet: company, date, JD link, status</li>
+            <li style="margin-bottom:6px;">Start Redis basics (free — Redis University online). Adds a high-value keyword</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-week">Month 2</div>
+        <div class="tl-title">Consistency + Skill Signal</div>
+        <div class="tl-body">
+          <ul style="padding-left:18px; margin-top:6px;">
+            <li style="margin-bottom:6px;">1 LinkedIn post per week, every week. Alternate: technical lesson / career story / opinion.</li>
+            <li style="margin-bottom:6px;">10–15 applications per week. Track everything. Follow up after 1 week if no response.</li>
+            <li style="margin-bottom:6px;">Pin Bill-Hive v2 and Anigaze on GitHub. Add topic tags and proper descriptions.</li>
+            <li style="margin-bottom:6px;">Ask a Net Tech India classmate or colleague for a LinkedIn recommendation</li>
+            <li style="margin-bottom:6px;">Complete a short AWS or Docker basics course — adds "currently learning" credibility</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-week">Month 3</div>
+        <div class="tl-title">Interview-Ready + Negotiation</div>
+        <div class="tl-body">
+          <ul style="padding-left:18px; margin-top:6px;">
+            <li style="margin-bottom:6px;">Do mock interviews: practice Java core, Spring Boot internals, REST design, DB questions, system design basics</li>
+            <li style="margin-bottom:6px;">Know your story cold: non-IT → Java developer, building two products, Bill-Hive, your transition</li>
+            <li style="margin-bottom:6px;">Research salary ranges before any interview. Know your number and be ready to name it</li>
+            <li style="margin-bottom:6px;">If you get an offer below ₹6L from a product company — it's negotiable. Ask once, clearly, with a reason</li>
+            <li style="margin-bottom:6px;">Keep posting on LinkedIn even while interviewing — visibility keeps options open</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="background:var(--navy); border-color:var(--navy);">
+      <div class="card-title" style="color:#93c5fd;">🎯 The one thing that matters most</div>
+      <p style="color:#94a3b8;">Your story — BMS background, 120+ clients audited, crossed into tech, built two products nearly alone — is genuinely unusual. Most Java developers at 1 year have done tutorial projects and service-company work. You shipped real products. Lead with that in every cover note, every application, every LinkedIn post, every interview opening. It is your strongest differentiator.</p>
+    </div>
+
+  </div>
+
+</div>
+
+</body>
+</html>
